@@ -2,6 +2,7 @@ function Hobo(x, y) {
     this.x = x;
     this.y = y;
     this.direction = '';
+    this.images = new HoboAnimation();
 }
 
 Hobo.SIZE = {
@@ -46,6 +47,7 @@ Hobo.prototype.move = function() {
 }
 
 Hobo.prototype.render = function(ctx) {
-    ctx.fillStyle = "#808080";
-    ctx.fillRect(this.x, this.y, Hobo.SIZE.w, Hobo.SIZE.h);
+    this.images.drawFrame(ctx, this.x, this.y);
+    // ctx.fillStyle = "#808080";
+    // ctx.fillRect(this.x, this.y, Hobo.SIZE.w, Hobo.SIZE.h);
 };
