@@ -10,9 +10,9 @@ Hobo.SIZE = {
     h: 16
 };
 
-Hobo.SPEED = 0.5;
+Hobo.SPEED = 32;
 
-Hobo.prototype.update = function(keys) {
+Hobo.prototype.update = function(dt, keys) {
     if (keys.left) {
         this.direction = 'left';
     }
@@ -26,22 +26,23 @@ Hobo.prototype.update = function(keys) {
         this.direction = 'down';
     }
 
-    this.move();
+    this.move(dt);
+    this.images.update(dt);
 };
 
-Hobo.prototype.move = function() {
+Hobo.prototype.move = function(dt) {
     switch (this.direction) {
         case 'left':
-            this.x -= Hobo.SPEED;
+            this.x -= Hobo.SPEED * dt;
             break;
         case 'up':
-            this.y -= Hobo.SPEED;
+            this.y -= Hobo.SPEED * dt;
             break;
         case 'right':
-            this.x += Hobo.SPEED;
+            this.x += Hobo.SPEED * dt;
             break;
         case 'down':
-            this.y += Hobo.SPEED;
+            this.y += Hobo.SPEED * dt;
             break;
     }
 }
