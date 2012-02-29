@@ -10,20 +10,18 @@ Hobo.SIZE = {
 
 Hobo.SPEED = 0.5;
 
-Hobo.prototype.move = function(direction) {
-    switch (direction) {
-        case 'left':
-            this.x -= Hobo.SPEED;
-            break;
-        case 'up':
-            this.y -= Hobo.SPEED;
-            break;
-        case 'right':
-            this.x += Hobo.SPEED;
-            break;
-        case 'down':
-            this.y += Hobo.SPEED;
-            break;
+Hobo.prototype.update = function(keys) {
+    if (keys.left) {
+        this.x -= Hobo.SPEED;
+    }
+    if (keys.up) {
+        this.y -= Hobo.SPEED;
+    }
+    if (keys.right) {
+        this.x += Hobo.SPEED;
+    }
+    if (keys.down) {
+        this.y += Hobo.SPEED;
     }
 };
 
