@@ -47,7 +47,7 @@ Hobo.prototype.move = function() {
 }
 
 Hobo.prototype.render = function(ctx) {
-    this.images.drawFrame(ctx, this.x, this.y);
+    this.images.drawFrame(ctx, this);
     // ctx.fillStyle = "#808080";
     // ctx.fillRect(this.x, this.y, Hobo.SIZE.w, Hobo.SIZE.h);
 };
