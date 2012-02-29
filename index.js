@@ -32,7 +32,7 @@ function HoboMan(canvas) {
     this.level = new Level(testLevel);
 
     this.level.render(this.ctx);
-    this.hobo = new Hobo(0, 0);
+    this.hobo = new Hobo(20, 20);
     this.keys = {
         left: 0,
         right: 0,
@@ -47,14 +47,14 @@ function HoboMan(canvas) {
 }
 
 HoboMan.prototype.loop = function() {
-    this.update();
+    this.update(0.016);
     this.render();
 
     setTimeout(_.bind(this.loop, this), 16);
 };
 
-HoboMan.prototype.update = function() {
-    this.hobo.update(this.keys);
+HoboMan.prototype.update = function(dt) {
+    this.hobo.update(dt, this.keys);
 };
 
 HoboMan.prototype.render = function() {
