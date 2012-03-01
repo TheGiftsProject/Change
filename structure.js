@@ -48,9 +48,18 @@ Block.prototype.generateEmptyMatrix = function() {
     }
 }
 
-function Cell(content, isWall) {
-  this.content = content;
-  this.isWall  = isWall;
+Block.prototype.toString = function() {
+
+}
+
+function Cell(content, type) {
+  this.content = content ? content : false;
+  this.type  = type ? type : Cell.WALL;
+}
+
+Cell.TYPES = {
+    WALL: 0,
+    CLEAR: 1
 }
 
 function BlockCoordinate(row, col) {

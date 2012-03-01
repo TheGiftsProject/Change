@@ -2,11 +2,6 @@ function Level(levelDesc) {
     this.parse(levelDesc);
 }
 
-Level.CELL_TYPES = {
-    WALL: 0,
-    CLEAR: 1
-};
-
 Level.CELL_SIZE = {
     w: 16,
     h: 16
@@ -20,10 +15,10 @@ Level.prototype.parse = function(levelDesc) {
         for (var j = 0, strLen = rows[i].length; j < strLen; ++j) {
             switch (rows[i][j]) {
                 case '=':
-                    row.push(Level.CELL_TYPES.WALL);
+                    row.push(Cell.TYPES.WALL);
                     break;
                 case ' ':
-                    row.push(Level.CELL_TYPES.CLEAR);
+                    row.push(Cell.TYPES.CLEAR);
                     break;
             }
         }
@@ -35,7 +30,7 @@ Level.prototype.parse = function(levelDesc) {
 Level.prototype.render = function(ctx) {
     for (var row = 0, rowLen = this.level.length; row < rowLen; ++row) {
         for (var col = 0, colLen = this.level[row].length; col < colLen; ++col) {
-            ctx.fillStyle = (this.level[row][col] == Level.CELL_TYPES.WALL ? "#000000" : "#FFFFFF");
+            ctx.fillStyle = (this.level[row][col] == Cell.TYPES.WALL ? "#000000" : "#FFFFFF");
             ctx.fillRect(Level.CELL_SIZE.w * col, Level.CELL_SIZE.h * row, Level.CELL_SIZE.w, Level.CELL_SIZE.h);
         }
     }
