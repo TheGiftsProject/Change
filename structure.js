@@ -54,16 +54,24 @@ Block.prototype.generateEmptyMatrix = function() {
 Block.prototype.generateMaze = function() {
     matrix = this.cellsMatrix;
 
-    var digThroughCol = function (col, froRow, toRow) {
-
+    var digThroughCol = function (col, fromRow, toRow) {
+        for (var row = fromRow; row < toRow; row++) {
+            this.matrix[row][col].type = Cell.TYPES.CLEAR;
+        }
     }
 
     var digThroughRow = function(row, fromCol, toCol) {
-
+        for (var col = fromCol; col < toCol; col++) {
+            this.matrix[row][col].type = Cell.TYPES.CLEAR;
+        }
     }
 
     var mazeRecursion = function(row_min, row_max, col_min, col_max) {
+        // end conditions.
+        if (row_max - row_min < 3 || col_max - col_min < 3) return
+        else if (row_min == row_max || col_min == col_max) return
 
+        // choose to split by col/row randomly.
         if (Math.random() > 0.5) {
             var random_row = Math.randomIntBetween(row_min, row_max);
             digThroughRow(random_row, col_min, col_max);
@@ -76,8 +84,6 @@ Block.prototype.generateMaze = function() {
             mazeRecursion(row_min, row_max, col_min, random_col - 1);
             mazeRecursion(row_min, row_max, random_col + 1, col_max);
         }
-
-
     }
 
     mazeRecursion(0, this.blockSize, 0, this.blockSize)
