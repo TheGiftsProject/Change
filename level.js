@@ -23,7 +23,9 @@ Level.prototype.parse = function(levelDesc) {
 Level.prototype.render = function(ctx) {
     for (var row = 0, rowLen = this.level.length; row < rowLen; ++row) {
         for (var col = 0, colLen = this.level[row].length; col < colLen; ++col) {
+            ctx.strokeStyle = "#000000";
             ctx.fillStyle = (this.level[row][col] == Cell.TYPES.WALL ? "#000000" : "#FFFFFF");
+            ctx.strokeRect(Level.CELL_SIZE.w * col, Level.CELL_SIZE.h * row, Level.CELL_SIZE.w, Level.CELL_SIZE.h);
             ctx.fillRect(Level.CELL_SIZE.w * col, Level.CELL_SIZE.h * row, Level.CELL_SIZE.w, Level.CELL_SIZE.h);
         }
     }
