@@ -1,6 +1,7 @@
+/* ================================================= WORLD ================================================= */
 function World(blockSize, initialBlockLayers) {
   this.blockSize          = blockSize;
-  this.initialBlockLayers = initialBlockLayers != undefined ? initialBlockLayers : 1;
+  this.initialBlockLayers = initialBlockLayers;
   this.blocks = {};
   this.initializeWorld();
 }
@@ -23,17 +24,19 @@ World.prototype.addBlock = function(row, col) {
   this.blocks[row][col] = block;
 }
 
-World.prototype.getBlock = function(row, col) {
+World.prototype.getBlockAt = function(row, col) {
     if (!this.blocks[row]) {
         return null;
     }
     else return this.blocks[row][col];
 }
 
+/* ================================================= BLOCK ================================================= */
 function Block(blockSize, coord) {
   this.coord = coord;
   this.blockSize = blockSize;
   this.generateEmptyMatrix();
+  this.generateMaze();
 }
 
 Block.prototype.generateEmptyMatrix = function() {
@@ -42,10 +45,42 @@ Block.prototype.generateEmptyMatrix = function() {
     for (row = 0; row < this.blockSize; row++) {
         this.cellsMatrix[row] = new Array(this.blockSize);
         for (col = 0; col < this.blockSize; col++) {
-            cell = new Cell(false, Math.random() > 0.5 ? Cell.TYPES.WALL : Cell.TYPES.CLEAR);
+            cell = new Cell(Cell.TYPES.WALL);
             this.cellsMatrix[row][col] = cell;
         }
     }
+}
+
+Block.prototype.generateMaze = function() {
+    matrix = this.cellsMatrix;
+
+    var digThroughCol = function (col, froRow, toRow) {
+
+    }
+
+    var digThroughRow = function(row, fromCol, toCol) {
+
+    }
+
+    var mazeRecursion = function(row_min, row_max, col_min, col_max) {
+
+        if (Math.random() > 0.5) {
+            var random_row = Math.randomIntBetween(row_min, row_max);
+            digThroughRow(random_row, col_min, col_max);
+            mazeRecursion(row_min, random_row - 1, col_min, col_max);
+            mazeRecursion(random_row + 1, row_max, col_min, col_max);
+        }
+        else {
+            var random_col = Math.randomIntBetween(col_min, col_max);
+            digThroughCol(random_col, row_min, row_max);
+            mazeRecursion(row_min, row_max, col_min, random_col - 1);
+            mazeRecursion(row_min, row_max, random_col + 1, col_max);
+        }
+
+
+    }
+
+    mazeRecursion(0, this.blockSize, 0, this.blockSize)
 }
 
 Block.prototype.toString = function() {
@@ -60,21 +95,23 @@ Block.prototype.toString = function() {
     return string;
 }
 
-function Cell(content, type) {
-  this.content = content != undefined ? content : false;
-  this.type = type != undefined ? type : Cell.WALL;
+/* ================================================= CELL ================================================= */
+function Cell(type, content) {
+  this.type = type;
+  this.content = content;
 }
 
 Cell.TYPES = {
-    WALL: 0,
-    CLEAR: 1
+    CLEAR: 0,
+    WALL: 1
+
 }
 
 Cell.prototype.toString = function() {
     return this.type;
 }
 
-
+/* ================================================= COORDS ================================================= */
 function BlockCoordinate(row, col) {
   this.row = row;
   this.col = col;
