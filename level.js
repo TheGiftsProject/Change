@@ -13,14 +13,7 @@ Level.prototype.parse = function(levelDesc) {
     for (var i = 0, length = rows.length; i < length ; ++i) {
         row = [];
         for (var j = 0, strLen = rows[i].length; j < strLen; ++j) {
-            switch (rows[i][j]) {
-                case '=':
-                    row.push(Cell.TYPES.WALL);
-                    break;
-                case ' ':
-                    row.push(Cell.TYPES.CLEAR);
-                    break;
-            }
+            row.push(rows[i][j]);
         }
 
         this.level.push(row);

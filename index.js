@@ -1,35 +1,8 @@
-var testLevel;
-testLevel = "============================\n"
-testLevel+= "=            ==            =\n"
-testLevel+= "= ========== == ===== ==== =\n"
-testLevel+= "= ========== == ===== ==== =\n"
-testLevel+= "= =   =   =       =        =\n"
-testLevel+= "=   =   =   === =   =      =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "=                          =\n"
-testLevel+= "=            ==            =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "=                          =\n"
-testLevel+= "=            ==            =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "=                          =\n"
-testLevel+= "=            ==            =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "=                          =\n"
-testLevel+= "=            ==            =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "= ==== ===== == ===== ==== =\n"
-testLevel+= "=                          =\n"
-testLevel+= "============================\n"
-
 function HoboMan(canvas) {
     this.canvas = canvas;
     this.InitCanvas();
-    this.level = new Level(testLevel);
+    var testBlockDesc = new Block(30, null).toString();
+    this.level = new Level(testBlockDesc);
 
     this.level.render(this.ctx);
     this.hobo = new Hobo(20, 20);

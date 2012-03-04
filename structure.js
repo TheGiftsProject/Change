@@ -1,6 +1,6 @@
 function World(blockSize, initialBlockLayers) {
   this.blockSize          = blockSize;
-  this.initialBlockLayers = initialBlockLayers ? initialBlockLayers : 1;
+  this.initialBlockLayers = initialBlockLayers != undefined ? initialBlockLayers : 1;
   this.blocks = {};
   this.initializeWorld();
 }
@@ -42,25 +42,38 @@ Block.prototype.generateEmptyMatrix = function() {
     for (row = 0; row < this.blockSize; row++) {
         this.cellsMatrix[row] = new Array(this.blockSize);
         for (col = 0; col < this.blockSize; col++) {
-            cell = new Cell();
+            cell = new Cell(false, Math.random() > 0.5 ? Cell.TYPES.WALL : Cell.TYPES.CLEAR);
             this.cellsMatrix[row][col] = cell;
         }
     }
 }
 
 Block.prototype.toString = function() {
-
+    var row, col;
+    var string = "";
+    for (row = 0; row < this.blockSize; row++) {
+        for (col = 0; col < this.blockSize; col++) {
+            string += this.cellsMatrix[row][col].toString();
+        }
+        string += '\n';
+    }
+    return string;
 }
 
 function Cell(content, type) {
-  this.content = content ? content : false;
-  this.type  = type ? type : Cell.WALL;
+  this.content = content != undefined ? content : false;
+  this.type = type != undefined ? type : Cell.WALL;
 }
 
 Cell.TYPES = {
     WALL: 0,
     CLEAR: 1
 }
+
+Cell.prototype.toString = function() {
+    return this.type;
+}
+
 
 function BlockCoordinate(row, col) {
   this.row = row;
