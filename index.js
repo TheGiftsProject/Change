@@ -2,7 +2,7 @@ function HoboMan(canvas) {
     this.canvas = canvas;
     this.InitCanvas();
     var world = new World(20, 1);
-    this.level = new Level(world, -1, -1);
+    this.level = new Level(world);
 
     this.level.render(this.ctx);
     this.hobo = new Hobo(20, 20);
@@ -33,7 +33,7 @@ HoboMan.prototype.update = function(dt) {
 HoboMan.prototype.render = function() {
     this.ctx.fillStyle = "#FFFFFF";
     this.ctx.fillRect(0, 0, this.ctxWidth, this.ctxHeight);
-    this.level.render(this.ctx);
+    this.level.render(this.ctx, this.canvas.width, this.canvas.height);
     this.hobo.render(this.ctx);
 };
 

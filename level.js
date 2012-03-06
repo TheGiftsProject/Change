@@ -1,7 +1,5 @@
-function Level(world, from_block_row, from_block_col) {
+function Level(world) {
     this.world = world;
-    this.current_block_row = from_block_row;
-    this.current_block_col = from_block_col;
 }
 
 Level.CELL_SIZE = {
@@ -9,13 +7,16 @@ Level.CELL_SIZE = {
     h: 16
 };
 
-Level.prototype.render = function(ctx) {
+Level.prototype.render = function(ctx, width, height) {
     ctx.strokeStyle = "#000000";
 
-    var block_row = this.current_block_row;
-    var block_col = this.current_block_col;
+    // TODO: should get these values according to Hobo location.
+    var block_row = -1;
+    var block_col = -1;
+
     var cell_width = Level.CELL_SIZE.w;
     var cell_height = Level.CELL_SIZE.h;
+
     for (var row = 0, rowLen = this.world.blockSize; row < rowLen; ++row) {
         for (var col = 0, colLen = this.world.blockSize; col < colLen; ++col) {
             ctx.strokeStyle = "#000000";
