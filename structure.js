@@ -111,10 +111,13 @@ Cell.TYPES = {
     WALL: 1
 }
 
-Cell.prototype.toString = function() {
-    return this.type;
+Cell.prototype.isWall = function() {
+    return this.type == Cell.TYPES.WALL;
 }
 
+Cell.prototype.isClear = function() {
+    return this.type == Cell.TYPES.CLEAR;
+}
 /* ================================================= COORDS ================================================= */
 function BlockCoordinate(row, col) {
   this.row = row;
