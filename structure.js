@@ -7,24 +7,24 @@ function World(blockSize, initialBlockLayers) {
 }
 
 World.prototype.initializeWorld = function() {
-  var row, col;
-  for (row = -this.initialBlockLayers; row <= this.initialBlockLayers; row++)
-    for (col = -this.initialBlockLayers; col <= this.initialBlockLayers; col++)
-      this.addBlock(row, col);
+  var block_row, block_col;
+  for (block_row = -this.initialBlockLayers; block_row <= this.initialBlockLayers; block_row++)
+    for (block_col = -this.initialBlockLayers; block_col <= this.initialBlockLayers; block_col++)
+      this.addBlock(block_row, block_col);
 }
 
-World.prototype.addBlock = function(row, col) {
-  var coord = new BlockCoordinate(row, col);
+World.prototype.addBlock = function(block_row, block_col) {
+  var coord = new BlockCoordinate(block_row, block_col);
   var block = new Block(this.blockSize, coord);
-  if (!this.blocks[row])
-    this.blocks[row] = {};
-  this.blocks[row][col] = block;
+  if (!this.blocks[block_row])
+    this.blocks[block_row] = {};
+  this.blocks[block_row][block_col] = block;
 }
 
-World.prototype.getBlockAt = function(row, col) {
-    if (!this.blocks[row]) 
+World.prototype.getBlockAt = function(block_row, block_col) {
+    if (!this.blocks[block_row])
         return null;
-    else return this.blocks[row][col];
+    else return this.blocks[block_row][block_col];
 }
 
 /* ================================================= BLOCK ================================================= */
@@ -48,8 +48,8 @@ Block.prototype.generateEmptyMatrix = function() {
 }
 
 Block.prototype.generateMaze = function() {
-    var SPACING = 4;
-    var DEAD_END_CHANCE = 0.1;
+    var SPACING = 3;
+    var DEAD_END_CHANCE = 0.75;
 
     matrix = this.cellsMatrix;
 
@@ -96,15 +96,8 @@ Block.prototype.generateMaze = function() {
     mazeRecursion(0, this.blockSize, 0, this.blockSize, true, -1)
 }
 
-Block.prototype.toString = function() {
-    var row, col;
-    var string = "";
-    for (row = 0; row < this.blockSize; row++) {
-        for (col = 0; col < this.blockSize; col++) 
-            string += this.cellsMatrix[row][col].toString();
-        string += '\n';
-    }
-    return string;
+Block.prototype.getCellAt = function(row, col) {
+    return this.cellsMatrix[row][col];
 }
 
 /* ================================================= CELL ================================================= */

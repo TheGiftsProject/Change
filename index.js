@@ -1,8 +1,8 @@
 function HoboMan(canvas) {
     this.canvas = canvas;
     this.InitCanvas();
-    var testBlockDesc = new Block(30, null).toString();
-    this.level = new Level(testBlockDesc);
+    var world = new World(20, 1);
+    this.level = new Level(world, -1, -1);
 
     this.level.render(this.ctx);
     this.hobo = new Hobo(20, 20);
