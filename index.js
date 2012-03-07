@@ -7,6 +7,7 @@ function HoboMan(canvas, fpsText) {
 
     this.level.render(this.ctx);
     this.hobo = new Hobo(160, 160);
+    this.coins = new Coins(world);
     this.keys = {
         left: 0,
         right: 0,
@@ -27,12 +28,13 @@ HoboMan.prototype.loop = function() {
     var newTime = new Date().getTime();
     this.frameInterval = newTime - this.currentTime;
     this.currentTime = newTime;
-    this.frameTimeAccumulator += this.frameInterval
+    this.frameTimeAccumulator += this.frameInterval;
 
     while (this.frameTimeAccumulator >= this.targetInterval) {
         this.update(this.targetInterval / 1000);
         this.frameTimeAccumulator -= this.targetInterval;
     }
+    this.coins.pickup(this.hobo);
     this.render();
 
     setTimeout(_.bind(this.loop, this), 0);
@@ -40,14 +42,18 @@ HoboMan.prototype.loop = function() {
 
 HoboMan.prototype.update = function(dt) {
     this.hobo.update(dt, this.keys);
+    this.coins.update(dt);
 };
 
 HoboMan.prototype.render = function() {
     this.ctx.fillStyle = "#FFFFFF";
     this.ctx.fillRect(0, 0, this.ctxWidth, this.ctxHeight);
     this.level.render(this.ctx, this.canvas.width, this.canvas.height);
+    this.coins.render(this.ctx);
     this.hobo.render(this.ctx);
     this.fpsText.innerHTML = (1000/this.frameInterval).toFixed(2) + " fps";
+    this.ctx.fillStyle = "black";
+    this.ctx.fillText("Score: " + this.hobo.points,300,12);
 };
 
 HoboMan.prototype.updateKeys = function(ev) {

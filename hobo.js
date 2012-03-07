@@ -4,6 +4,7 @@ function Hobo(x, y) {
     this.direction = '';
     this.nextDirection = '';
     this.images = new HoboAnimation();
+    this.points = 0;
 }
 
 Hobo.SIZE = {
@@ -65,3 +66,7 @@ Hobo.prototype.move = function(dt) {
 Hobo.prototype.render = function(ctx) {
     this.images.drawFrame(ctx, this);
 };
+Hobo.prototype.addPoints = function(points) {
+    this.points += points;
+};
+
