@@ -66,7 +66,8 @@ Coin.prototype.update = function(dt){
 
 Coin.prototype.render = function(context){
     if (this.collected == true) return;
-    var animation = Math.floor((this.accimulator*5) % 2);
+    var tmp = Math.floor((this.accimulator*5) % 4);
+    var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
     context.drawImage(this.sprite, animation * this.width, this.type * this.height, this.width, this.height, this.y*this.height,this.x*this.width, this.width, this.height);
 };
 
