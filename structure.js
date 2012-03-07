@@ -68,8 +68,8 @@ Block.prototype.generateEmptyMatrix = function() {
 }
 
 Block.prototype.generateMaze = function() {
-    var SPACING = 3;
-    var DEAD_END_CHANCE = 0.25;
+    var SPACING = 6
+    var DEAD_END_CHANCE = 0;
 
     matrix = this.cellsMatrix;
 
