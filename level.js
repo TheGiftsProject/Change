@@ -1,6 +1,6 @@
 function Level(world) {
     this.world = world;
-    this.renderer = new LevelSprite();
+    this.renderer = new LevelRenderer();
 }
 
 Level.CELL_SIZE = {
