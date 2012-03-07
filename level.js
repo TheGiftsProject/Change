@@ -3,8 +3,8 @@ function Level(world) {
 }
 
 Level.CELL_SIZE = {
-    WIDTH: 32,
-    HEIGHT: 32
+    WIDTH: 16,
+    HEIGHT: 16
 };
 
 Level.CELL_COLOR = {
@@ -27,7 +27,7 @@ Level.prototype.render = function(ctx, width, height) {
 
     for (var row = 0; row < rows; ++row) {
         for (var col = 0; col < cols; ++col) {
-            ctx.strokeStyle = "#000000";
+            ctx.strokeStyle = "#808080";
             ctx.fillStyle = (this.world.getCellAt(initial_row + row, initial_col + col).isWall() ? Level.CELL_COLOR.WALL : Level.CELL_COLOR.CLEAR);
             ctx.strokeRect(cell_width * col, cell_height * row, cell_width, cell_height);
             ctx.fillRect(cell_width * col, cell_height * row, cell_width, cell_height);

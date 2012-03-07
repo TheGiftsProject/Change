@@ -18,6 +18,7 @@ HoboAnimation.prototype.getDirectionOffset = function(hobo){
         case 'up': return 32;
         case 'right': return 16;
         case 'down': return 0;
+        default: return 0;
     }
 };
 
