@@ -2,7 +2,7 @@ function HoboMan(canvas, fpsText) {
     this.canvas = canvas;
     this.fpsText = fpsText;
     this.InitCanvas();
-    var world = new World(20, 1);
+    var world = new World(20, 9);
     this.level = new Level(world);
 
     this.level.render(this.ctx);
