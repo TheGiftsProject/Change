@@ -11,7 +11,7 @@ Level.CELL_SIZE = {
 Level.CELL_COLOR = {
     WALL:  "#000000",
     PATH: "#FFFFFF"
-}
+};
 
 Level.prototype.render = function(ctx, width, height) {
     ctx.strokeStyle = "#000000";

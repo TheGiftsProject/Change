@@ -1,11 +1,9 @@
 
-function TileRenderer(row, col, world, context, render_row, render_col, sprite){
+function TileRenderer(row, col, world, context, sprite){
     this.row = row;
     this.col = col;
     this.world = world;
     this.context = context;
-    this.render_row = render_row;
-    this.render_col = render_col;
     this.sprite = sprite;
     this.neighbours = [
         [world.getCellAt(row - 1, col -1), world.getCellAt(row - 1, col), world.getCellAt(row - 1, col +1)],
@@ -39,7 +37,9 @@ TileRenderer.prototype.blit = function(sprite, srcX, srcY){
     this.context.drawImage(sprite, srcX, srcY, 16, 16, this.render_col*16, this.render_row*16, 16, 16);
 };
 
-TileRenderer.prototype.render = function(){
+TileRenderer.prototype.render = function(render_row, render_col){
+    this.render_row = render_row;
+    this.render_col = render_col;
     if (this.isWall(0,0)) {
         this.renderWall();
     } else {
