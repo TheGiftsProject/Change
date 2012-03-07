@@ -3,24 +3,32 @@ function Level(world) {
 }
 
 Level.CELL_SIZE = {
-    w: 16,
-    h: 16
+    WIDTH: 32,
+    HEIGHT: 32
 };
+
+Level.CELL_COLOR = {
+    WALL:  "#000000",
+    CLEAR: "#FFFFFF"
+}
 
 Level.prototype.render = function(ctx, width, height) {
     ctx.strokeStyle = "#000000";
 
     // TODO: should get these values according to Hobo location.
-    var block_row = -1;
-    var block_col = -1;
+    var initial_row = -3;
+    var initial_col = -3;
 
-    var cell_width = Level.CELL_SIZE.w;
-    var cell_height = Level.CELL_SIZE.h;
+    var cell_width = Level.CELL_SIZE.WIDTH;
+    var cell_height = Level.CELL_SIZE.HEIGHT;
 
-    for (var row = 0, rowLen = this.world.blockSize; row < rowLen; ++row) {
-        for (var col = 0, colLen = this.world.blockSize; col < colLen; ++col) {
+    var rows = Math.ceil(width / cell_width);
+    var cols = Math.ceil(height / cell_height);
+
+    for (var row = 0; row < rows; ++row) {
+        for (var col = 0; col < cols; ++col) {
             ctx.strokeStyle = "#000000";
-            ctx.fillStyle = (this.world.getBlockAt(block_row, block_col).getCellAt(row, col).isWall() ? "#000000" : "#FFFFFF");
+            ctx.fillStyle = (this.world.getCellAt(initial_row + row, initial_col + col).isWall() ? Level.CELL_COLOR.WALL : Level.CELL_COLOR.CLEAR);
             ctx.strokeRect(cell_width * col, cell_height * row, cell_width, cell_height);
             ctx.fillRect(cell_width * col, cell_height * row, cell_width, cell_height);
         }

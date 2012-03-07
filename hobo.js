@@ -10,7 +10,7 @@ Hobo.SIZE = {
     h: 16
 };
 
-Hobo.SPEED = 32;
+Hobo.SPEED = 82;
 
 Hobo.prototype.update = function(dt, keys) {
     if (keys.left) {

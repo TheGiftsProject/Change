@@ -5,7 +5,7 @@ function HoboMan(canvas) {
     this.level = new Level(world);
 
     this.level.render(this.ctx);
-    this.hobo = new Hobo(20, 20);
+    this.hobo = new Hobo(0, 0);
     this.keys = {
         left: 0,
         right: 0,

@@ -21,23 +21,27 @@ World.prototype.addBlock = function(block_row, block_col) {
   this.blocks[block_row][block_col] = block;
 }
 
-World.prototype.getBlockAt = function(block_row, block_col) {
-    if (!this.blocks[block_row])
-        return null;
-    else return this.blocks[block_row][block_col];
+World.prototype.getCellAt = function(global_row, global_col) {
+    var block_row = Math.floor(global_row / this.blockSize);
+    var block_col = Math.floor(global_col / this.blockSize);
+    var cell_row  = global_row.mod(this.blockSize);
+    var cell_col  = global_col.mod(this.blockSize);
+    if (!this.blocks[block_row] || !this.blocks[block_row][block_col])
+        return new Cell(Cell.TYPES.WALL, null);
+    else return this.blocks[block_row][block_col].cellsMatrix[cell_row][cell_col];
 }
 
 /* ================================================= BLOCK ================================================= */
 function Block(blockSize, coord) {
   this.coord = coord;
   this.blockSize = blockSize;
+  this.cellsMatrix = new Array(blockSize)
   this.generateEmptyMatrix();
   this.generateMaze();
 }
 
 Block.prototype.generateEmptyMatrix = function() {
     var row, col;
-    this.cellsMatrix = new Array(this.blockSize);
     for (row = 0; row < this.blockSize; row++) {
         this.cellsMatrix[row] = new Array(this.blockSize);
         for (col = 0; col < this.blockSize; col++) {
@@ -48,8 +52,8 @@ Block.prototype.generateEmptyMatrix = function() {
 }
 
 Block.prototype.generateMaze = function() {
-    var SPACING = 3;
-    var DEAD_END_CHANCE = 0.75;
+    var SPACING = 5;
+    var DEAD_END_CHANCE = 0.1;
 
     matrix = this.cellsMatrix;
 
