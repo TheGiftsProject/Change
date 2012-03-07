@@ -11,15 +11,30 @@ World.prototype.initializeWorld = function() {
   for (block_row = -this.initialBlockLayers; block_row <= this.initialBlockLayers; block_row++)
     for (block_col = -this.initialBlockLayers; block_col <= this.initialBlockLayers; block_col++)
       this.addBlock(block_row, block_col);
-}
+};
 
 World.prototype.addBlock = function(block_row, block_col) {
   var coord = new BlockCoordinate(block_row, block_col);
-  var block = new Block(this.blockSize, coord);
+  var neighnours = {
+      top: this.getBlockAt(block_row - 1, block_col),
+      right: this.getBlockAt(block_row, block_col +1),
+      bottom: this.getBlockAt(block_row + 1, block_col),
+      left: this.getBlockAt(block_row, block_col)
+  };
+  var block = new Block(this.blockSize, coord, neighnours);
+
   if (!this.blocks[block_row])
     this.blocks[block_row] = {};
   this.blocks[block_row][block_col] = block;
-}
+  block.connect();
+};
+
+World.prototype.getBlockAt= function(block_row, block_col) {
+    if (!this.blocks[block_row]) {
+        return null;
+    }
+    return this.blocks[block_row][block_col];
+};
 
 World.prototype.getCellAt = function(global_row, global_col) {
     var block_row = Math.floor(global_row / this.blockSize);
@@ -28,12 +43,13 @@ World.prototype.getCellAt = function(global_row, global_col) {
     var cell_col  = global_col.mod(this.blockSize);
     if (!this.blocks[block_row] || !this.blocks[block_row][block_col])
         return new Cell(Cell.TYPES.WALL, null);
-    else return this.blocks[block_row][block_col].cellsMatrix[cell_row][cell_col];
-}
+    else return this.blocks[block_row][block_col].getCellAt(cell_row, cell_col);
+};
 
 /* ================================================= BLOCK ================================================= */
-function Block(blockSize, coord) {
+function Block(blockSize, coord, neighbours) {
   this.coord = coord;
+  this.neighbours = neighbours;
   this.blockSize = blockSize;
   this.cellsMatrix = new Array(blockSize)
   this.generateEmptyMatrix();
@@ -52,8 +68,8 @@ Block.prototype.generateEmptyMatrix = function() {
 }
 
 Block.prototype.generateMaze = function() {
-    var SPACING = 5;
-    var DEAD_END_CHANCE = 0.1;
+    var SPACING = 3;
+    var DEAD_END_CHANCE = 0.25;
 
     matrix = this.cellsMatrix;
 
@@ -61,23 +77,23 @@ Block.prototype.generateMaze = function() {
       if (Math.random() < DEAD_END_CHANCE)
         return Math.randomIntBetween(from+1, to); 
       return -1;
-    }
+    };
 
     var digThroughCol = function (col, from_row, to_row) {
         random_dead_end = randomDeadEndIndex(from_row, to_row);
         for (var row = from_row; row < to_row; row++) 
           if (row != random_dead_end)
-              this.matrix[row][col].type = Cell.TYPES.CLEAR;
+              this.matrix[row][col].type = Cell.TYPES.PATH;
         return random_dead_end
-    }
+    };
 
     var digThroughRow = function(row, from_col, to_col) {
         random_dead_end = randomDeadEndIndex(from_col, to_col);
         for (var col = from_col; col < to_col; col++)
           if (col != random_dead_end)
-            this.matrix[row][col].type = Cell.TYPES.CLEAR;
+            this.matrix[row][col].type = Cell.TYPES.PATH;
         return random_dead_end
-    }
+    };
 
     var mazeRecursion = function(row_min, row_max, col_min, col_max, splitRow, exclude) {
         if (row_max - row_min < SPACING || col_max - col_min < SPACING) return
@@ -96,13 +112,98 @@ Block.prototype.generateMaze = function() {
             mazeRecursion(row_min, row_max, col_min, random_col, true, next_exclude);
             mazeRecursion(row_min, row_max, random_col + 1, col_max, true, next_exclude);
         }
-    }
+    };
     mazeRecursion(0, this.blockSize, 0, this.blockSize, true, -1)
-}
+};
+
+Block.prototype.connect = function() {
+    for (var side in this.neighbours) {
+        if (this.getNeighbour(side)) {
+            switch (side) {
+                case "top": this.connectToTop(this.getNeighbour(side)); break;
+                case "bottom": this.connectToBottom(this.getNeighbour(side)); break;
+                case "left": this.connectToLeft(this.getNeighbour(side)); break;
+                case "right": this.connectToRight(this.getNeighbour(side)); break;
+            }
+        }
+    }
+};
+
+Block.prototype.connectToTop = function(neighbour) {
+    me = this;
+    var isCellConnectedFromTop = function(row, col) {
+        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row+1, col).isPath()
+    };
+
+    for (col = 1; col < this.blockSize-1; col++) {
+        if (neighbour.getCellAt(this.blockSize-1, col).isPath()) {
+            var climbing_row = 0;
+            do {
+                this.getCellAt(climbing_row, col).setAsPath();
+                climbing_row++;
+            } while (!isCellConnectedFromTop(climbing_row, col))
+        }
+    }
+};
+
+Block.prototype.connectToBottom = function(neighbour) {
+    me = this;
+    var isCellConnectedFromBottom = function(row, col) {
+        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row-1, col).isPath()
+    };
+
+    for (col = 1; col < this.blockSize-1; col++) {
+        if (neighbour.getCellAt(0, col).isPath()) {
+            var climbing_row = this.blockSize-1;
+            do {
+                this.getCellAt(climbing_row, col).setAsPath();
+                climbing_row--;
+            } while (!isCellConnectedFromBottom(climbing_row, col))
+        }
+    }
+};
+
+Block.prototype.connectToLeft = function(neighbour) {
+    me = this;
+    var isCellConnectedFromLeft = function(row, col) {
+        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath()
+    };
+
+    for (row = 1; row < this.blockSize-1; row++) {
+        if (neighbour.getCellAt(row, this.blockSize-1).isPath()) {
+            var climbing_col = 0;
+            do {
+                this.getCellAt(row, climbing_col).setAsPath();
+                climbing_col++;
+            } while (!isCellConnectedFromLeft(row, climbing_col))
+        }
+    }
+};
+
+Block.prototype.connectToRight = function(neighbour) {
+    me = this;
+    var isCellConnectedFromRight = function(row, col) {
+        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath()
+    };
+
+    for (row = 1; row < this.blockSize-1; row++) {
+        if (neighbour.getCellAt(row, 0).isPath()) {
+            var climbing_col = this.blockSize-1;
+            do {
+                this.getCellAt(row, climbing_col).setAsPath();
+                climbing_col--;
+            } while (!isCellConnectedFromRight(row, climbing_col))
+        }
+    }
+};
+
+Block.prototype.getNeighbour = function(side) {
+    return this.neighbours[side];
+};
 
 Block.prototype.getCellAt = function(row, col) {
     return this.cellsMatrix[row][col];
-}
+};
 
 /* ================================================= CELL ================================================= */
 function Cell(type, content) {
@@ -111,17 +212,21 @@ function Cell(type, content) {
 }
 
 Cell.TYPES = {
-    CLEAR: 0,
+    PATH: 0,
     WALL: 1
-}
+};
+
+Cell.prototype.setAsPath = function() {
+    this.type = Cell.TYPES.PATH;
+};
 
 Cell.prototype.isWall = function() {
     return this.type == Cell.TYPES.WALL;
-}
+};
 
-Cell.prototype.isClear = function() {
-    return this.type == Cell.TYPES.CLEAR;
-}
+Cell.prototype.isPath = function() {
+    return this.type == Cell.TYPES.PATH;
+};
 /* ================================================= COORDS ================================================= */
 function BlockCoordinate(row, col) {
   this.row = row;
