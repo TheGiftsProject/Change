@@ -6,8 +6,8 @@ function HoboMan(canvas, fpsText) {
     this.level = new Level(this.world);
 
     this.level.render(this.ctx);
-    this.hobo = new Hobo(160, 160,world);
-    this.coins = new Coins(world);
+    this.hobo = new Hobo(160, 160, this.world);
+    this.coins = new Coins(this.world);
     this.keys = {
         left: 0,
         right: 0,
