@@ -4,8 +4,8 @@ function Level(world) {
 }
 
 Level.CELL_SIZE = {
-    WIDTH: 20,
-    HEIGHT: 20
+    WIDTH: 16,
+    HEIGHT: 16
 };
 
 Level.CELL_COLOR = {
@@ -17,8 +17,8 @@ Level.prototype.render = function(ctx, width, height) {
     ctx.strokeStyle = "#000000";
 
     // TODO: should get these values according to Hobo location.
-    var initial_row = -10;
-    var initial_col = -10;
+    var initial_row = -20;
+    var initial_col = -20;
 
     var cell_width = Level.CELL_SIZE.WIDTH;
     var cell_height = Level.CELL_SIZE.HEIGHT;
