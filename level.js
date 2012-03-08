@@ -1,5 +1,6 @@
 function Level(world) {
     this.world = world;
+    this.renderer = new LevelRenderer();
 }
 
 Level.CELL_SIZE = {
@@ -10,7 +11,7 @@ Level.CELL_SIZE = {
 Level.CELL_COLOR = {
     WALL:  "#000000",
     PATH: "#FFFFFF"
-}
+};
 
 Level.prototype.render = function(ctx, width, height) {
     ctx.strokeStyle = "#000000";
@@ -27,10 +28,7 @@ Level.prototype.render = function(ctx, width, height) {
 
     for (var row = 0; row < rows; ++row) {
         for (var col = 0; col < cols; ++col) {
-            ctx.strokeStyle = "#808080";
-            ctx.fillStyle = (this.world.getCellAt(initial_row + row, initial_col + col).isWall() ? Level.CELL_COLOR.WALL : Level.CELL_COLOR.PATH);
-            ctx.strokeRect(cell_width * col, cell_height * row, cell_width, cell_height);
-            ctx.fillRect(cell_width * col, cell_height * row, cell_width, cell_height);
+            this.renderer.renderTile(initial_row + row, initial_col + col, this.world, ctx, row, col);    
         }
     }
 };
