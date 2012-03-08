@@ -40,8 +40,8 @@ World.prototype.generateNewCells = function(from_row, to_row, from_col, to_col) 
 };
 
 World.prototype.generateMaze = function(from_row, to_row, from_col, to_col) {
-    var SPACING = 7;
-    var DEAD_END_CHANCE = 0;
+    var SPACING =4;
+    var DEAD_END_CHANCE = 0.2;
 
     that = this;
 
@@ -85,6 +85,7 @@ World.prototype.generateMaze = function(from_row, to_row, from_col, to_col) {
             mazeRecursion(row_min, row_max, random_col + 1, col_max, true, next_exclude);
         }
     };
+
     mazeRecursion(from_row, to_row, from_col, to_col, true, -1)
 };
 

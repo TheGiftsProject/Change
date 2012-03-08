@@ -11,8 +11,8 @@ function Coins(world) {
 Coins.prototype.place = function(world){
     var rand;
     // values need to be changed according to world size - coins should be generated with the block.
-    for (var i = 0; i < 300 ; i++){
-        for (var j = 0; j < 300 ; j++){
+    for (var i = 0; i < 100 ; i++){
+        for (var j = 0; j < 100 ; j++){
             if (world.getCellAt(i-20,j-20).isPath()){
                 rand = Math.floor(Math.random()*10);
                 if (rand >= 7) continue;
