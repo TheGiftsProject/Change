@@ -14,14 +14,13 @@ World.prototype.initializeWorld = function() {
 };
 
 World.prototype.addBlock = function(block_row, block_col) {
-  var coord = new BlockCoordinate(block_row, block_col);
   var neighnours = {
       top: this.getBlockAt(block_row - 1, block_col),
       right: this.getBlockAt(block_row, block_col +1),
       bottom: this.getBlockAt(block_row + 1, block_col),
       left: this.getBlockAt(block_row, block_col - 1)
   };
-  var block = new Block(this.blockSize, coord, neighnours);
+  var block = new Block(this.blockSize, neighnours);
 
   if (!this.blocks[block_row])
     this.blocks[block_row] = {};
@@ -48,7 +47,6 @@ World.prototype.getCellAt = function(global_row, global_col) {
 
 /* ================================================= BLOCK ================================================= */
 function Block(blockSize, coord, neighbours) {
-  this.coord = coord;
   this.neighbours = neighbours;
   this.blockSize = blockSize;
   this.cellsMatrix = new Array(blockSize)
@@ -253,8 +251,3 @@ Cell.prototype.isWall = function() {
 Cell.prototype.isPath = function() {
     return this.type == Cell.TYPES.PATH;
 };
-/* ================================================= COORDS ================================================= */
-function BlockCoordinate(row, col) {
-  this.row = row;
-  this.col = col;
-}
