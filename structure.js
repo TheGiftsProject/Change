@@ -13,31 +13,25 @@ World.prototype.initializeWorld = function() {
       this.addBlockForCell(block_row * this.blockSize, block_col * this.blockSize);
 };
 
-World.prototype.addBlock = function(block_row, block_col) {
-  var block = new Block(this.blockSize);
-  if (!this.matrix[block_row])
-    this.matrix[block_row] = {};
-  this.matrix[block_row][block_col] = block;
+World.prototype.getCellAt = function(row, col) {
+    if (!this.matrix[row] || !this.matrix[row][col])
+        this.addBlockForCoords(row, col);
+    else return this.getCellAt(row, col);
 };
 
-World.prototype.getCellAt = function(global_row, global_col) {
-    if (!this.matrix[global_row] || !this.matrix[global_row][global_col])
-        this.addBlockForCell(global_row, global_col);
-    else return this.getCellAt(global_row, global_col);
-};
-
-World.prototype.addBlockForCell = function(global_row, global_col) {
-
+World.prototype.addBlockForCoords = function(row, col) {
+    var from_row = Math.floor(row / this.blockSize);
+    var from_col = Math.floor(col / this.blockSize);
+    var to_row = from_row + this.blockSize;
+    var to_col = from_col + this.blockSize;
+    this.generateNewCells(from_row, to_row, from_col, to_col)
 }
 
-/* ================================================= BLOCK ================================================= */
-Block.prototype.generateEmptyMatrix = function() {
-    var row, col;
-    for (row = 0; row < this.blockSize; row++) {
-        this.cellsMatrix[row] = new Array(this.blockSize);
-        for (col = 0; col < this.blockSize; col++) {
+World.prototype.generateNewCells = function(from_row, to_row, from_col, to_col) {
+    for (row = from_row; row < to_row; row++) {
+        for (col = from_col; col < to_col; col++) {
             cell = new Cell(Cell.TYPES.WALL);
-            this.cellsMatrix[row][col] = cell;
+            this.matrix[row][col] = cell;
         }
     }
 }
