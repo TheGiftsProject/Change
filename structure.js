@@ -19,7 +19,7 @@ World.prototype.addBlock = function(block_row, block_col) {
       top: this.getBlockAt(block_row - 1, block_col),
       right: this.getBlockAt(block_row, block_col +1),
       bottom: this.getBlockAt(block_row + 1, block_col),
-      left: this.getBlockAt(block_row, block_col)
+      left: this.getBlockAt(block_row, block_col - 1)
   };
   var block = new Block(this.blockSize, coord, neighnours);
 
@@ -54,6 +54,20 @@ function Block(blockSize, coord, neighbours) {
   this.cellsMatrix = new Array(blockSize)
   this.generateEmptyMatrix();
   this.generateMaze();
+  this.setNeighboursForOthers();
+}
+
+Block.prototype.setNeighboursForOthers = function() {
+    for (var side in this.neighbours) {
+        if (this.getNeighbour(side)) {
+            switch (side) {
+                case "top": this.getNeighbour(side).neighbours["bottom"] = this; break;
+                case "bottom": this.getNeighbour(side).neighbours["top"] = this; break;
+                case "left": this.getNeighbour(side).neighbours["right"] = this; break;
+                case "right": this.getNeighbour(side).neighbours["left"] = this; break;
+            }
+        }
+    }
 }
 
 Block.prototype.generateEmptyMatrix = function() {
@@ -68,7 +82,7 @@ Block.prototype.generateEmptyMatrix = function() {
 }
 
 Block.prototype.generateMaze = function() {
-    var SPACING = 6
+    var SPACING = 7;
     var DEAD_END_CHANCE = 0;
 
     matrix = this.cellsMatrix;
@@ -120,10 +134,22 @@ Block.prototype.connect = function() {
     for (var side in this.neighbours) {
         if (this.getNeighbour(side)) {
             switch (side) {
-                case "top": this.connectToTop(this.getNeighbour(side)); break;
-                case "bottom": this.connectToBottom(this.getNeighbour(side)); break;
-                case "left": this.connectToLeft(this.getNeighbour(side)); break;
-                case "right": this.connectToRight(this.getNeighbour(side)); break;
+                case "top":
+                    this.connectToTop(this.getNeighbour(side));
+                    this.getNeighbour(side).connectToBottom(this);
+                    break;
+                case "bottom":
+                    this.connectToBottom(this.getNeighbour(side));
+                    this.getNeighbour(side).connectToTop(this);
+                    break;
+                case "left":
+                    this.connectToLeft(this.getNeighbour(side));
+                    this.getNeighbour(side).connectToRight(this);
+                    break;
+                case "right":
+                    this.connectToRight(this.getNeighbour(side));
+                    this.getNeighbour(side).connectToLeft(this);
+                    break;
             }
         }
     }
@@ -132,7 +158,7 @@ Block.prototype.connect = function() {
 Block.prototype.connectToTop = function(neighbour) {
     me = this;
     var isCellConnectedFromTop = function(row, col) {
-        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row+1, col).isPath()
+        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row+1, col).isPath();
     };
 
     for (col = 1; col < this.blockSize-1; col++) {
@@ -141,7 +167,7 @@ Block.prototype.connectToTop = function(neighbour) {
             do {
                 this.getCellAt(climbing_row, col).setAsPath();
                 climbing_row++;
-            } while (!isCellConnectedFromTop(climbing_row, col))
+            } while (!isCellConnectedFromTop(climbing_row, col) && climbing_row < this.blockSize-2)
         }
     }
 };
@@ -149,7 +175,7 @@ Block.prototype.connectToTop = function(neighbour) {
 Block.prototype.connectToBottom = function(neighbour) {
     me = this;
     var isCellConnectedFromBottom = function(row, col) {
-        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row-1, col).isPath()
+        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row-1, col).isPath();
     };
 
     for (col = 1; col < this.blockSize-1; col++) {
@@ -158,7 +184,7 @@ Block.prototype.connectToBottom = function(neighbour) {
             do {
                 this.getCellAt(climbing_row, col).setAsPath();
                 climbing_row--;
-            } while (!isCellConnectedFromBottom(climbing_row, col))
+            } while (!isCellConnectedFromBottom(climbing_row, col) && climbing_row > 1)
         }
     }
 };
@@ -166,7 +192,7 @@ Block.prototype.connectToBottom = function(neighbour) {
 Block.prototype.connectToLeft = function(neighbour) {
     me = this;
     var isCellConnectedFromLeft = function(row, col) {
-        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath()
+        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath();
     };
 
     for (row = 1; row < this.blockSize-1; row++) {
@@ -175,7 +201,7 @@ Block.prototype.connectToLeft = function(neighbour) {
             do {
                 this.getCellAt(row, climbing_col).setAsPath();
                 climbing_col++;
-            } while (!isCellConnectedFromLeft(row, climbing_col))
+            } while (!isCellConnectedFromLeft(row, climbing_col) && climbing_col < this.blockSize-2)
         }
     }
 };
@@ -183,7 +209,7 @@ Block.prototype.connectToLeft = function(neighbour) {
 Block.prototype.connectToRight = function(neighbour) {
     me = this;
     var isCellConnectedFromRight = function(row, col) {
-        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath()
+        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath();
     };
 
     for (row = 1; row < this.blockSize-1; row++) {
@@ -192,7 +218,7 @@ Block.prototype.connectToRight = function(neighbour) {
             do {
                 this.getCellAt(row, climbing_col).setAsPath();
                 climbing_col--;
-            } while (!isCellConnectedFromRight(row, climbing_col))
+            } while (!isCellConnectedFromRight(row, climbing_col) && climbing_col > 1)
         }
     }
 };

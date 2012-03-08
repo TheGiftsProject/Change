@@ -1,11 +1,12 @@
-function HoboMan(canvas) {
+function HoboMan(canvas, fpsText) {
     this.canvas = canvas;
+    this.fpsText = fpsText;
     this.InitCanvas();
-    var world = new World(10, 1);
-    this.level = new Level(world);
+    this.world = new World(10, 1);
+    this.level = new Level(this.world);
 
     this.level.render(this.ctx);
-    this.hobo = new Hobo(0, 0);
+    this.hobo = new Hobo(160, 160);
     this.keys = {
         left: 0,
         right: 0,
@@ -16,14 +17,25 @@ function HoboMan(canvas) {
     document.body.addEventListener('keydown', _.bind(this.updateKeys, this));
     document.body.addEventListener('keyup', _.bind(this.updateKeys, this));
 
+    this.targetInterval = 33;
+    this.currentTime = new Date().getTime();
+    this.frameTimeAccumulator = 0;
     this.loop();
 }
 
 HoboMan.prototype.loop = function() {
-    this.update(0.016);
+    var newTime = new Date().getTime();
+    this.frameInterval = newTime - this.currentTime;
+    this.currentTime = newTime;
+    this.frameTimeAccumulator += this.frameInterval
+
+    while (this.frameTimeAccumulator >= this.targetInterval) {
+        this.update(this.targetInterval / 1000);
+        this.frameTimeAccumulator -= this.targetInterval;
+    }
     this.render();
 
-    setTimeout(_.bind(this.loop, this), 16);
+    setTimeout(_.bind(this.loop, this), 0);
 };
 
 HoboMan.prototype.update = function(dt) {
@@ -35,6 +47,7 @@ HoboMan.prototype.render = function() {
     this.ctx.fillRect(0, 0, this.ctxWidth, this.ctxHeight);
     this.level.render(this.ctx, this.canvas.width, this.canvas.height);
     this.hobo.render(this.ctx);
+    this.fpsText.innerHTML = (1000/this.frameInterval).toFixed(2) + " fps";
 };
 
 HoboMan.prototype.updateKeys = function(ev) {
@@ -65,4 +78,4 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctxHeight = this.canvas.height;
 };
 
-hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);
+hoboman = new HoboMan(document.getElementsByTagName('canvas')[0], document.getElementsByTagName('span')[0]);
