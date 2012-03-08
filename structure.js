@@ -81,11 +81,15 @@ Block.prototype.generateEmptyMatrix = function() {
     }
 }
 
+Block.prototype.getCellAt = function(row, col) {
+    return this.cellsMatrix[row][col];
+};
+
 Block.prototype.generateMaze = function() {
     var SPACING = 7;
     var DEAD_END_CHANCE = 0;
 
-    matrix = this.cellsMatrix;
+    that = this;
 
     var randomDeadEndIndex = function(from, to) {
       if (Math.random() < DEAD_END_CHANCE)
@@ -97,7 +101,7 @@ Block.prototype.generateMaze = function() {
         random_dead_end = randomDeadEndIndex(from_row, to_row);
         for (var row = from_row; row < to_row; row++) 
           if (row != random_dead_end)
-              this.matrix[row][col].type = Cell.TYPES.PATH;
+            that.getCellAt(row, col).setAsPath();
         return random_dead_end
     };
 
@@ -105,7 +109,7 @@ Block.prototype.generateMaze = function() {
         random_dead_end = randomDeadEndIndex(from_col, to_col);
         for (var col = from_col; col < to_col; col++)
           if (col != random_dead_end)
-            this.matrix[row][col].type = Cell.TYPES.PATH;
+            that.getCellAt(row, col).setAsPath();
         return random_dead_end
     };
 
@@ -225,10 +229,6 @@ Block.prototype.connectToRight = function(neighbour) {
 
 Block.prototype.getNeighbour = function(side) {
     return this.neighbours[side];
-};
-
-Block.prototype.getCellAt = function(row, col) {
-    return this.cellsMatrix[row][col];
 };
 
 /* ================================================= CELL ================================================= */
