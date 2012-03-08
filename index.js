@@ -2,12 +2,12 @@ function HoboMan(canvas, fpsText) {
     this.canvas = canvas;
     this.fpsText = fpsText;
     this.InitCanvas();
-    var world = new World(20, 9);
-    this.level = new Level(world);
+    this.world = new World(20, 1);
+    this.level = new Level(this.world);
 
     this.level.render(this.ctx);
-    this.hobo = new Hobo(160, 160,world);
-    this.coins = new Coins(world);
+    this.hobo = new Hobo(160, 160, this.world);
+    this.coins = new Coins(this.world);
     this.keys = {
         left: 0,
         right: 0,

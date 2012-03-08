@@ -2,76 +2,48 @@
 function World(blockSize, initialBlockLayers) {
   this.blockSize          = blockSize;
   this.initialBlockLayers = initialBlockLayers;
-  this.blocks = {};
+  this.matrix = {};
   this.initializeWorld();
-}
+};
 
 World.prototype.initializeWorld = function() {
   var block_row, block_col;
   for (block_row = -this.initialBlockLayers; block_row <= this.initialBlockLayers; block_row++)
     for (block_col = -this.initialBlockLayers; block_col <= this.initialBlockLayers; block_col++)
-      this.addBlock(block_row, block_col);
+      this.addBlockForCoords(block_row * this.blockSize, block_col * this.blockSize);
 };
 
-World.prototype.addBlock = function(block_row, block_col) {
-  var coord = new BlockCoordinate(block_row, block_col);
-  var neighnours = {
-      top: this.getBlockAt(block_row - 1, block_col),
-      right: this.getBlockAt(block_row, block_col +1),
-      bottom: this.getBlockAt(block_row + 1, block_col),
-      left: this.getBlockAt(block_row, block_col)
-  };
-  var block = new Block(this.blockSize, coord, neighnours);
-
-  if (!this.blocks[block_row])
-    this.blocks[block_row] = {};
-  this.blocks[block_row][block_col] = block;
-  block.connect();
+World.prototype.getCellAt = function(row, col) {
+    if (!this.matrix[row] || !this.matrix[row][col])
+        this.addBlockForCoords(row, col);
+    else return this.matrix[row][col];
 };
 
-World.prototype.getBlockAt= function(block_row, block_col) {
-    if (!this.blocks[block_row]) {
-        return null;
-    }
-    return this.blocks[block_row][block_col];
-};
-
-World.prototype.getCellAt = function(global_row, global_col) {
-    var block_row = Math.floor(global_row / this.blockSize);
-    var block_col = Math.floor(global_col / this.blockSize);
-    var cell_row  = global_row.mod(this.blockSize);
-    var cell_col  = global_col.mod(this.blockSize);
-    if (!this.blocks[block_row] || !this.blocks[block_row][block_col])
-        return new Cell(Cell.TYPES.WALL, null);
-    else return this.blocks[block_row][block_col].getCellAt(cell_row, cell_col);
-};
-
-/* ================================================= BLOCK ================================================= */
-function Block(blockSize, coord, neighbours) {
-  this.coord = coord;
-  this.neighbours = neighbours;
-  this.blockSize = blockSize;
-  this.cellsMatrix = new Array(blockSize)
-  this.generateEmptyMatrix();
-  this.generateMaze();
+World.prototype.addBlockForCoords = function(row, col) {
+    var from_row = Math.floor(row / this.blockSize) * this.blockSize;
+    var from_col = Math.floor(col / this.blockSize) * this.blockSize;
+    var to_row = from_row + this.blockSize;
+    var to_col = from_col + this.blockSize;
+    this.generateNewCells(from_row, to_row, from_col, to_col);
+    this.generateMaze(from_row, to_row, from_col, to_col);
 }
 
-Block.prototype.generateEmptyMatrix = function() {
-    var row, col;
-    for (row = 0; row < this.blockSize; row++) {
-        this.cellsMatrix[row] = new Array(this.blockSize);
-        for (col = 0; col < this.blockSize; col++) {
+World.prototype.generateNewCells = function(from_row, to_row, from_col, to_col) {
+    for (row = from_row; row < to_row; row++) {
+        for (col = from_col; col < to_col; col++) {
             cell = new Cell(Cell.TYPES.WALL);
-            this.cellsMatrix[row][col] = cell;
+            if (!this.matrix[row])
+                this.matrix[row] = {};
+            this.matrix[row][col] = cell;
         }
     }
-}
+};
 
-Block.prototype.generateMaze = function() {
-    var SPACING = 3;
-    var DEAD_END_CHANCE = 0.25;
+World.prototype.generateMaze = function(from_row, to_row, from_col, to_col) {
+    var SPACING = 7;
+    var DEAD_END_CHANCE = 0;
 
-    matrix = this.cellsMatrix;
+    that = this;
 
     var randomDeadEndIndex = function(from, to) {
       if (Math.random() < DEAD_END_CHANCE)
@@ -83,7 +55,7 @@ Block.prototype.generateMaze = function() {
         random_dead_end = randomDeadEndIndex(from_row, to_row);
         for (var row = from_row; row < to_row; row++) 
           if (row != random_dead_end)
-              this.matrix[row][col].type = Cell.TYPES.PATH;
+            that.getCellAt(row, col).setAsPath();
         return random_dead_end
     };
 
@@ -91,16 +63,16 @@ Block.prototype.generateMaze = function() {
         random_dead_end = randomDeadEndIndex(from_col, to_col);
         for (var col = from_col; col < to_col; col++)
           if (col != random_dead_end)
-            this.matrix[row][col].type = Cell.TYPES.PATH;
+            that.getCellAt(row, col).setAsPath();
         return random_dead_end
     };
 
-    var mazeRecursion = function(row_min, row_max, col_min, col_max, splitRow, exclude) {
+    var mazeRecursion = function(row_min, row_max, col_min, col_max, split_row, exclude) {
         if (row_max - row_min < SPACING || col_max - col_min < SPACING) return
         else if (row_min == row_max || col_min == col_max) return
 
         var next_exclude;
-        if (splitRow) {
+        if (split_row) {
             var random_row = Math.randomIntWithExclusion(row_min+1, row_max-1, exclude);
             next_exclude = digThroughRow(random_row, col_min, col_max);
             mazeRecursion(row_min, random_row, col_min, col_max, false, next_exclude);
@@ -113,102 +85,12 @@ Block.prototype.generateMaze = function() {
             mazeRecursion(row_min, row_max, random_col + 1, col_max, true, next_exclude);
         }
     };
-    mazeRecursion(0, this.blockSize, 0, this.blockSize, true, -1)
-};
-
-Block.prototype.connect = function() {
-    for (var side in this.neighbours) {
-        if (this.getNeighbour(side)) {
-            switch (side) {
-                case "top": this.connectToTop(this.getNeighbour(side)); break;
-                case "bottom": this.connectToBottom(this.getNeighbour(side)); break;
-                case "left": this.connectToLeft(this.getNeighbour(side)); break;
-                case "right": this.connectToRight(this.getNeighbour(side)); break;
-            }
-        }
-    }
-};
-
-Block.prototype.connectToTop = function(neighbour) {
-    me = this;
-    var isCellConnectedFromTop = function(row, col) {
-        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row+1, col).isPath()
-    };
-
-    for (col = 1; col < this.blockSize-1; col++) {
-        if (neighbour.getCellAt(this.blockSize-1, col).isPath()) {
-            var climbing_row = 0;
-            do {
-                this.getCellAt(climbing_row, col).setAsPath();
-                climbing_row++;
-            } while (!isCellConnectedFromTop(climbing_row, col))
-        }
-    }
-};
-
-Block.prototype.connectToBottom = function(neighbour) {
-    me = this;
-    var isCellConnectedFromBottom = function(row, col) {
-        return me.getCellAt(row, col-1).isPath() || me.getCellAt(row, col+1).isPath() || me.getCellAt(row-1, col).isPath()
-    };
-
-    for (col = 1; col < this.blockSize-1; col++) {
-        if (neighbour.getCellAt(0, col).isPath()) {
-            var climbing_row = this.blockSize-1;
-            do {
-                this.getCellAt(climbing_row, col).setAsPath();
-                climbing_row--;
-            } while (!isCellConnectedFromBottom(climbing_row, col))
-        }
-    }
-};
-
-Block.prototype.connectToLeft = function(neighbour) {
-    me = this;
-    var isCellConnectedFromLeft = function(row, col) {
-        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath()
-    };
-
-    for (row = 1; row < this.blockSize-1; row++) {
-        if (neighbour.getCellAt(row, this.blockSize-1).isPath()) {
-            var climbing_col = 0;
-            do {
-                this.getCellAt(row, climbing_col).setAsPath();
-                climbing_col++;
-            } while (!isCellConnectedFromLeft(row, climbing_col))
-        }
-    }
-};
-
-Block.prototype.connectToRight = function(neighbour) {
-    me = this;
-    var isCellConnectedFromRight = function(row, col) {
-        return me.getCellAt(row-1, col).isPath() || me.getCellAt(row+1, col).isPath() || me.getCellAt(row, col+1).isPath()
-    };
-
-    for (row = 1; row < this.blockSize-1; row++) {
-        if (neighbour.getCellAt(row, 0).isPath()) {
-            var climbing_col = this.blockSize-1;
-            do {
-                this.getCellAt(row, climbing_col).setAsPath();
-                climbing_col--;
-            } while (!isCellConnectedFromRight(row, climbing_col))
-        }
-    }
-};
-
-Block.prototype.getNeighbour = function(side) {
-    return this.neighbours[side];
-};
-
-Block.prototype.getCellAt = function(row, col) {
-    return this.cellsMatrix[row][col];
+    mazeRecursion(from_row, to_row, from_col, to_col, true, -1)
 };
 
 /* ================================================= CELL ================================================= */
-function Cell(type, content) {
+function Cell(type) {
   this.type = type;
-  this.content = content;
 }
 
 Cell.TYPES = {
@@ -227,8 +109,3 @@ Cell.prototype.isWall = function() {
 Cell.prototype.isPath = function() {
     return this.type == Cell.TYPES.PATH;
 };
-/* ================================================= COORDS ================================================= */
-function BlockCoordinate(row, col) {
-  this.row = row;
-  this.col = col;
-}
