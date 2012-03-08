@@ -6,7 +6,7 @@ function Hobo(x, y, world) {
     this.images = new HoboAnimation();
     this.points = 0;
     this.world = world;
-    this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w)-20 ,Math.floor(this.y / Hobo.SIZE.h)-20).type = 0;
+    this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w)-20 ,Math.floor(this.y / Hobo.SIZE.h)-20).setAsPath();
 }
 
 Hobo.SIZE = {
