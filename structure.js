@@ -1,112 +1,155 @@
 /* ================================================= WORLD ================================================= */
-function World(blockSize, initialBlockLayers) {
-  this.blockSize          = blockSize;
-  this.initialBlockLayers = initialBlockLayers;
-  this.matrix = {};
-  this.initializeWorld();
-};
-
-World.prototype.initializeWorld = function() {
-  var block_row, block_col;
-  for (block_row = -this.initialBlockLayers; block_row <= this.initialBlockLayers; block_row++)
-    for (block_col = -this.initialBlockLayers; block_col <= this.initialBlockLayers; block_col++)
-      this.addBlockForCoords(block_row * this.blockSize, block_col * this.blockSize);
-};
-
-World.prototype.getCellAt = function(row, col) {
-    if (!this.matrix[row] || !this.matrix[row][col])
-        this.addBlockForCoords(row, col);
-    else return this.matrix[row][col];
-};
-
-World.prototype.addBlockForCoords = function(row, col) {
-    var from_row = Math.floor(row / this.blockSize) * this.blockSize;
-    var from_col = Math.floor(col / this.blockSize) * this.blockSize;
-    var to_row = from_row + this.blockSize;
-    var to_col = from_col + this.blockSize;
-    this.generateNewCells(from_row, to_row, from_col, to_col);
-    this.generateMaze(from_row, to_row, from_col, to_col);
+function World() {
+  this.patternsMatrix = {};
 }
 
-World.prototype.generateNewCells = function(from_row, to_row, from_col, to_col) {
-    for (row = from_row; row < to_row; row++) {
-        for (col = from_col; col < to_col; col++) {
-            cell = new Cell(Cell.TYPES.WALL);
-            if (!this.matrix[row])
-                this.matrix[row] = {};
-            this.matrix[row][col] = cell;
-        }
+World.prototype.getPatternAt = function(coord) {
+    if (!this.patternsMatrix[coord.row] || !this.patternsMatrix[coord.row][coord.col]) {
+        return null;
     }
+    return this.patternsMatrix[coord.row][coord.col];
+}
+
+World.prototype.getCellAt = function(global_row, global_col) {
+    var global_coord = new Coord(global_row, global_col);
+    var pattern_coord = Pattern.translateGlobalToPattern(global_coord);
+    var internal_coord = Pattern.translateGlobalToInternal(global_coord);
+
+    var pattern = this.getPatternAt(pattern_coord);
+    if (!pattern) {
+        pattern = this.generatePatternFor(new Coord(pattern_coord.row, pattern_coord.col));
+    }
+
+    return pattern.internalCellAt(internal_coord);
 };
 
-World.prototype.generateMaze = function(from_row, to_row, from_col, to_col) {
-    var SPACING =4;
-    var DEAD_END_CHANCE = 0.2;
+World.CONNECTION_CHANCES = [1.0, 1.0, 0.3, 0.125];
 
-    that = this;
+World.prototype.generatePatternFor = function(coord) {
+    var top_pattern    = this.getPatternAt(coord.top());
+    var right_pattern  = this.getPatternAt(coord.right());
+    var bottom_pattern = this.getPatternAt(coord.bottom());
+    var left_pattern   = this.getPatternAt(coord.left());
 
-    var randomDeadEndIndex = function(from, to) {
-      if (Math.random() < DEAD_END_CHANCE)
-        return Math.randomIntBetween(from+1, to); 
-      return -1;
-    };
+    var top_connected    = top_pattern    ? top_pattern.bottom : false;
+    var right_connected  = right_pattern  ? right_pattern.left : false;
+    var bottom_connected = bottom_pattern ? bottom_pattern.top : false;
+    var left_connected   = left_pattern   ? left_pattern.right : false;
 
-    var digThroughCol = function (col, from_row, to_row) {
-        random_dead_end = randomDeadEndIndex(from_row, to_row);
-        for (var row = from_row; row < to_row; row++) 
-          if (row != random_dead_end)
-            that.getCellAt(row, col).setAsPath();
-        return random_dead_end
-    };
+    var connection_chances = World.CONNECTION_CHANCES.shuffle();
 
-    var digThroughRow = function(row, from_col, to_col) {
-        random_dead_end = randomDeadEndIndex(from_col, to_col);
-        for (var col = from_col; col < to_col; col++)
-          if (col != random_dead_end)
-            that.getCellAt(row, col).setAsPath();
-        return random_dead_end
-    };
+    top_connected    = top_connected    || Math.roll(connection_chances[0]);
+    right_connected  = right_connected  || Math.roll(connection_chances[1]);
+    bottom_connected = bottom_connected || Math.roll(connection_chances[2]);
+    left_connected   = left_connected   || Math.roll(connection_chances[3]);
 
-    var mazeRecursion = function(row_min, row_max, col_min, col_max, split_row, exclude) {
-        if (row_max - row_min < SPACING || col_max - col_min < SPACING) return
-        else if (row_min == row_max || col_min == col_max) return
+    var pattern = new Pattern(top_connected, right_connected, bottom_connected, left_connected, coord);
 
-        var next_exclude;
-        if (split_row) {
-            var random_row = Math.randomIntWithExclusion(row_min+1, row_max-1, exclude);
-            next_exclude = digThroughRow(random_row, col_min, col_max);
-            mazeRecursion(row_min, random_row, col_min, col_max, false, next_exclude);
-            mazeRecursion(random_row + 1, row_max, col_min, col_max, false, next_exclude);
-        }
-        else {
-            var random_col = Math.randomIntWithExclusion(col_min+1, col_max-1, exclude);
-            next_exclude = digThroughCol(random_col, row_min, row_max);
-            mazeRecursion(row_min, row_max, col_min, random_col, true, next_exclude);
-            mazeRecursion(row_min, row_max, random_col + 1, col_max, true, next_exclude);
-        }
-    };
+    if (!this.patternsMatrix[coord.row]) {
+        this.patternsMatrix[coord.row] = {};
+    }
 
-    mazeRecursion(from_row, to_row, from_col, to_col, true, -1)
+    this.patternsMatrix[coord.row][coord.col] = pattern;
+    return pattern;
+
 };
 
 /* ================================================= CELL ================================================= */
-function Cell(type) {
-  this.type = type;
+function Cell(isWall) {
+  this.wall = isWall;
 }
 
-Cell.TYPES = {
-    PATH: 0,
-    WALL: 1
-};
-
 Cell.prototype.setAsPath = function() {
-    this.type = Cell.TYPES.PATH;
+    this.wall = false;
 };
 
 Cell.prototype.isWall = function() {
-    return this.type == Cell.TYPES.WALL;
+    return this.wall;
 };
 
 Cell.prototype.isPath = function() {
-    return this.type == Cell.TYPES.PATH;
+    return !this.wall;
+};
+
+/* ================================================= COORDS ================================================= */
+function Coord(row, col) {
+    this.row = row;
+    this.col = col;
+}
+
+Coord.prototype.top = function() {
+    return new Coord(this.row-1, this.col);
+};
+
+Coord.prototype.bottom = function() {
+    return new Coord(this.row+1, this.col);
+};
+
+Coord.prototype.left = function() {
+    return new Coord(this.row, this.col-1);
+};
+
+Coord.prototype.right = function() {
+    return new Coord(this.row, this.col+1);
+};
+
+/* ================================================= PATTERN ================================================= */
+function Pattern(top, right, bottom, left, coord)
+{
+    this.top    = top;
+    this.right  = right;
+    this.bottom = bottom;
+    this.left   = left;
+    this.coord  = coord;
+}
+
+Pattern.SIZE   = 3; // must be an ODD number!
+Pattern.MIDDLE = Math.floor(Pattern.SIZE * 0.5);
+
+Pattern.prototype.inCenter = function(index) {
+    return index == Pattern.MIDDLE;
+}
+
+Pattern.prototype.inBefore = function(index) {
+    return index < Pattern.MIDDLE;
+}
+
+Pattern.prototype.internalCellAt = function(coord) {
+    var isWall;
+
+    if (this.inCenter(coord.row) && this.inCenter(coord.col)) {
+        isWall = false;
+    }
+    else if (!(this.inCenter(coord.row) || this.inCenter(coord.col))) {
+       isWall = true;
+    }
+    else if (this.top && this.inBefore(coord.row) && this.inCenter(coord.col)) {
+        isWall = false;
+    }
+    else if (this.bottom && !this.inBefore(coord.row) && this.inCenter(coord.col)) {
+        isWall = false;
+    }
+    else if (this.left && this.inBefore(coord.col) && this.inCenter(coord.row)) {
+        isWall = false;
+    }
+    else if (this.right && !this.inBefore(coord.col) && this.inCenter(coord.row)) {
+        isWall = false;
+    }
+    else {
+        isWall = true;
+    }
+
+    return new Cell(isWall);
+};
+
+Pattern.translateGlobalToPattern = function(coord) {
+    var pattern_row = Math.floor(coord.row / Pattern.SIZE);
+    var pattern_col = Math.floor(coord.col / Pattern.SIZE);
+    return new Coord(pattern_row, pattern_col);
+};
+
+Pattern.translateGlobalToInternal = function(coord) {
+    var internal_row = coord.row.mod(Pattern.SIZE);
+    var internal_col = coord.col.mod(Pattern.SIZE);
+    return new Coord(internal_row, internal_col);
 };
