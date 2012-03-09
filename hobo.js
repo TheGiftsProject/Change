@@ -7,6 +7,7 @@ function Hobo(x, y, world) {
     this.points = 0;
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w)-20 ,Math.floor(this.y / Hobo.SIZE.h)-20).setAsPath();
+    SoundJS.add("die", "resources/sound/bitten.wav");
 }
 
 Hobo.SIZE = {
@@ -99,4 +100,5 @@ Hobo.prototype.bitten = function(){
     this.points = 0;
     this.x = 0;
     this.y = 0;
+    SoundJS.play("die");
 };
