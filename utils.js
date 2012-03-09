@@ -1,14 +1,12 @@
-Math.randomIntBetween = function(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
+Math.roll = function(chance) {
+	return Math.random() < chance;
 }
 
-Math.randomIntWithExclusion = function(min, max, exclude) {
-	var initial_rand = Math.randomIntBetween(min, max - 1);
-    return initial_rand >= exclude ? initial_rand+1 : initial_rand;
-}
-
-// Due to a bug in JS with negative modulo.
-// http://javascript.about.com/od/problemsolving/a/modulobug.htm
 Number.prototype.mod = function(n) {
-    return ((this%n)+n)%n;
+    return ((this % n) + n) % n;
 }
+
+Array.prototype.shuffle = function() {
+	for(var j, x, i = this.length; i; j = parseInt(Math.random() * i), x = this[--i], this[i] = this[j], this[j] = x);
+	return this;
+};
