@@ -18,26 +18,7 @@ Dog.SIZE = {
 Dog.SPEED = 82;
 
 Dog.prototype.update = function(dt) {
-    var xDiff = this.x - this.hobo.x;
-    var yDiff = this.y - this.hobo.y;
-
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        if (xDiff < 0) {
-            this.nextDirection = 'right';
-        } else {
-            this.nextDirection = 'left';
-        }
-
-    } else {
-        if (yDiff < 0) {
-            this.nextDirection = 'down';
-        } else {
-            this.nextDirection = 'up';
-        }
-    }
-
-
-
+    this.decideOnDirection();
     this.move(dt);
     this.renderer.update(dt);
     this.checkCollistion();
@@ -112,4 +93,69 @@ Dog.prototype.bark = function(){
 //    if (this.currentCol() == this.hobo.currentCol() || this.currentRow() == this.hobo.currentRow()) {
 //            SoundJS.play("bark");
 //    }
+};
+
+
+Dog.prototype.isWall = function(direction){
+    var row = this.currentRow()-20;
+    var col = this.currentCol()-20;
+    switch (direction) {
+            case "left": col -= 1; break;
+            case "up": row -=1 ;break;
+            case "right": col += 1;break;
+            case "down": row += 1;break;
+        }
+    return this.world.getCellAt(row,col).isWall();
+};
+
+
+Dog.prototype.turnLeft = function(direction){
+    switch (direction) {
+        case "left": return "up";
+        case "up": return "right";
+        case "right": return "down";
+        case "down": return "left";
+    }
+};
+
+
+Dog.prototype.turnRight = function(direction){
+    switch (direction) {
+        case "left": return "down";
+        case "up": return "left";
+        case "right": return "up";
+        case "down": return "right";
+    }
+};
+
+Dog.prototype.decideOnDirection = function(){
+    var oldDirection = this.direction;
+    var xDiff = this.x - this.hobo.x;
+    var yDiff = this.y - this.hobo.y;
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff < 0) {
+            this.nextDirection = 'right';
+
+        } else {
+            this.nextDirection = 'left';
+        }
+
+    } else {
+        if (yDiff < 0) {
+            this.nextDirection = 'down';
+        } else {
+            this.nextDirection = 'up';
+        }
+    }
+
+    var randTurn = Math.random() > 0.5;
+    while (this.isWall(this.nextDirection)){
+        if (randTurn){
+            this.nextDirection = this.turnLeft(this.nextDirection);
+        } else {
+            this.nextDirection = this.turnRight(this.nextDirection);
+        }
+    }
+
 };
