@@ -86,3 +86,17 @@ Hobo.prototype.addPoints = function(points) {
     this.points += points;
 };
 
+Hobo.prototype.currentCol = function(){
+    return Math.floor(this.x / Hobo.SIZE.w);
+};
+
+Hobo.prototype.currentRow = function(){
+    return Math.floor(this.y / Hobo.SIZE.h);
+};
+
+
+Hobo.prototype.bitten = function(){
+    this.points = 0;
+    this.x = 0;
+    this.y = 0;
+};
