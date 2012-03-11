@@ -6,13 +6,16 @@ function Coins(world) {
     this.sprite.src = this.file;
     this.coins = {};
     this.place(world);
+    SoundJS.add("coin", "resources/sound/coin.wav",5);
 }
 
 Coins.prototype.place = function(world){
     var rand;
-    for (var i = 0; i < 300 ; i++){
-        for (var j = 0; j < 300 ; j++){
-            if (world.getCellAt(i-20,j-20).isPath()){
+    // values need to be changed according to world size - coins should be generated with the block.
+    for (var i = 0; i < 100 ; i++){
+        for (var j = 0; j < 100 ; j++){
+            if (i==1 && j==1) continue;
+            if (world.getCellAt(i,j).isPath()){
                 rand = Math.floor(Math.random()*10);
                 if (rand >= 7) continue;
                 var type = 2;
@@ -31,8 +34,9 @@ Coins.prototype.pickup = function(hobo){
     var tileY = Math.floor(hobo.x / 16);
 
     if ([tileX,tileY] in this.coins){
-        hobo.addPoints(this.coins[[tileX,tileY]].points())
+        hobo.addPoints(this.coins[[tileX,tileY]].points());
         delete this.coins[[tileX,tileY]];
+        SoundJS.play("coin");
     }
 };
 
@@ -57,7 +61,7 @@ function Coin(x,y, type,coins){
     this.y = y;
     this.type = type;
     this.collected = false;
-    this.accimulator = Math.floor(Math.random()*60);
+    this.accimulator = Math.floor(Math.random() * 60);
 }
 
 Coin.prototype.update = function(dt){

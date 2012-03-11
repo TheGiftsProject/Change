@@ -10,6 +10,12 @@ function TileRenderer(row, col, world, context, sprite){
         [world.getCellAt(row    , col -1), world.getCellAt(row    , col), world.getCellAt(row    , col +1)],
         [world.getCellAt(row + 1, col -1), world.getCellAt(row + 1, col), world.getCellAt(row + 1, col +1)]
         ];
+    this.wallThingie = null;
+    if (this.fits([[2,2,2],
+                   [2,2,2],
+                   [2,0,2]]) && Math.random() > 0.5){
+        this.wallThingie = Math.floor(Math.random() * 4);
+    }
 }
 
 TileRenderer.prototype.isWall = function(x,y){
@@ -76,6 +82,12 @@ TileRenderer.prototype.renderWall = function(){
                    [0,1,2]])){
         this.blit(this.sprite.wall, 0, 256 + 3 * 16);
     }
+
+    if (this.wallThingie != null){
+        this.blit(this.sprite.wallBottom, 0,  this.wallThingie * 16);
+    }
+
+
 };
 
 TileRenderer.prototype.renderRoad = function(){

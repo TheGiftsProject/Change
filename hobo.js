@@ -6,12 +6,18 @@ function Hobo(x, y, world) {
     this.images = new HoboAnimation();
     this.points = 0;
     this.world = world;
-    this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w)-20 ,Math.floor(this.y / Hobo.SIZE.h)-20).type = 0;
+    this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w) ,Math.floor(this.y / Hobo.SIZE.h)).setAsPath();
+    SoundJS.add("die", "resources/sound/bitten.wav");
 }
 
 Hobo.SIZE = {
     w: 16,
     h: 16
+};
+
+Hobo.START = {
+    x: 16,
+    y: 16
 };
 
 Hobo.SPEED = 82;
@@ -58,13 +64,13 @@ Hobo.prototype.move = function(dt) {
             this.y -= motion;
             break;
         case 'right':
-            if (this.world.getCellAt(currentRow-20,currentCol-19).isWall()){
+            if (this.world.getCellAt(currentRow,currentCol+1).isWall()){
                 break;
             }
             this.x += motion;
             break;
         case 'down':
-            if (this.world.getCellAt(currentRow-19,currentCol-20).isWall()){
+            if (this.world.getCellAt(currentRow+1,currentCol).isWall()){
                 break;
             }
             this.y += motion;
@@ -73,7 +79,7 @@ Hobo.prototype.move = function(dt) {
 
     var newCol = Math.floor(this.x / Hobo.SIZE.w);
     var newRow = Math.floor(this.y / Hobo.SIZE.h);
-    if (this.world.getCellAt(newRow-20,newCol-20).isWall()){
+    if (this.world.getCellAt(newRow,newCol).isWall()){
         this.x = currentCol * Hobo.SIZE.w;
         this.y = currentRow * Hobo.SIZE.h;
     }
@@ -86,3 +92,18 @@ Hobo.prototype.addPoints = function(points) {
     this.points += points;
 };
 
+Hobo.prototype.currentCol = function(){
+    return Math.floor(this.x / Hobo.SIZE.w);
+};
+
+Hobo.prototype.currentRow = function(){
+    return Math.floor(this.y / Hobo.SIZE.h);
+};
+
+
+Hobo.prototype.bitten = function(){
+    this.points = 0;
+    this.x = Hobo.START.x;
+    this.y = Hobo.START.y;
+    SoundJS.play("die");
+};
