@@ -15,6 +15,11 @@ Hobo.SIZE = {
     h: 16
 };
 
+Hobo.START = {
+    x: 16,
+    y: 16
+};
+
 Hobo.SPEED = 82;
 
 Hobo.prototype.update = function(dt, keys) {
@@ -98,7 +103,7 @@ Hobo.prototype.currentRow = function(){
 
 Hobo.prototype.bitten = function(){
     this.points = 0;
-    this.x = 0;
-    this.y = 0;
+    this.x = Hobo.START.x;
+    this.y = Hobo.START.y;
     SoundJS.play("die");
 };
