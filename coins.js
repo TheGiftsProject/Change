@@ -14,7 +14,7 @@ Coins.prototype.place = function(world){
     // values need to be changed according to world size - coins should be generated with the block.
     for (var i = 0; i < 100 ; i++){
         for (var j = 0; j < 100 ; j++){
-            if (i==0 && j==0) continue;
+            if (i==1 && j==1) continue;
             if (world.getCellAt(i,j).isPath()){
                 rand = Math.floor(Math.random()*10);
                 if (rand >= 7) continue;
@@ -61,7 +61,7 @@ function Coin(x,y, type,coins){
     this.y = y;
     this.type = type;
     this.collected = false;
-    this.accimulator = 1;
+    this.accimulator = Math.floor(Math.random() * 60);
 }
 
 Coin.prototype.update = function(dt){
