@@ -4,11 +4,18 @@ function HoboMan(canvas, fpsText) {
     this.InitCanvas();
     this.world = new World();
     this.level = new Level(this.world);
+    this.entities = [];
 
-    this.level.render(this.ctx);
+//    this.level.render(this.ctx);
+
     this.hobo = new Hobo(0, 0, this.world);
     this.dog = new Dog(160, 160, this.world, this.hobo);
     this.coins = new Coins(this.world);
+    
+    this.entities.push(this.coins);
+    this.entities.push(this.dog);
+    this.entities.push(this.hobo);
+
     this.keys = {
         left: 0,
         right: 0,
@@ -42,18 +49,20 @@ HoboMan.prototype.loop = function() {
 };
 
 HoboMan.prototype.update = function(dt) {
-    this.hobo.update(dt, this.keys);
-    this.coins.update(dt);
-    this.dog.update(dt);
+    for (var i=0; i < this.entities.length ; i++){
+        this.entities[i].update(dt, this.keys);
+    }
 };
 
 HoboMan.prototype.render = function() {
     this.ctx.fillStyle = "#FFFFFF";
     this.ctx.fillRect(0, 0, this.ctxWidth, this.ctxHeight);
     this.level.render(this.ctx, this.canvas.width, this.canvas.height);
-    this.coins.render(this.ctx);
-    this.hobo.render(this.ctx);
-    this.dog.render(this.ctx);
+
+    for (var i=0; i < this.entities.length ; i++){
+        this.entities[i].render(this.ctx);
+    }
+
     this.fpsText.innerHTML = (1000/this.frameInterval).toFixed(2) + " fps";
     this.ctx.fillStyle = "black";
     this.ctx.fillText("Score: " + this.hobo.points,300,12);
