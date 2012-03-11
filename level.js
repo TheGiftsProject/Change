@@ -17,8 +17,8 @@ Level.prototype.render = function(ctx, width, height) {
     ctx.strokeStyle = "#000000";
 
     // TODO: should get these values according to Hobo location.
-    var initial_row = -20;
-    var initial_col = -20;
+    var initial_row = 0;
+    var initial_col = 0;
 
     var cell_width = Level.CELL_SIZE.WIDTH;
     var cell_height = Level.CELL_SIZE.HEIGHT;

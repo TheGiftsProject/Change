@@ -5,7 +5,7 @@ function Dog(x, y, world, hobo) {
     this.nextDirection = '';
     this.renderer = new DogRenderer();
     this.world = world;
-    this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w)-20 ,Math.floor(this.y / Dog.SIZE.h)-20).setAsPath();
+    this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w) ,Math.floor(this.y / Dog.SIZE.h)).setAsPath();
     this.hobo = hobo;
     SoundJS.add("bark", "resources/sound/bark.wav",2);
 }
@@ -49,13 +49,13 @@ Dog.prototype.move = function(dt) {
             this.y -= motion;
             break;
         case 'right':
-            if (this.world.getCellAt(currentRow-20,currentCol-19).isWall()){
+            if (this.world.getCellAt(currentRow,currentCol+1).isWall()){
                 break;
             }
             this.x += motion;
             break;
         case 'down':
-            if (this.world.getCellAt(currentRow-19,currentCol-20).isWall()){
+            if (this.world.getCellAt(currentRow+1,currentCol).isWall()){
                 break;
             }
             this.y += motion;
@@ -64,7 +64,7 @@ Dog.prototype.move = function(dt) {
 
     var newCol = Math.floor(this.x / Dog.SIZE.w);
     var newRow = Math.floor(this.y / Dog.SIZE.h);
-    if (this.world.getCellAt(newRow-20,newCol-20).isWall()){
+    if (this.world.getCellAt(newRow,newCol).isWall()){
         this.x = currentCol * Dog.SIZE.w;
         this.y = currentRow * Dog.SIZE.h;
     }
@@ -97,8 +97,8 @@ Dog.prototype.bark = function(){
 
 
 Dog.prototype.isWall = function(direction){
-    var row = this.currentRow()-20;
-    var col = this.currentCol()-20;
+    var row = this.currentRow();
+    var col = this.currentCol();
     switch (direction) {
             case "left": col -= 1; break;
             case "up": row -=1 ;break;
