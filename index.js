@@ -6,9 +6,7 @@ function HoboMan(canvas, fpsText) {
     this.level = new Level(this.world);
     this.entities = [];
 
-//    this.level.render(this.ctx);
-
-    this.hobo = new Hobo(0, 0, this.world);
+    this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this.world);
     this.dog = new Dog(160, 160, this.world, this.hobo);
     this.coins = new Coins(this.world);
     

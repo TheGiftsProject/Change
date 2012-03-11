@@ -15,7 +15,7 @@ Coins.prototype.place = function(world){
     for (var i = 0; i < 100 ; i++){
         for (var j = 0; j < 100 ; j++){
             if (i==0 && j==0) continue;
-            if (world.getCellAt(i-20,j-20).isPath()){
+            if (world.getCellAt(i,j).isPath()){
                 rand = Math.floor(Math.random()*10);
                 if (rand >= 7) continue;
                 var type = 2;
