@@ -1,6 +1,5 @@
-function HoboMan(canvas, fpsText) {
+function HoboMan(canvas) {
     this.canvas = canvas;
-    this.fpsText = fpsText;
     this.InitCanvas();
     this.world = new World(20, 9);
     this.level = new Level(this.world);
@@ -51,8 +50,8 @@ HoboMan.prototype.render = function() {
     this.level.render(this.ctx, this.canvas.width, this.canvas.height);
     this.coins.render(this.ctx);
     this.hobo.render(this.ctx);
-    this.fpsText.innerHTML = (1000/this.frameInterval).toFixed(2) + " fps";
     this.ctx.fillStyle = "black";
+    this.ctx.fillText("fps: " + (1000/this.frameInterval).toFixed(2), 10, 12);
     this.ctx.fillText("Score: " + this.hobo.points,300,12);
 };
 
@@ -84,4 +83,4 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctxHeight = this.canvas.height;
 };
 
-hoboman = new HoboMan(document.getElementsByTagName('canvas')[0], document.getElementsByTagName('span')[0]);
+hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);

@@ -57,7 +57,7 @@ function Coin(x,y, type,coins){
     this.y = y;
     this.type = type;
     this.collected = false;
-    this.accimulator = 1;
+    this.accimulator = Math.floor(Math.random()*60);
 }
 
 Coin.prototype.update = function(dt){

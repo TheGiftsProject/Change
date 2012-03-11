@@ -1,5 +1,5 @@
 function HoboAnimation() {
-    this.file = "resources/images/hobo.png";
+    this.file = "resources/images/dog.png";
     this.height = 16;
     this.width = 16;
     this.spriteImage = new Image();
