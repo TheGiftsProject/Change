@@ -12,6 +12,7 @@ World.prototype.getPatternAt = function(coord) {
 
 World.prototype.getCellAt = function(global_row, global_col) {
     var global_coord = new Coord(global_row, global_col);
+  
     var pattern_coord = Pattern.translateGlobalToPattern(global_coord);
     var internal_coord = Pattern.translateGlobalToInternal(global_coord);
 
@@ -30,15 +31,20 @@ World.prototype.generatePatternFor = function(coord) {
     var right_pattern  = this.getPatternAt(coord.right());
     var bottom_pattern = this.getPatternAt(coord.bottom());
     var left_pattern   = this.getPatternAt(coord.left());
-
-    var connections = 0;
-
-    var top_exists    = top_pattern    ? true : false;
+	
+	var top_exists    = top_pattern    ? true : false;
     var right_exists  = right_pattern  ? true : false;
     var bottom_exists = bottom_pattern ? true : false;
     var left_exists   = left_pattern   ? true : false;
-
-    var top_connected    = top_exists    ? top_pattern.bottom : false;
+	
+	var connections = 0;
+	
+    var top_connected    = top_pattern    ? top_pattern.bottom : false;
+    var right_connected  = right_pattern  ? right_pattern.left : false;
+    var bottom_connected = bottom_pattern ? bottom_pattern.top : false;
+    var left_connected   = left_pattern   ? left_pattern.right : false;
+	
+	var top_connected    = top_exists    ? top_pattern.bottom : false;
     if (top_connected) connections++;
 
     var right_connected  = right_exists  ? right_pattern.left : false;
@@ -49,8 +55,8 @@ World.prototype.generatePatternFor = function(coord) {
 
     var left_connected   = left_exists   ? left_pattern.right : false;
     if (left_connected) connections++;
-
-    var connection_chances = World.CONNECTION_CHANCES.slice(0, connections).shuffle();
+	
+    var connection_chances = World.CONNECTION_CHANCES.slice(0, 4 - connections).shuffle();
 
     var new_connections = 0;
 
@@ -71,7 +77,7 @@ World.prototype.generatePatternFor = function(coord) {
 
     if (!left_exists || left_connected) {
         left_connected = left_connected || Math.roll(connection_chances[new_connections]);
-    }
+    }	
 
     var pattern = new Pattern(top_connected, right_connected, bottom_connected, left_connected, coord);
 
