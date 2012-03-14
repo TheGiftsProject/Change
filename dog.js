@@ -18,7 +18,7 @@ Dog.SIZE = {
 Dog.SPEED = 82;
 
 Dog.prototype.update = function(dt) {
-    this.decideOnDirection();
+    this.decideOnDirection2();
     this.move(dt);
     this.renderer.update(dt);
     this.checkCollistion();
@@ -26,21 +26,21 @@ Dog.prototype.update = function(dt) {
 };
 
 Dog.prototype.move = function(dt) {
-    var distFromCellX = Math.floor(this.x) % Dog.SIZE.w;
-    var distFromCellY = Math.floor(this.y) % Dog.SIZE.h;
-    var currentCol = Math.floor(this.x / Dog.SIZE.w);
-    var currentRow = Math.floor(this.y / Dog.SIZE.h);
-    var oldX = this.x;
-    var oldY = this.y;
+    var oldCol = Math.floor(this.x / Dog.SIZE.w);
+    var oldRow = Math.floor(this.y / Dog.SIZE.h);
 
-    if (distFromCellX < 5 && distFromCellY < 5) {
+    if (this.direction == "") {
         this.direction = this.nextDirection;
-        this.x = Math.floor(this.x);
-        this.y = Math.floor(this.y);
     }
 
-    var motion = Dog.SPEED * dt;
+    this.moveCoordinates(dt);
+    this.turnIfCan(oldRow, oldCol);
+    this.stopAtWall(oldRow, oldCol);
+};
 
+
+Dog.prototype.moveCoordinates = function(dt){
+    var motion = Dog.SPEED * dt;
     switch (this.direction) {
         case 'left':
             this.x -= motion;
@@ -49,27 +49,69 @@ Dog.prototype.move = function(dt) {
             this.y -= motion;
             break;
         case 'right':
-            if (this.world.getCellAt(currentRow,currentCol+1).isWall()){
-                break;
-            }
             this.x += motion;
             break;
         case 'down':
-            if (this.world.getCellAt(currentRow+1,currentCol).isWall()){
-                break;
-            }
             this.y += motion;
             break;
     }
+};
 
-    var newCol = Math.floor(this.x / Dog.SIZE.w);
-    var newRow = Math.floor(this.y / Dog.SIZE.h);
-    if (this.world.getCellAt(newRow,newCol).isWall()){
-        this.x = currentCol * Dog.SIZE.w;
-        this.y = currentRow * Dog.SIZE.h;
+Dog.prototype.stopAtWall = function(oldRow, oldCol){
+    var row = this.currentRow();
+    var col = this.currentCol();
+
+    if (this.direction == "right"){
+        oldCol = col;
+        col += 1;
+    }
+    if (this.direction == "down"){
+        oldRow = row;
+        row += 1;
+    }
+
+    if (this.world.getCellAt(row, col).isWall()){
+        this.x = oldCol * 16;
+        this.y = oldRow * 16;
+        if (this.nextDirection && !this.isWall(this.nextDirection)){
+            //TURN at Wall
+            this.turn();
+        }
     }
 };
 
+Dog.prototype.turn = function(){
+    this.direction = this.nextDirection;
+    this.nextDirection = null;
+};
+
+Dog.prototype.turnIfCan = function(oldRow, oldCol){
+    if (this.nextDirection == null) return;
+
+    var row = oldRow;
+    var col = oldCol;
+    if (this.direction == "right" || this.direction == "down"){
+        row = this.currentRow();
+        col = this.currentCol();
+    }
+
+    var horizontal = (this.direction == "left" || this.direction == "right");
+
+    if ((horizontal && oldCol != this.currentCol()) || (!horizontal && oldRow != this.currentRow())){
+        if (!this.isWall(this.nextDirection, row, col)){
+            this.turn();
+            this.x = col * Dog.SIZE.w;
+            this.y = row * Dog.SIZE.h;
+            if (horizontal){
+                if (this.nextDirection == "up") this.y -= Dog.SIZE.h;
+                if (this.nextDirection == "down") this.y += Dog.SIZE.h;
+            } else {
+                if (this.nextDirection == "left") this.x -= Dog.SIZE.w;
+                if (this.nextDirection == "right") this.x += Dog.SIZE.w;
+            }
+        }
+    }
+};
 Dog.prototype.render = function(ctx) {
     this.renderer.drawFrame(ctx, this);
 };
@@ -96,9 +138,9 @@ Dog.prototype.bark = function(){
 };
 
 
-Dog.prototype.isWall = function(direction){
-    var row = this.currentRow();
-    var col = this.currentCol();
+Dog.prototype.isWall = function(direction, row, col){
+    if (!row) row = this.currentRow();
+    if (!col) col = this.currentCol();
     switch (direction) {
             case "left": col -= 1; break;
             case "up": row -=1 ;break;
@@ -128,8 +170,17 @@ Dog.prototype.turnRight = function(direction){
     }
 };
 
+Dog.prototype.turnAround = function(direction){
+    switch (direction) {
+        case "left": return "right";
+        case "up": return "down";
+        case "right": return "left";
+        case "down": return "up";
+    }
+};
+
+
 Dog.prototype.decideOnDirection = function(){
-    var oldDirection = this.direction;
     var xDiff = this.x - this.hobo.x;
     var yDiff = this.y - this.hobo.y;
 
@@ -149,6 +200,7 @@ Dog.prototype.decideOnDirection = function(){
         }
     }
 
+
     var randTurn = Math.random() > 0.5;
     while (this.isWall(this.nextDirection)){
         if (randTurn){
@@ -157,5 +209,41 @@ Dog.prototype.decideOnDirection = function(){
             this.nextDirection = this.turnRight(this.nextDirection);
         }
     }
+    if (this.nextDirection == this.direction){
+        this.nextDirection = null;
+    }
 
+};
+
+Dog.prototype.decideOnDirection2 = function(){
+    var xDiff = this.x - this.hobo.x;
+    var yDiff = this.y - this.hobo.y;
+
+    var xDirection = (xDiff < 3) ? 'right' : 'left';
+    var yDirection = (yDiff < 3) ? 'down' : 'up';
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)){
+        this.nextDirection = xDirection;
+        if (this.isWall(xDirection) && (this.direction == xDirection)) this.nextDirection = yDirection;
+    } else {
+        this.nextDirection = yDirection;
+        if (this.isWall(yDirection) && (this.direction == yDirection)) this.nextDirection = xDirection;
+    }
+
+    if ((this.direction == xDirection || this.direction == yDirection) && this.isWall(yDirection) && this.isWall(xDirection)){
+        if (this.isWall(this.turnAround(yDirection))){
+            this.nextDirection = this.turnAround(xDirection)
+        } else {
+            this.nextDirection = this.turnAround(yDirection)
+        }
+
+    }
+
+    if (this.nextDirection == this.direction){
+        this.nextDirection = null;
+    } else {
+        if (Math.random() > 0.8){
+            this.nextDirection = null;
+        }
+    }
 };
