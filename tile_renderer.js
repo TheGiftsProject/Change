@@ -61,17 +61,17 @@ TileRenderer.prototype.render = function(render_row, render_col){
     } else {
         this.renderRoad();
     }
-    if (this.world.getCellAt(this.row, this.col).hasContent()) {
-        debugger;
-        this.renderCoin();
+    var cell = this.world.getCellAt(this.row, this.col);
+    if (cell.hasContent()) {
+        this.renderCoin(cell.content);
     }
 };
 
-TileRenderer.prototype.renderCoin = function() {
+TileRenderer.prototype.renderCoin = function(content_type) {
     this.accumulator = (this.accumulator + 60) % 60;
     var tmp = Math.floor((this.accumulator*5) % 4);
     var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
-    this.blit(this.sprite.coins, animation * 16, 16)
+    this.blit(this.sprite.coins, 16, 16 * content_type)
 }
 
 TileRenderer.prototype.renderWall = function(){
