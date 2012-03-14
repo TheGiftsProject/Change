@@ -21,6 +21,7 @@ function TileRenderer(row, col, world, context, sprite){
                    [2,1,2]]) && Math.random() > 0.8){
         this.roofDecal = Math.floor(Math.random() * TileRenderer.DECALS.roof);
     }
+    this.accumulator = Math.floor(Math.random() * 60);
 }
 TileRenderer.DECALS = {
     roof: 7,
@@ -60,7 +61,18 @@ TileRenderer.prototype.render = function(render_row, render_col){
     } else {
         this.renderRoad();
     }
+    var cell = this.world.getCellAt(this.row, this.col);
+    if (cell.hasContent()) {
+        this.renderCoin(cell.content);
+    }
 };
+
+TileRenderer.prototype.renderCoin = function(content_type) {
+    this.accumulator = (this.accumulator + 60) % 60;
+    var tmp = Math.floor((this.accumulator*5) % 4);
+    var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
+    this.blit(this.sprite.coins, 16, 16 * content_type)
+}
 
 TileRenderer.prototype.renderWall = function(){
     var idx = 0;

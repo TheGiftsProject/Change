@@ -9,12 +9,10 @@ function HoboMan(canvas) {
     this.dog = new Dog(160, 160, this.world, this.hobo);
     this.dog2 = new Dog(16, 320, this.world, this.hobo);
     this.dog3 = new Dog(320, 16, this.world, this.hobo);
-    this.coins = new Coins(this.world);
 
-    this.entities.push(this.coins);
-    //this.entities.push(this.dog);
-    //this.entities.push(this.dog2);
-    //this.entities.push(this.dog3);
+    this.entities.push(this.dog);
+    this.entities.push(this.dog2);
+    this.entities.push(this.dog3);
     this.entities.push(this.hobo);
 
     this.keys = {
@@ -45,7 +43,6 @@ HoboMan.prototype.loop = function() {
 
     while (this.frameTimeAccumulator >= this.targetInterval) {
         this.update(this.targetInterval / 1000);
-        this.coins.pickup(this.hobo);
         this.frameTimeAccumulator -= this.targetInterval;
         var updated = true;
     }
