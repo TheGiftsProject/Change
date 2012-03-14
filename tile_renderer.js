@@ -16,6 +16,7 @@ function TileRenderer(row, col, world, context, sprite){
                    [2,0,2]]) && Math.random() > 0.5){
         this.wallThingie = Math.floor(Math.random() * 4);
     }
+    this.accumulator = Math.floor(Math.random() * 60);
 }
 
 TileRenderer.prototype.isWall = function(x,y){
@@ -51,7 +52,18 @@ TileRenderer.prototype.render = function(render_row, render_col){
     } else {
         this.renderRoad();
     }
+    if (this.world.getCellAt(this.row, this.col).hasContent()) {
+        debugger;
+        this.renderCoin();
+    }
 };
+
+TileRenderer.prototype.renderCoin = function() {
+    this.accumulator = (this.accumulator + 60) % 60;
+    var tmp = Math.floor((this.accumulator*5) % 4);
+    var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
+    this.blit(this.sprite.coins, animation * 16, 16)
+}
 
 TileRenderer.prototype.renderWall = function(){
     var idx = 0;

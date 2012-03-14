@@ -106,8 +106,8 @@ Hobo.prototype.currentRow = function(){
 };
 
 Hobo.prototype.collectCoin = function(content_type, row, col) {
-    this.addPoints(this.translatePoints(content_type))
-    this.world.collectAt(row, col)
+    this.addPoints(this.translatePoints(content_type));
+    this.world.collectAt(row, col);
     SoundJS.play("coin");
 }
 

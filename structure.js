@@ -48,11 +48,6 @@ World.prototype.generatePatternFor = function(coord) {
 	
 	var connections = 0;
 	
-    var top_connected    = top_pattern    ? top_pattern.bottom : false;
-    var right_connected  = right_pattern  ? right_pattern.left : false;
-    var bottom_connected = bottom_pattern ? bottom_pattern.top : false;
-    var left_connected   = left_pattern   ? left_pattern.right : false;
-	
 	var top_connected    = top_exists    ? top_pattern.bottom : false;
     if (top_connected) connections++;
 
@@ -162,19 +157,19 @@ Pattern.CONTENT_CHANCE = 0.5;
 
 Pattern.prototype.collectAt = function(coord) {
     if (this.inCenter(coord.row) && this.inCenter(coord.col)) {
-        middle_content = null;
+        this.middle_content = null;
     }
     else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
-        top_content = null;
+        this.top_content = null;
     }
     else if (this.bottom && !this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
-        bottom__content = null;
+        this.bottom_content = null;
     }
     else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
-        left_content = null;
+        this.left_content = null;
     }
     else if (this.right && !this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
-        right_content = null;
+        this.right_content = null;
     }
 }
 
