@@ -36,7 +36,7 @@ Coins.prototype.pickup = function(hobo){
     if ([tileX,tileY] in this.coins){
         hobo.addPoints(this.coins[[tileX,tileY]].points());
         delete this.coins[[tileX,tileY]];
-        SoundJS.play("coin");
+        //SoundJS.play("coin");
     }
 };
 
