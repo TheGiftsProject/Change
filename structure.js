@@ -138,15 +138,16 @@ function Pattern(top, right, bottom, left)
     this.left   = left;
 }
 
-Pattern.SIZE   = 3; // must be an ODD number!
-Pattern.MIDDLE = Math.floor(Pattern.SIZE * 0.5);
-
 Pattern.prototype.inCenter = function(index) {
-    return index == Pattern.MIDDLE;
+    return index == 1;
 }
 
-Pattern.prototype.inBefore = function(index) {
-    return index < Pattern.MIDDLE;
+Pattern.prototype.beforeCenter = function(index) {
+    return index == 0;
+}
+
+Pattern.prototype.afterCenter = function(index) {
+    return index == 0;
 }
 
 Pattern.prototype.internalCellAt = function(coord) {
@@ -158,16 +159,16 @@ Pattern.prototype.internalCellAt = function(coord) {
     else if (!(this.inCenter(coord.row) || this.inCenter(coord.col))) {
        isWall = true;
     }
-    else if (this.top && this.inBefore(coord.row) && this.inCenter(coord.col)) {
+    else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
         isWall = false;
     }
-    else if (this.bottom && !this.inBefore(coord.row) && this.inCenter(coord.col)) {
+    else if (this.bottom && this.afterCenter(coord.row) && this.inCenter(coord.col)) {
         isWall = false;
     }
-    else if (this.left && this.inBefore(coord.col) && this.inCenter(coord.row)) {
+    else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
         isWall = false;
     }
-    else if (this.right && !this.inBefore(coord.col) && this.inCenter(coord.row)) {
+    else if (this.right && this.afterCenter(coord.col) && this.inCenter(coord.row)) {
         isWall = false;
     }
     else {
@@ -178,13 +179,15 @@ Pattern.prototype.internalCellAt = function(coord) {
 };
 
 Pattern.translateGlobalToPattern = function(coord) {
-    var pattern_row = Math.floor(coord.row / Pattern.SIZE);
-    var pattern_col = Math.floor(coord.col / Pattern.SIZE);
+    var pattern_row = Math.floor(coord.row / 3);
+    var pattern_col = Math.floor(coord.col / 3);
     return new Coord(pattern_row, pattern_col);
 };
 
 Pattern.translateGlobalToInternal = function(coord) {
-    var internal_row = coord.row.mod(Pattern.SIZE);
-    var internal_col = coord.col.mod(Pattern.SIZE);
+    var internal_row = coord.row.mod(3);
+    var internal_col = coord.col.mod(3);
     return new Coord(internal_row, internal_col);
 };
+/* ================================================= CONTENT ================================================= */
+
