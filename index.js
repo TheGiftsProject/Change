@@ -9,9 +9,7 @@ function HoboMan(canvas) {
     this.dog = new Dog(160, 160, this.world, this.hobo);
     this.dog2 = new Dog(16, 320, this.world, this.hobo);
     this.dog3 = new Dog(320, 16, this.world, this.hobo);
-    this.coins = new Coins(this.world);
-    
-    this.entities.push(this.coins);
+
     this.entities.push(this.dog);
     this.entities.push(this.dog2);
     this.entities.push(this.dog3);
@@ -43,7 +41,6 @@ HoboMan.prototype.loop = function() {
         this.update(this.targetInterval / 1000);
         this.frameTimeAccumulator -= this.targetInterval;
     }
-    this.coins.pickup(this.hobo);
     this.render();
 
     setTimeout(_.bind(this.loop, this), 0);

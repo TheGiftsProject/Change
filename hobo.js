@@ -8,6 +8,7 @@ function Hobo(x, y, world) {
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w) ,Math.floor(this.y / Hobo.SIZE.h)).setAsPath();
     SoundJS.add("die", "resources/sound/bitten.wav");
+    SoundJS.add("coin", "resources/sound/coin.wav",5);
 }
 
 Hobo.SIZE = {
@@ -45,8 +46,11 @@ Hobo.prototype.move = function(dt) {
     var distFromCellY = Math.floor(this.y) % Hobo.SIZE.h;
     var currentCol = Math.floor(this.x / Hobo.SIZE.w);
     var currentRow = Math.floor(this.y / Hobo.SIZE.h);
-    var oldX = this.x;
-    var oldY = this.y;
+
+    var cell = this.world.getCellAt(currentRow,currentCol);
+    if (cell.hasContent()) {
+        this.collectCoin(cell);
+    }
 
     if (distFromCellX < 5 && distFromCellY < 5) {
         this.direction = this.nextDirection;
@@ -88,6 +92,7 @@ Hobo.prototype.move = function(dt) {
 Hobo.prototype.render = function(ctx) {
     this.images.drawFrame(ctx, this);
 };
+
 Hobo.prototype.addPoints = function(points) {
     this.points += points;
 };
@@ -100,10 +105,23 @@ Hobo.prototype.currentRow = function(){
     return Math.floor(this.y / Hobo.SIZE.h);
 };
 
+Hobo.prototype.collectCoin = function(cell) {
+    cell.removeContent();
+    this.addPoints(this.translatePoints(cell.content))
+    SoundJS.play("coin");
+}
 
 Hobo.prototype.bitten = function(){
     this.points = 0;
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
     SoundJS.play("die");
+};
+
+Hobo.prototype.translatePoints = function(content_type) {
+    switch(content_type) {
+        case 0: return 10;
+        case 1: return 5;
+        case 2: return 1;
+    }
 };

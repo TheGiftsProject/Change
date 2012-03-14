@@ -91,8 +91,9 @@ World.prototype.generatePatternFor = function(coord) {
 };
 
 /* ================================================= CELL ================================================= */
-function Cell(isWall) {
-  this.wall = isWall;
+function Cell(isWall, content) {
+  this.wall    = isWall;
+  this.content = content;
 }
 
 Cell.prototype.setAsPath = function() {
@@ -106,6 +107,14 @@ Cell.prototype.isWall = function() {
 Cell.prototype.isPath = function() {
     return !this.wall;
 };
+
+Cell.prototype.hasContent = function() {
+    return this.content !== null;
+}
+
+Cell.prototype.removeContent = function() {
+    this.content = null;
+}
 
 /* ================================================= COORDS ================================================= */
 function Coord(row, col) {
@@ -136,6 +145,22 @@ function Pattern(top, right, bottom, left)
     this.right  = right;
     this.bottom = bottom;
     this.left   = left;
+
+    this.middle_content = this.generateRandomContent();
+    this.top_content    = this.generateRandomContent();
+    this.right_content  = this.generateRandomContent();
+    this.bottom_content = this.generateRandomContent();
+    this.left_content   = this.generateRandomContent();
+}
+
+Pattern.CONTENT_CHANCE = 0.5;
+
+Pattern.prototype.generateRandomContent = function()
+{
+    if (Math.roll(Pattern.CONTENT_CHANCE)) {
+        return Math.floor(Math.random() * 3);
+    }
+    return null;
 }
 
 Pattern.prototype.inCenter = function(index) {
@@ -148,30 +173,38 @@ Pattern.prototype.beforeCenter = function(index) {
 
 Pattern.prototype.internalCellAt = function(coord) {
     var isWall;
+    var content;
 
     if (this.inCenter(coord.row) && this.inCenter(coord.col)) {
-        isWall = false;
+        isWall  = false;
+        content = this.middle_content;
     }
     else if (!(this.inCenter(coord.row) || this.inCenter(coord.col))) {
-       isWall = true;
+       isWall  = true;
+       content = null;
     }
     else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
-        isWall = false;
+        isWall  = false;
+        content = this.top_content;
     }
     else if (this.bottom && !this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
-        isWall = false;
+        isWall  = false;
+        content = this.bottom_content;
     }
     else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
-        isWall = false;
+        isWall  = false;
+        content = this.left_content;
     }
     else if (this.right && !this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
-        isWall = false;
+        isWall  = false;
+        content = this.right_content;
     }
     else {
-        isWall = true;
+        isWall  = true;
+        content = null;
     }
 
-    return new Cell(isWall);
+    return new Cell(isWall, content);
 };
 
 Pattern.translateGlobalToPattern = function(coord) {
@@ -185,5 +218,3 @@ Pattern.translateGlobalToInternal = function(coord) {
     var internal_col = coord.col.mod(3);
     return new Coord(internal_row, internal_col);
 };
-/* ================================================= CONTENT ================================================= */
-
