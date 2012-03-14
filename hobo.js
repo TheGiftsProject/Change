@@ -9,7 +9,10 @@ function Hobo(x, y, world) {
     this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w) ,Math.floor(this.y / Hobo.SIZE.h)).setAsPath();
     this.world.collectAt(this.currentRow(), this.currentCol());
     SoundJS.add("die", "resources/sound/bitten.wav");
-    SoundJS.add("coin", "resources/sound/coin.wav",5);
+    SoundJS.add("coin0", "resources/sound/coin0.wav",5);
+    SoundJS.add("coin1", "resources/sound/coin1.wav",5);
+    SoundJS.add("coin2", "resources/sound/coin2.wav",5);
+    SoundJS.add("coin3", "resources/sound/coin3.wav",5);
 }
 
 Hobo.SIZE = {
@@ -111,7 +114,7 @@ Hobo.prototype.currentRow = function(){
 Hobo.prototype.collectCoin = function(content_type, row, col) {
     this.addPoints(this.translatePoints(content_type));
     this.world.collectAt(row, col);
-    SoundJS.play("coin");
+    SoundJS.play("coin" + Math.floor(Math.random() * 4));
 }
 
 Hobo.prototype.bitten = function(){
