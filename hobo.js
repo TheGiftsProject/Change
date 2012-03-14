@@ -49,48 +49,22 @@ Hobo.prototype.updateFromKeys = function(dt, keys) {
 };
 
 Hobo.prototype.move = function(dt) {
-    var distFromCellX = Math.floor(this.x) % Hobo.SIZE.w;
-    var distFromCellY = Math.floor(this.y) % Hobo.SIZE.h;
-    var oldX = this.x;
-    var oldY = this.y;
+
     var oldCol = Math.floor(this.x / Hobo.SIZE.w);
     var oldRow = Math.floor(this.y / Hobo.SIZE.h);
-
     var cell = this.world.getCellAt(oldRow,oldCol);
-
 
     if (cell.hasContent()) {
         this.collectCoin(cell.content, oldRow, oldCol);
     }
 
-
-    if (!this.isWall(this.nextDirection)){
-        if (distFromCellX < 3 && distFromCellY < 3 ) {
-            this.direction = this.nextDirection;
-        }
+    if (this.direction == "") {
+        this.direction = this.nextDirection;
     }
 
     this.moveCoordinates(dt);
-
-    if (this.currentCol() != oldCol || this.currentRow() != oldCol) {
-        if (this.world.getCellAt(this.currentRow(), this.currentCol()).isWall()){
-//            if (this.direction == "right" || this.direction == "down"){
-//                this.x = oldX;
-//                this.y = oldY;
-//            } else {
-                this.x = oldCol * 16;
-                this.y = oldRow * 16;
-//            }
-        }
-    }
-
-
-//    var newCol = Math.floor(this.x / Hobo.SIZE.w);
-//    var newRow = Math.floor(this.y / Hobo.SIZE.h);
-//    if (this.world.getCellAt(newRow,newCol).isWall()){
-//        this.x = currentCol * Hobo.SIZE.w;
-//        this.y = currentRow * Hobo.SIZE.h;
-//    }
+    this.turnIfCan(oldRow, oldCol);
+    this.stopAtWall(oldRow, oldCol);
 };
 
 Hobo.prototype.render = function(ctx) {
@@ -109,13 +83,6 @@ Hobo.prototype.currentRow = function(){
     return Math.floor(this.y / Hobo.SIZE.h);
 };
 
-Hobo.prototype.currentRowY = function (){
-    return this.currentRow() * Hobo.SIZE.h;
-};
-
-Hobo.prototype.currentColX = function (){
-    return this.currentCol() * Hobo.SIZE.w;
-}
 
 Hobo.prototype.collectCoin = function(content_type, row, col) {
     this.addPoints(this.translatePoints(content_type));
@@ -130,9 +97,9 @@ Hobo.prototype.bitten = function(){
     SoundJS.play("die");
 };
 
-Hobo.prototype.isWall = function(direction){
-    var row = this.currentRow();
-    var col = this.currentCol();
+Hobo.prototype.isWall = function(direction, row, col){
+    if (!row) row = this.currentRow();
+    if (!col) col = this.currentCol();
     switch (direction) {
             case "left": col -= 1; break;
             case "up": row -=1 ;break;
@@ -165,5 +132,61 @@ Hobo.prototype.moveCoordinates = function(dt){
         case 'down':
             this.y += motion;
             break;
+    }
+};
+
+Hobo.prototype.stopAtWall = function(oldRow, oldCol){
+    var row = this.currentRow();
+    var col = this.currentCol();
+
+    if (this.direction == "right"){
+        oldCol = col;
+        col += 1;
+    }
+    if (this.direction == "down"){
+        oldRow = row;
+        row += 1;
+    }
+
+    if (this.world.getCellAt(row, col).isWall()){
+        this.x = oldCol * 16;
+        this.y = oldRow * 16;
+        if (this.nextDirection && !this.isWall(this.nextDirection)){
+            //TURN at Wall
+            this.turn();
+        }
+    }
+};
+
+Hobo.prototype.turn = function(){
+    this.direction = this.nextDirection;
+    this.nextDirection = null;
+};
+
+Hobo.prototype.turnIfCan = function(oldRow, oldCol){
+    if (this.nextDirection == null) return;
+
+    var row = oldRow;
+    var col = oldCol;
+    if (this.direction == "right" || this.direction == "down"){
+        row = this.currentRow();
+        col = this.currentCol();
+    }
+
+    var horizontal = (this.direction == "left" || this.direction == "right");
+
+    if ((horizontal && oldCol != this.currentCol()) || (!horizontal && oldRow != this.currentRow())){
+        if (!this.isWall(this.nextDirection, row, col)){
+            this.turn();
+            this.x = col * Hobo.SIZE.w;
+            this.y = row * Hobo.SIZE.h;
+            if (horizontal){
+                if (this.nextDirection == "up") this.y -= Hobo.SIZE.h;
+                if (this.nextDirection == "down") this.y += Hobo.SIZE.h;
+            } else {
+                if (this.nextDirection == "left") this.x -= Hobo.SIZE.w;
+                if (this.nextDirection == "right") this.x += Hobo.SIZE.w;
+            }
+        }
     }
 };
