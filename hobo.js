@@ -50,8 +50,6 @@ Hobo.prototype.move = function(dt) {
 
     if (distFromCellX < 5 && distFromCellY < 5) {
         this.direction = this.nextDirection;
-        this.x = Math.floor(this.x);
-        this.y = Math.floor(this.y);
     }
 
     var motion = Hobo.SPEED * dt;
