@@ -52,16 +52,20 @@ Hobo.prototype.move = function(dt) {
     var currentRow = Math.floor(this.y / Hobo.SIZE.h);
 
     var cell = this.world.getCellAt(currentRow,currentCol);
+    var motion = Hobo.SPEED * dt;
 
     if (cell.hasContent()) {
         this.collectCoin(cell.content, currentRow, currentCol);
     }
 
-    if (distFromCellX < 3 && distFromCellY < 3 && !this.isWall(this.nextDirection)) {
-        this.direction = this.nextDirection;
+
+    if (!this.isWall(this.nextDirection)){
+        if (distFromCellX < 3 && distFromCellY < 3 ) {
+            this.direction = this.nextDirection;
+        }
     }
 
-    var motion = Hobo.SPEED * dt;
+
 
     switch (this.direction) {
         case 'left':
