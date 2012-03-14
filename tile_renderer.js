@@ -106,6 +106,11 @@ TileRenderer.prototype.renderRoad = function(){
     this.renderLines();
     this.renderStops();
     this.renderSewage();
+    if (this.fits([[1,1,1],
+                   [1,2,1],
+                   [1,1,1]])){
+        this.blit(this.sprite.road, 32, 32);
+    }
 };
 
 TileRenderer.prototype.renderStops = function(){
