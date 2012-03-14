@@ -8,27 +8,21 @@ Level.CELL_SIZE = {
     HEIGHT: 16
 };
 
-Level.CELL_COLOR = {
-    WALL:  "#000000",
-    PATH: "#FFFFFF"
-};
-
-Level.prototype.render = function(ctx, width, height) {
+Level.prototype.render = function(ctx, viewport) {
     ctx.strokeStyle = "#000000";
-
-    // TODO: should get these values according to Hobo location.
-    var initial_row = 0;
-    var initial_col = 0;
 
     var cell_width = Level.CELL_SIZE.WIDTH;
     var cell_height = Level.CELL_SIZE.HEIGHT;
 
-    var rows = Math.ceil(width / cell_width);
-    var cols = Math.ceil(height / cell_height);
+    var startRow = Math.ceil(viewport.y / cell_height) - 1;
+    var startCol = Math.ceil(viewport.x / cell_width) - 1;
+
+    var cols = Math.ceil(viewport.width / cell_width) + 1;
+    var rows = Math.ceil(viewport.height / cell_height) + 1;
 
     for (var row = 0; row < rows; ++row) {
         for (var col = 0; col < cols; ++col) {
-            this.renderer.renderTile(initial_row + row, initial_col + col, this.world, ctx, row, col);    
+            this.renderer.renderTile(startRow + row, startCol + col, this.world, ctx);
         }
     }
 };

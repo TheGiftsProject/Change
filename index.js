@@ -9,9 +9,7 @@ function HoboMan(canvas) {
     this.dog = new Dog(160, 160, this.world, this.hobo);
     this.dog2 = new Dog(16, 320, this.world, this.hobo);
     this.dog3 = new Dog(320, 16, this.world, this.hobo);
-    this.coins = new Coins(this.world);
-    
-    this.entities.push(this.coins);
+
     this.entities.push(this.dog);
     this.entities.push(this.dog2);
     this.entities.push(this.dog3);
@@ -27,14 +25,18 @@ function HoboMan(canvas) {
     document.body.addEventListener('keydown', _.bind(this.updateKeys, this));
     document.body.addEventListener('keyup', _.bind(this.updateKeys, this));
 
-    this.targetInterval = 33;
+    this.targetInterval = 16;
     this.currentTime = new Date().getTime();
     this.frameTimeAccumulator = 0;
+    this.frameCounter = 0;
+    this.fps = 0;
     this.loop();
+    this.updateFPS();
 }
 
 HoboMan.prototype.loop = function() {
     var newTime = new Date().getTime();
+    var updated = false;
     this.frameInterval = newTime - this.currentTime;
     this.currentTime = newTime;
     this.frameTimeAccumulator += this.frameInterval;
@@ -42,9 +44,12 @@ HoboMan.prototype.loop = function() {
     while (this.frameTimeAccumulator >= this.targetInterval) {
         this.update(this.targetInterval / 1000);
         this.frameTimeAccumulator -= this.targetInterval;
+        var updated = true;
     }
-    this.coins.pickup(this.hobo);
-    this.render();
+    if (updated) {
+        this.render();
+        this.frameCounter += 1;
+    }
 
     setTimeout(_.bind(this.loop, this), 0);
 };
@@ -56,15 +61,36 @@ HoboMan.prototype.update = function(dt) {
 };
 
 HoboMan.prototype.render = function() {
+    // clear last frame
     this.ctx.fillStyle = "#FFFFFF";
     this.ctx.fillRect(0, 0, this.ctxWidth, this.ctxHeight);
-    this.level.render(this.ctx, this.canvas.width, this.canvas.height);
+
+    // render game
+    this.ctx.save();
+    var viewport = {
+        x: this.hobo.x - (this.ctxWidth/this.ctxScale)/2 + 8,
+        y: this.hobo.y - (this.ctxHeight/this.ctxScale)/2 + 8,
+        width: this.ctxWidth/this.ctxScale,
+        height: this.ctxHeight/this.ctxScale
+    };
+    this.ctx.scale(this.ctxScale, this.ctxScale);
+    this.ctx.translate(Math.floor(-viewport.x), Math.floor(-viewport.y));
+    this.level.render(this.ctx, viewport);
     for (var i=0; i < this.entities.length ; i++){
         this.entities[i].render(this.ctx);
     }
+    this.ctx.restore();
+
+    // render UI
     this.ctx.fillStyle = "black";
-    this.ctx.fillText("fps: " + (1000/this.frameInterval).toFixed(2), 10, 12);
+    this.ctx.fillText("fps: " + this.fps, 10, 12);
     this.ctx.fillText("Score: " + this.hobo.points,300,12);
+};
+
+HoboMan.prototype.updateFPS = function() {
+    this.fps = this.frameCounter;
+    this.frameCounter = 0;
+    setTimeout(_.bind(this.updateFPS, this), 1000);
 };
 
 HoboMan.prototype.updateKeys = function(ev) {
@@ -93,6 +119,7 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctx = this.canvas.getContext("2d");
     this.ctxWidth = this.canvas.width;
     this.ctxHeight = this.canvas.height;
+    this.ctxScale = 1;
 };
 
 hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);

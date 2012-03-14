@@ -1,10 +1,12 @@
 function HoboAnimation() {
-    this.file = "resources/images/dog.png";
+    this.file = "resources/images/hobo.png";
     this.height = 16;
     this.width = 16;
     this.spriteImage = new Image();
     this.spriteImage.src = this.file;
     this.accumulator = 0;
+    this.lastX = null;
+    this.lastY = null;
 }
 
 HoboAnimation.totalAnimationTime = 0.4;
@@ -31,10 +33,15 @@ HoboAnimation.prototype.update = function(dt) {
 
 HoboAnimation.prototype.getAnimationOffset = function(hobo){
     var frame = Math.floor(this.accumulator / (HoboAnimation.totalAnimationTime / HoboAnimation.numFrames));
-
+    if (hobo.x == this.lastX && hobo.y == this.lastY){
+        frame = 0;
+    } else {
+        this.lastX = hobo.x;
+        this.lastY = hobo.y;
+    }
     return HoboAnimation.frameMapping[frame] * this.height;
 };
 
 HoboAnimation.prototype.drawFrame = function(context, hobo){
-    context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(), this.width, this.height, hobo.x, hobo.y, Hobo.SIZE.w, Hobo.SIZE.h);
+    context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(hobo), this.width, this.height, Math.floor(hobo.x), Math.floor(hobo.y) - 6, Hobo.SIZE.w, Hobo.SIZE.h);
 };

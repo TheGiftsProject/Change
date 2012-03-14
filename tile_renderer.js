@@ -1,4 +1,3 @@
-
 function TileRenderer(row, col, world, context, sprite){
     this.row = row;
     this.col = col;
@@ -10,13 +9,24 @@ function TileRenderer(row, col, world, context, sprite){
         [world.getCellAt(row    , col -1), world.getCellAt(row    , col), world.getCellAt(row    , col +1)],
         [world.getCellAt(row + 1, col -1), world.getCellAt(row + 1, col), world.getCellAt(row + 1, col +1)]
         ];
-    this.wallThingie = null;
+    this.wallDecal = null;
+    this.roofDecal = null;
     if (this.fits([[2,2,2],
-                   [2,2,2],
+                   [2,1,2],
                    [2,0,2]]) && Math.random() > 0.5){
-        this.wallThingie = Math.floor(Math.random() * 4);
+        this.wallDecal = Math.floor(Math.random() * TileRenderer.DECALS.wall);
     }
+    if (this.fits([[2,2,2],
+                   [2,1,2],
+                   [2,1,2]]) && Math.random() > 0.8){
+        this.roofDecal = Math.floor(Math.random() * TileRenderer.DECALS.roof);
+    }
+    this.accumulator = Math.floor(Math.random() * 60);
 }
+TileRenderer.DECALS = {
+    roof: 7,
+    wall: 5,
+};
 
 TileRenderer.prototype.isWall = function(x,y){
     return this.neighbours[x+1][y+1].isWall();
@@ -51,7 +61,18 @@ TileRenderer.prototype.render = function(render_row, render_col){
     } else {
         this.renderRoad();
     }
+    var cell = this.world.getCellAt(this.row, this.col);
+    if (cell.hasContent()) {
+        this.renderCoin(cell.content);
+    }
 };
+
+TileRenderer.prototype.renderCoin = function(content_type) {
+    this.accumulator = (this.accumulator + 60) % 60;
+    var tmp = Math.floor((this.accumulator*5) % 4);
+    var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
+    this.blit(this.sprite.coins, 16, 16 * content_type)
+}
 
 TileRenderer.prototype.renderWall = function(){
     var idx = 0;
@@ -83,10 +104,12 @@ TileRenderer.prototype.renderWall = function(){
         this.blit(this.sprite.wall, 0, 256 + 3 * 16);
     }
 
-    if (this.wallThingie != null){
-        this.blit(this.sprite.wallBottom, 0,  this.wallThingie * 16);
+    if (this.wallDecal != null){
+        this.blit(this.sprite.wallBottom, 0,  this.wallDecal * 16);
     }
-
+    if (this.roofDecal != null){
+        this.blit(this.sprite.roof, 0,  this.roofDecal * 16);
+    }
 
 };
 
@@ -95,6 +118,11 @@ TileRenderer.prototype.renderRoad = function(){
     this.renderLines();
     this.renderStops();
     this.renderSewage();
+    if (this.fits([[1,1,1],
+                   [1,2,1],
+                   [1,1,1]])){
+        this.blit(this.sprite.road, 32, 32);
+    }
 };
 
 TileRenderer.prototype.renderStops = function(){
