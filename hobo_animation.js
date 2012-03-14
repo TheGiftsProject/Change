@@ -36,5 +36,5 @@ HoboAnimation.prototype.getAnimationOffset = function(hobo){
 };
 
 HoboAnimation.prototype.drawFrame = function(context, hobo){
-    context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(), this.width, this.height, hobo.x, hobo.y, Hobo.SIZE.w, Hobo.SIZE.h);
+    context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(), this.width, this.height, Math.floor(hobo.x), Math.floor(hobo.y) - 6, Hobo.SIZE.w, Hobo.SIZE.h);
 };
