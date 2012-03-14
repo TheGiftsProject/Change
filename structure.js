@@ -146,10 +146,6 @@ Pattern.prototype.beforeCenter = function(index) {
     return index == 0;
 }
 
-Pattern.prototype.afterCenter = function(index) {
-    return index == 0;
-}
-
 Pattern.prototype.internalCellAt = function(coord) {
     var isWall;
 
@@ -162,13 +158,13 @@ Pattern.prototype.internalCellAt = function(coord) {
     else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
         isWall = false;
     }
-    else if (this.bottom && this.afterCenter(coord.row) && this.inCenter(coord.col)) {
+    else if (this.bottom && !this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
         isWall = false;
     }
     else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
         isWall = false;
     }
-    else if (this.right && this.afterCenter(coord.col) && this.inCenter(coord.row)) {
+    else if (this.right && !this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
         isWall = false;
     }
     else {
