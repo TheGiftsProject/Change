@@ -51,14 +51,16 @@ Hobo.prototype.updateFromKeys = function(dt, keys) {
 Hobo.prototype.move = function(dt) {
     var distFromCellX = Math.floor(this.x) % Hobo.SIZE.w;
     var distFromCellY = Math.floor(this.y) % Hobo.SIZE.h;
-    var currentCol = Math.floor(this.x / Hobo.SIZE.w);
-    var currentRow = Math.floor(this.y / Hobo.SIZE.h);
+    var oldX = this.x;
+    var oldY = this.y;
+    var oldCol = Math.floor(this.x / Hobo.SIZE.w);
+    var oldRow = Math.floor(this.y / Hobo.SIZE.h);
 
-    var cell = this.world.getCellAt(currentRow,currentCol);
-    var motion = Hobo.SPEED * dt;
+    var cell = this.world.getCellAt(oldRow,oldCol);
+
 
     if (cell.hasContent()) {
-        this.collectCoin(cell.content, currentRow, currentCol);
+        this.collectCoin(cell.content, oldRow, oldCol);
     }
 
 
@@ -68,35 +70,27 @@ Hobo.prototype.move = function(dt) {
         }
     }
 
+    this.moveCoordinates(dt);
 
-
-    switch (this.direction) {
-        case 'left':
-            this.x -= motion;
-            break;
-        case 'up':
-            this.y -= motion;
-            break;
-        case 'right':
-            if (this.world.getCellAt(currentRow,currentCol+1).isWall()){
-                break;
-            }
-            this.x += motion;
-            break;
-        case 'down':
-            if (this.world.getCellAt(currentRow+1,currentCol).isWall()){
-                break;
-            }
-            this.y += motion;
-            break;
+    if (this.currentCol() != oldCol || this.currentRow() != oldCol) {
+        if (this.world.getCellAt(this.currentRow(), this.currentCol()).isWall()){
+//            if (this.direction == "right" || this.direction == "down"){
+//                this.x = oldX;
+//                this.y = oldY;
+//            } else {
+                this.x = oldCol * 16;
+                this.y = oldRow * 16;
+//            }
+        }
     }
 
-    var newCol = Math.floor(this.x / Hobo.SIZE.w);
-    var newRow = Math.floor(this.y / Hobo.SIZE.h);
-    if (this.world.getCellAt(newRow,newCol).isWall()){
-        this.x = currentCol * Hobo.SIZE.w;
-        this.y = currentRow * Hobo.SIZE.h;
-    }
+
+//    var newCol = Math.floor(this.x / Hobo.SIZE.w);
+//    var newRow = Math.floor(this.y / Hobo.SIZE.h);
+//    if (this.world.getCellAt(newRow,newCol).isWall()){
+//        this.x = currentCol * Hobo.SIZE.w;
+//        this.y = currentRow * Hobo.SIZE.h;
+//    }
 };
 
 Hobo.prototype.render = function(ctx) {
@@ -114,6 +108,14 @@ Hobo.prototype.currentCol = function(){
 Hobo.prototype.currentRow = function(){
     return Math.floor(this.y / Hobo.SIZE.h);
 };
+
+Hobo.prototype.currentRowY = function (){
+    return this.currentRow() * Hobo.SIZE.h;
+};
+
+Hobo.prototype.currentColX = function (){
+    return this.currentCol() * Hobo.SIZE.w;
+}
 
 Hobo.prototype.collectCoin = function(content_type, row, col) {
     this.addPoints(this.translatePoints(content_type));
@@ -145,5 +147,23 @@ Hobo.prototype.translatePoints = function(content_type) {
         case 0: return 10;
         case 1: return 5;
         case 2: return 1;
+    }
+};
+
+Hobo.prototype.moveCoordinates = function(dt){
+    var motion = Hobo.SPEED * dt;
+    switch (this.direction) {
+        case 'left':
+            this.x -= motion;
+            break;
+        case 'up':
+            this.y -= motion;
+            break;
+        case 'right':
+            this.x += motion;
+            break;
+        case 'down':
+            this.y += motion;
+            break;
     }
 };
