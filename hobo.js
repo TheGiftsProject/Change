@@ -7,6 +7,7 @@ function Hobo(x, y, world) {
     this.points = 0;
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w) ,Math.floor(this.y / Hobo.SIZE.h)).setAsPath();
+    this.world.collectAt(this.currentRow(), this.currentCol());
     SoundJS.add("die", "resources/sound/bitten.wav");
     SoundJS.add("coin", "resources/sound/coin.wav",5);
 }
@@ -24,6 +25,12 @@ Hobo.START = {
 Hobo.SPEED = 82;
 
 Hobo.prototype.update = function(dt, keys) {
+    this.updateFromKeys(dt, keys);
+    this.move(dt);
+    this.images.update(dt);
+};
+
+Hobo.prototype.updateFromKeys = function(dt, keys) {
     if (keys.left) {
         this.nextDirection = 'left';
     }
@@ -36,9 +43,6 @@ Hobo.prototype.update = function(dt, keys) {
     if (keys.down) {
         this.nextDirection = 'down';
     }
-
-    this.move(dt);
-    this.images.update(dt);
 };
 
 Hobo.prototype.move = function(dt) {
@@ -48,11 +52,12 @@ Hobo.prototype.move = function(dt) {
     var currentRow = Math.floor(this.y / Hobo.SIZE.h);
 
     var cell = this.world.getCellAt(currentRow,currentCol);
+
     if (cell.hasContent()) {
         this.collectCoin(cell.content, currentRow, currentCol);
     }
 
-    if (distFromCellX < 5 && distFromCellY < 5) {
+    if (distFromCellX < 3 && distFromCellY < 3 && !this.isWall(this.nextDirection)) {
         this.direction = this.nextDirection;
     }
 
@@ -114,6 +119,18 @@ Hobo.prototype.bitten = function(){
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
     SoundJS.play("die");
+};
+
+Hobo.prototype.isWall = function(direction){
+    var row = this.currentRow();
+    var col = this.currentCol();
+    switch (direction) {
+            case "left": col -= 1; break;
+            case "up": row -=1 ;break;
+            case "right": col += 1;break;
+            case "down": row += 1;break;
+        }
+    return this.world.getCellAt(row,col).isWall();
 };
 
 Hobo.prototype.translatePoints = function(content_type) {
