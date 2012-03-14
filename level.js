@@ -8,6 +8,10 @@ Level.CELL_SIZE = {
     HEIGHT: 16
 };
 
+Level.prototype.update = function(dt) {
+    this.renderer.update(dt);
+}
+
 Level.prototype.render = function(ctx, viewport) {
     ctx.strokeStyle = "#000000";
 
