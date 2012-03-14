@@ -1,9 +1,33 @@
 <html>
     <head>
+        <style type="text/css">
+            .skin{
+                background: url("/resources/images/skin.png") no-repeat;;
+                width: 448px;
+                height: 736px;
+                position: relative;
+            }
+            canvas, .shadow{
+                position: absolute;
+                top: 96px;
+                left: 64px;
+            }
+            .shadow{
+                /*-moz-box-shadow: inset 16px 16px 0px rgba(0.8,0.8,0.8,0.2);*/
+                /*-webkit-box-shadow: inset 16px 16px 0px rgba(0.8,0.8,0.8,0.8);*/
+                box-shadow: inset 8px 8px 2px rgba(80,80,80,0.2);
+                z-index: 100;
+                width: 320px;
+                height: 320px;
+            }
+
+        </style>
     </head>
     <body>
-        <canvas width=400 height=400></canvas>
-        <audio id="coin" src="/resources/sound/coin.wav"></audio>
+        <div class="skin">
+            <div class= "shadow"></div>
+            <canvas width=320 height=320></canvas>
+        </div>
         <script src="underscore.min.js"></script>
         <script src="sound.js"></script>
         <script src="utils.js"></script>
