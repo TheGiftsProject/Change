@@ -7,6 +7,7 @@ function Hobo(x, y, world) {
     this.points = 0;
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w) ,Math.floor(this.y / Hobo.SIZE.h)).setAsPath();
+    this.world.collectAt(this.currentRow(), this.currentCol());
     SoundJS.add("die", "resources/sound/bitten.wav");
     SoundJS.add("coin", "resources/sound/coin.wav",5);
 }
@@ -24,6 +25,12 @@ Hobo.START = {
 Hobo.SPEED = 82;
 
 Hobo.prototype.update = function(dt, keys) {
+    this.updateFromKeys(dt, keys);
+    this.move(dt);
+    this.images.update(dt);
+};
+
+Hobo.prototype.updateFromKeys = function(dt, keys) {
     if (keys.left) {
         this.nextDirection = 'left';
     }
@@ -36,9 +43,6 @@ Hobo.prototype.update = function(dt, keys) {
     if (keys.down) {
         this.nextDirection = 'down';
     }
-
-    this.move(dt);
-    this.images.update(dt);
 };
 
 Hobo.prototype.move = function(dt) {
@@ -48,6 +52,7 @@ Hobo.prototype.move = function(dt) {
     var currentRow = Math.floor(this.y / Hobo.SIZE.h);
 
     var cell = this.world.getCellAt(currentRow,currentCol);
+
     if (cell.hasContent()) {
         this.collectCoin(cell.content, currentRow, currentCol);
     }
