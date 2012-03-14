@@ -1,15 +1,14 @@
 function LevelRenderer() {
-    this.file = "resources/images/borders2.png";
-    this.file2 = "resources/images/roads.png";
-    this.file3 = "resources/images/road-side.png";
     this.height = 16;
     this.width = 16;
     this.wall = new Image();
-    this.wall.src = this.file;
+    this.wall.src = "resources/images/wall.png";
     this.road = new Image();
-    this.road.src = this.file2;
+    this.road.src = "resources/images/roads.png";
     this.wallBottom = new Image();
-    this.wallBottom.src = this.file3;
+    this.wallBottom.src = "resources/images/road-side.png";
+    this.roof = new Image();
+    this.roof.src = "resources/images/roof.png";
     this.tileRenderers = {};
 }
 

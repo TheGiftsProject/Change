@@ -108,7 +108,7 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctx = this.canvas.getContext("2d");
     this.ctxWidth = this.canvas.width;
     this.ctxHeight = this.canvas.height;
-    this.ctxScale = 4;
+    this.ctxScale = 2;
 };
 
 hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);
