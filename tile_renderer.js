@@ -1,9 +1,9 @@
-function TileRenderer(row, col, world, context, sprite){
+function TileRenderer(row, col, world, context, renderer){
     this.row = row;
     this.col = col;
     this.world = world;
     this.context = context;
-    this.sprite = sprite;
+    this.renderer = renderer;
     this.neighbours = [
         [world.getCellAt(row - 1, col -1), world.getCellAt(row - 1, col), world.getCellAt(row - 1, col +1)],
         [world.getCellAt(row    , col -1), world.getCellAt(row    , col), world.getCellAt(row    , col +1)],
@@ -21,7 +21,6 @@ function TileRenderer(row, col, world, context, sprite){
                    [2,1,2]]) && Math.random() > 0.8){
         this.roofDecal = Math.floor(Math.random() * TileRenderer.DECALS.roof);
     }
-    this.accumulator = Math.floor(Math.random() * 60);
 }
 TileRenderer.DECALS = {
     roof: 7,
@@ -68,10 +67,10 @@ TileRenderer.prototype.render = function(render_row, render_col){
 };
 
 TileRenderer.prototype.renderCoin = function(content_type) {
-    this.accumulator = (this.accumulator + 60) % 60;
-    var tmp = Math.floor((this.accumulator*5) % 4);
+    var tmp = Math.floor((this.renderer.accumulator*5) % 4);
+    console.log(tmp);
     var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
-    this.blit(this.sprite.coins, 16, 16 * content_type)
+    this.blit(this.renderer.coins, 16 * animation, 16 * content_type)
 }
 
 TileRenderer.prototype.renderWall = function(){
@@ -80,48 +79,48 @@ TileRenderer.prototype.renderWall = function(){
     if (this.isPath(0,1))   idx += 2;
     if (this.isPath(1,0))   idx += 4;
     if (this.isPath(0,-1))  idx += 8;
-    this.blit(this.sprite.wall, 0 , idx * 16);
+    this.blit(this.renderer.wall, 0 , idx * 16);
 
     if (this.fits([[0,1,2],
                    [1,2,2],
                    [2,2,2]])){
-        this.blit(this.sprite.wall, 0, 256 + 0 * 16);
+        this.blit(this.renderer.wall, 0, 256 + 0 * 16);
     }
     if (this.fits([[2,1,0],
                    [2,2,1],
                    [2,2,2]])){
-        this.blit(this.sprite.wall, 0, 256 + 1 * 16);
+        this.blit(this.renderer.wall, 0, 256 + 1 * 16);
     }
 
     if (this.fits([[2,2,2],
                    [2,2,1],
                    [2,1,0]])){
-        this.blit(this.sprite.wall, 0, 256 + 2 * 16);
+        this.blit(this.renderer.wall, 0, 256 + 2 * 16);
     }
     if (this.fits([[2,2,2],
                    [1,2,2],
                    [0,1,2]])){
-        this.blit(this.sprite.wall, 0, 256 + 3 * 16);
+        this.blit(this.renderer.wall, 0, 256 + 3 * 16);
     }
 
     if (this.wallDecal != null){
-        this.blit(this.sprite.wallBottom, 0,  this.wallDecal * 16);
+        this.blit(this.renderer.wallBottom, 0,  this.wallDecal * 16);
     }
     if (this.roofDecal != null){
-        this.blit(this.sprite.roof, 0,  this.roofDecal * 16);
+        this.blit(this.renderer.roof, 0,  this.roofDecal * 16);
     }
 
 };
 
 TileRenderer.prototype.renderRoad = function(){
-    this.blit(this.sprite.road, 32, 0);
+    this.blit(this.renderer.road, 32, 0);
     this.renderLines();
     this.renderStops();
     this.renderSewage();
     if (this.fits([[1,1,1],
                    [1,2,1],
                    [1,1,1]])){
-        this.blit(this.sprite.road, 32, 32);
+        this.blit(this.renderer.road, 32, 32);
     }
 };
 
@@ -129,25 +128,25 @@ TileRenderer.prototype.renderStops = function(){
     if (this.fits([[2,0,0],
                    [2,2,1],
                    [2,0,2]])){
-        this.blit(this.sprite.road, 0, 32);
+        this.blit(this.renderer.road, 0, 32);
         return;
     }
     if (this.fits([[2,0,2],
                    [1,2,2],
                    [0,0,2]])){
-        this.blit(this.sprite.road, 0, 16);
+        this.blit(this.renderer.road, 0, 16);
         return;
     }
     if (this.fits([[2,2,2],
                    [0,2,0],
                    [2,1,0]])){
-        this.blit(this.sprite.road, 16, 16);
+        this.blit(this.renderer.road, 16, 16);
         return;
     }
     if (this.fits([[0,1,2],
                    [0,2,0],
                    [2,2,2]])){
-        this.blit(this.sprite.road, 32, 16);
+        this.blit(this.renderer.road, 32, 16);
         return;
     }
 };
@@ -156,7 +155,7 @@ TileRenderer.prototype.renderSewage = function(){
     if (this.fits([[0,2,0],
                    [2,2,2],
                    [0,2,0]])){
-        this.blit(this.sprite.road, 16, 32);
+        this.blit(this.renderer.road, 16, 32);
         return;
     }
 };
@@ -169,7 +168,7 @@ TileRenderer.prototype.renderLines = function(){
         this.fits([[2,0,2],
                    [1,2,2],
                    [2,0,2]]))){
-        this.blit(this.sprite.road, 0, 0);
+        this.blit(this.renderer.road, 0, 0);
         return;
     }
     if (this.col % 2 ==0 && (
@@ -179,7 +178,7 @@ TileRenderer.prototype.renderLines = function(){
         this.fits([[2,2,2],
                    [0,2,0],
                    [2,1,2]]))){
-        this.blit(this.sprite.road, 16, 0);
+        this.blit(this.renderer.road, 16, 0);
         return;
     }
 };

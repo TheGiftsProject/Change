@@ -58,6 +58,7 @@ HoboMan.prototype.update = function(dt) {
     for (var i=0; i < this.entities.length ; i++){
         this.entities[i].update(dt, this.keys);
     }
+    this.level.update(dt);
 };
 
 HoboMan.prototype.render = function() {
