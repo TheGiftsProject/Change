@@ -48,7 +48,7 @@ Hobo.prototype.move = function(dt) {
     var oldX = this.x;
     var oldY = this.y;
 
-    if (distFromCellX < 5 && distFromCellY < 5) {
+    if (distFromCellX < 3 && distFromCellY < 3 && !this.isWall(this.nextDirection)) {
         this.direction = this.nextDirection;
     }
 
@@ -104,4 +104,16 @@ Hobo.prototype.bitten = function(){
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
     SoundJS.play("die");
+};
+
+Hobo.prototype.isWall = function(direction){
+    var row = this.currentRow();
+    var col = this.currentCol();
+    switch (direction) {
+            case "left": col -= 1; break;
+            case "up": row -=1 ;break;
+            case "right": col += 1;break;
+            case "down": row += 1;break;
+        }
+    return this.world.getCellAt(row,col).isWall();
 };
