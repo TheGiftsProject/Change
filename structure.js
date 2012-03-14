@@ -79,7 +79,7 @@ World.prototype.generatePatternFor = function(coord) {
         left_connected = left_connected || Math.roll(connection_chances[new_connections]);
     }	
 
-    var pattern = new Pattern(top_connected, right_connected, bottom_connected, left_connected, coord);
+    var pattern = new Pattern(top_connected, right_connected, bottom_connected, left_connected);
 
     if (!this.patternsMatrix[coord.row]) {
         this.patternsMatrix[coord.row] = {};
@@ -130,13 +130,12 @@ Coord.prototype.right = function() {
 };
 
 /* ================================================= PATTERN ================================================= */
-function Pattern(top, right, bottom, left, coord)
+function Pattern(top, right, bottom, left)
 {
     this.top    = top;
     this.right  = right;
     this.bottom = bottom;
     this.left   = left;
-    this.coord  = coord;
 }
 
 Pattern.SIZE   = 3; // must be an ODD number!
