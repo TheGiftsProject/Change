@@ -63,11 +63,12 @@ HoboMan.prototype.render = function() {
     // render game
     this.ctx.save();
     var viewport = {
-        x: this.hobo.x - this.ctxWidth/2,
-        y: this.hobo.y - this.ctxHeight/2,
-        width: this.ctxWidth,
-        height: this.ctxHeight
+        x: this.hobo.x - (this.ctxWidth/this.ctxScale)/2,
+        y: this.hobo.y - (this.ctxHeight/this.ctxScale)/2,
+        width: this.ctxWidth/this.ctxScale,
+        height: this.ctxHeight/this.ctxScale
     };
+    this.ctx.scale(this.ctxScale, this.ctxScale);
     this.ctx.translate(Math.floor(-viewport.x), Math.floor(-viewport.y));
     this.level.render(this.ctx, viewport);
     for (var i=0; i < this.entities.length ; i++){
@@ -107,6 +108,7 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctx = this.canvas.getContext("2d");
     this.ctxWidth = this.canvas.width;
     this.ctxHeight = this.canvas.height;
+    this.ctxScale = 4;
 };
 
 hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);
