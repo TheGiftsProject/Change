@@ -24,6 +24,15 @@ World.prototype.getCellAt = function(global_row, global_col) {
     return pattern.internalCellAt(internal_coord);
 };
 
+World.prototype.collectAt = function(global_row, global_col) {
+    var global_coord = new Coord(global_row, global_col);
+    var pattern_coord = Pattern.translateGlobalToPattern(global_coord);
+    var internal_coord = Pattern.translateGlobalToInternal(global_coord);
+
+    var pattern = this.getPatternAt(pattern_coord);
+    pattern.collectAt(internal_coord);
+};
+
 World.CONNECTION_CHANCES = [1.0,  1.0,  0.05, 0.01];
 
 World.prototype.generatePatternFor = function(coord) {
@@ -112,10 +121,6 @@ Cell.prototype.hasContent = function() {
     return this.content !== null;
 }
 
-Cell.prototype.removeContent = function() {
-    this.content = null;
-}
-
 /* ================================================= COORDS ================================================= */
 function Coord(row, col) {
     this.row = row;
@@ -154,6 +159,24 @@ function Pattern(top, right, bottom, left)
 }
 
 Pattern.CONTENT_CHANCE = 0.5;
+
+Pattern.prototype.collectAt = function(coord) {
+    if (this.inCenter(coord.row) && this.inCenter(coord.col)) {
+        middle_content = null;
+    }
+    else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
+        top_content = null;
+    }
+    else if (this.bottom && !this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
+        bottom__content = null;
+    }
+    else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
+        left_content = null;
+    }
+    else if (this.right && !this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
+        right_content = null;
+    }
+}
 
 Pattern.prototype.generateRandomContent = function()
 {

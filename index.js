@@ -9,7 +9,6 @@ function HoboMan(canvas) {
     this.dog = new Dog(160, 160, this.world, this.hobo);
     this.dog2 = new Dog(16, 320, this.world, this.hobo);
     this.dog3 = new Dog(320, 16, this.world, this.hobo);
-
     this.entities.push(this.dog);
     this.entities.push(this.dog2);
     this.entities.push(this.dog3);
@@ -53,12 +52,26 @@ HoboMan.prototype.update = function(dt) {
 };
 
 HoboMan.prototype.render = function() {
+    // clear last frame
     this.ctx.fillStyle = "#FFFFFF";
     this.ctx.fillRect(0, 0, this.ctxWidth, this.ctxHeight);
-    this.level.render(this.ctx, this.canvas.width, this.canvas.height);
+
+    // render game
+    this.ctx.save();
+    var viewport = {
+        x: this.hobo.x - this.ctxWidth/2,
+        y: this.hobo.y - this.ctxHeight/2,
+        width: this.ctxWidth,
+        height: this.ctxHeight
+    };
+    this.ctx.translate(Math.floor(-viewport.x), Math.floor(-viewport.y));
+    this.level.render(this.ctx, viewport);
     for (var i=0; i < this.entities.length ; i++){
         this.entities[i].render(this.ctx);
     }
+    this.ctx.restore();
+
+    // render UI
     this.ctx.fillStyle = "black";
     this.ctx.fillText("fps: " + (1000/this.frameInterval).toFixed(2), 10, 12);
     this.ctx.fillText("Score: " + this.hobo.points,300,12);

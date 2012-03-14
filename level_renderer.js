@@ -16,10 +16,10 @@ function LevelRenderer() {
     this.tileRenderers = {};
 }
 
-LevelRenderer.prototype.renderTile = function(row, col, world, context, render_row, render_col){
-	if (!([row,col] in this.tileRenderers)) {
-		this.tileRenderers[[row,col]] = new TileRenderer(row, col, world, context, this);
-	}
-	this.tileRenderers[[row,col]].render(render_row,render_col);
+LevelRenderer.prototype.renderTile = function(row, col, world, context){
+    if (!([row,col] in this.tileRenderers)) {
+        this.tileRenderers[[row,col]] = new TileRenderer(row, col, world, context, this);
+    }
+    this.tileRenderers[[row,col]].render(row, col);
 };
 

@@ -49,7 +49,7 @@ Hobo.prototype.move = function(dt) {
 
     var cell = this.world.getCellAt(currentRow,currentCol);
     if (cell.hasContent()) {
-        this.collectCoin(cell);
+        this.collectCoin(cell.content, currentRow, currentCol);
     }
 
     if (distFromCellX < 5 && distFromCellY < 5) {
@@ -105,9 +105,9 @@ Hobo.prototype.currentRow = function(){
     return Math.floor(this.y / Hobo.SIZE.h);
 };
 
-Hobo.prototype.collectCoin = function(cell) {
-    cell.removeContent();
-    this.addPoints(this.translatePoints(cell.content))
+Hobo.prototype.collectCoin = function(content_type, row, col) {
+    this.addPoints(this.translatePoints(content_type))
+    this.world.collectAt(row, col)
     SoundJS.play("coin");
 }
 
