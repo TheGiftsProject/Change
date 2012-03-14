@@ -12,6 +12,11 @@ function LevelRenderer() {
     this.coins = new Image();
     this.coins.src = "resources/images/coins.png";
     this.tileRenderers = {};
+    this.accumulator = Math.floor(Math.random() * 60);
+}
+
+LevelRenderer.prototype.update = function(dt) {
+    this.accumulator = (this.accumulator + dt) % 60;
 }
 
 LevelRenderer.prototype.renderTile = function(row, col, world, context){
