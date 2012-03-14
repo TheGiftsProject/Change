@@ -6,7 +6,7 @@ function Hobo(x, y, world) {
     this.images = new HoboAnimation();
     this.points = 0;
     this.world = world;
-    this.world.getCellAt(Math.floor(this.x / Hobo.SIZE.w) ,Math.floor(this.y / Hobo.SIZE.h)).setAsPath();
+    this.world.getCellAt(this.currentRow(), this.currentCol()).setAsPath();
     this.world.collectAt(this.currentRow(), this.currentCol());
     SoundJS.add("die", "resources/sound/bitten.wav");
     SoundJS.add("coin", "resources/sound/coin.wav",5);
