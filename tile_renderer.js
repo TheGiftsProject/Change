@@ -68,7 +68,6 @@ TileRenderer.prototype.render = function(render_row, render_col){
 
 TileRenderer.prototype.renderCoin = function(content_type) {
     var tmp = Math.floor((this.renderer.accumulator*5) % 4);
-    console.log(tmp);
     var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
     this.blit(this.renderer.coins, 16 * animation, 16 * content_type)
 }
