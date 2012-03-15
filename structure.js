@@ -33,7 +33,7 @@ World.prototype.collectAt = function(global_row, global_col) {
     pattern.collectAt(internal_coord);
 };
 
-World.CONNECTION_CHANCES = [1.0,  1.0,  0.3, 0.2];
+World.CONNECTION_CHANCES = [1.0,  1.0,  0.4, 0.2];
 World.VARIANCE_CHANCE = 4;
 
 World.prototype.generatePatternFor = function(coord) {
@@ -48,9 +48,6 @@ World.prototype.generatePatternFor = function(coord) {
     var left_exists   = left_pattern   ? true : false;
 	
 	var connections = 0;
-	
-	var top_connected    = top_exists    ? top_pattern.bottom : false;
-    if (top_connected) connections++;
 
     var right_connected  = right_exists  ? right_pattern.left : false;
     if (right_connected) connections++;
@@ -60,10 +57,19 @@ World.prototype.generatePatternFor = function(coord) {
 
     var left_connected   = left_exists   ? left_pattern.right : false;
     if (left_connected) connections++;
+
+    var top_connected    = top_exists    ? top_pattern.bottom : false;
+    if (top_connected) connections++;
 	
     var connection_chances = World.CONNECTION_CHANCES.slice(0, 4 - connections).shuffle();
 
     var new_connections = 0;
+
+
+    if (!left_exists || left_connected) {
+        left_connected = left_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
+        new_connections++;
+    }
 
     if (!top_exists || top_connected) {
         top_connected = top_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
@@ -80,9 +86,6 @@ World.prototype.generatePatternFor = function(coord) {
         new_connections++;
     }
 
-    if (!left_exists || left_connected) {
-        left_connected = left_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
-    }	
 
     var pattern = new Pattern(top_connected, right_connected, bottom_connected, left_connected);
 
