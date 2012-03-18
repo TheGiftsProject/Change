@@ -29,7 +29,7 @@ World.prototype.getCellAt = function(global_row, global_col) {
 
         for (var internal_row = 0; internal_row < 3; internal_row++) {
             for (var internal_col = 0; internal_col < 3; internal_col++) {
-                this.addCellAt(pattern.internalCellAt(internal_row, internal_col), pattern_coord * 3 + internal_row, pattern_coord * 3 + internal_col);
+                this.addCellAt(pattern.internalCellAt(internal_row, internal_col), pattern_coord.row * 3 + internal_row, pattern_coord.col * 3 + internal_col);
             }
         }
     }
@@ -103,10 +103,15 @@ World.prototype.generatePatternFor = function(coord) {
 };
 
 /* ================================================= CELL ================================================= */
-function Cell(isWall, content) {
+function Cell(isWall) {
     this.wall = isWall;
-    this.content = content;
+    if (!isWall) {
+        this.content = null;
+    }
 }
+
+
+Cell.COIN_CHANCE = 0.5;
 
 Cell.prototype.setAsPath = function() {
     this.wall = false;
@@ -127,6 +132,15 @@ Cell.prototype.hasContent = function() {
 Cell.prototype.removeContent = function() {
     return this.content = null;
 };
+
+/* ================================================= CONTENT ================================================= */
+function Content(type) {
+}
+
+Content.COIN          = "coin";
+Content.POWERUP_GOD   = "godmode";
+Content.POWERUP_BONUS = "godmode";
+
 
 /* ================================================= COORDS ================================================= */
 function Coord(row, col) {
@@ -156,21 +170,6 @@ function Pattern(top, right, bottom, left) {
     this.right = right;
     this.bottom = bottom;
     this.left = left;
-
-    this.middle_content = this.generateRandomContent();
-    this.top_content = this.generateRandomContent();
-    this.right_content = this.generateRandomContent();
-    this.bottom_content = this.generateRandomContent();
-    this.left_content = this.generateRandomContent();
-};
-
-Pattern.CONTENT_CHANCE = 0.5;
-
-Pattern.prototype.generateRandomContent = function() {
-    if (Math.roll(Pattern.CONTENT_CHANCE)) {
-        return Math.floor(Math.random() * 3);
-    }
-    return null;
 };
 
 Pattern.prototype.inCenter = function(index) {
@@ -183,38 +182,30 @@ Pattern.prototype.beforeCenter = function(index) {
 
 Pattern.prototype.internalCellAt = function(row, col) {
     var isWall;
-    var content;
 
     if (this.inCenter(row) && this.inCenter(col)) {
         isWall = false;
-        content = this.middle_content;
     }
     else if (! (this.inCenter(row) || this.inCenter(col))) {
         isWall = true;
-        content = null;
     }
     else if (this.top && this.beforeCenter(row) && this.inCenter(col)) {
         isWall = false;
-        content = this.top_content;
     }
     else if (this.bottom && ! this.beforeCenter(row) && this.inCenter(col)) {
         isWall = false;
-        content = this.bottom_content;
     }
     else if (this.left && this.beforeCenter(col) && this.inCenter(row)) {
         isWall = false;
-        content = this.left_content;
     }
     else if (this.right && ! this.beforeCenter(col) && this.inCenter(row)) {
         isWall = false;
-        content = this.right_content;
     }
     else {
         isWall = true;
-        content = null;
     }
 
-    return new Cell(isWall, content);
+    return new Cell(isWall);
 };
 
 Pattern.translateGlobalToPattern = function(row, col) {
