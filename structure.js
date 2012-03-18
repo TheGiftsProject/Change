@@ -91,7 +91,20 @@ World.prototype.generatePatternFor = function(coord) {
         return connected;
     }
 
-    var pattern = new Pattern(isSideConnected('top'), isSideConnected('right'), isSideConnected('bottom'), isSideConnected('left'));
+
+    function getPatternConnections(){
+
+        var connections = {};
+        var sides = ['top', 'right', 'bottom', 'left'].shuffle();
+
+        _.each( sides, function(side){
+            connections[side] = isSideConnected(side);
+        });
+
+        return connections;
+    }
+
+    var pattern = new Pattern( getPatternConnections() );
 
     if (!this.patternsMatrix[coord.row]) {
         this.patternsMatrix[coord.row] = {};
@@ -151,11 +164,13 @@ Coord.prototype.right = function() {
 };
 
 /* ================================================= PATTERN ================================================= */
-function Pattern(top, right, bottom, left) {
-    this.top = top;
-    this.right = right;
-    this.bottom = bottom;
-    this.left = left;
+function Pattern(connections) {
+    this.connections = connections;
+
+    this.top = connections['top'];
+    this.right = connections['right'];
+    this.bottom = connections['bottom'];
+    this.left = connections['left'];
 
     this.middle_content = this.generateRandomContent();
     this.top_content = this.generateRandomContent();
