@@ -12,7 +12,7 @@ World.prototype.getPatternAt = function(coord) {
 
 World.prototype.getCellAt = function(global_row, global_col) {
     var global_coord = new Coord(global_row, global_col);
-  
+
     var pattern_coord = Pattern.translateGlobalToPattern(global_coord);
     var internal_coord = Pattern.translateGlobalToInternal(global_coord);
 
@@ -33,61 +33,62 @@ World.prototype.collectAt = function(global_row, global_col) {
     pattern.collectAt(internal_coord);
 };
 
-World.CONNECTION_CHANCES = [1.0,  1.0,  0.4, 0.2];
-World.VARIANCE_CHANCE = 4;
+World.VARIANCE_CHANCE = 2;
 
 World.prototype.generatePatternFor = function(coord) {
-    var top_pattern    = this.getPatternAt(coord.top());
-    var right_pattern  = this.getPatternAt(coord.right());
-    var bottom_pattern = this.getPatternAt(coord.bottom());
-    var left_pattern   = this.getPatternAt(coord.left());
-	
-	var top_exists    = top_pattern    ? true : false;
-    var right_exists  = right_pattern  ? true : false;
-    var bottom_exists = bottom_pattern ? true : false;
-    var left_exists   = left_pattern   ? true : false;
-	
-	var connections = 0;
 
-    var right_connected  = right_exists  ? right_pattern.left : false;
-    if (right_connected) connections++;
+    /**
+     * builds a 4 number sequance, e.g [1.0, 0.8, 0.2, 0.1]
+     */
+  function rollChanceFromValue(){
 
-    var bottom_connected = bottom_exists ? bottom_pattern.top : false;
-    if (bottom_connected) connections++;
+        // total value of the sequance
+        var totalValue = 4.5;
 
-    var left_connected   = left_exists   ? left_pattern.right : false;
-    if (left_connected) connections++;
+        // we set this to higher value then 1 so that the 1st run will have a better chance of being connected
+        var maxLimit = 1.3;
 
-    var top_connected    = top_exists    ? top_pattern.bottom : false;
-    if (top_connected) connections++;
-	
-    var connection_chances = World.CONNECTION_CHANCES.slice(0, 4 - connections).shuffle();
+        // the max amount to reduce from the upper bound each run
+        var jumpLimit = 0.1;
 
-    var new_connections = 0;
-
-
-    if (!left_exists || left_connected) {
-        left_connected = left_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
-        new_connections++;
+    var result = 0;
+    
+    return function(){
+      if( totalValue > 0 ){
+        result = Math.max( 0, Math.randomRange(0, maxLimit) );
+        maxLimit = Math.max( 0, maxLimit - Math.randomRange(0, jumpLimit) );
+        totalValue = totalValue - result; // save for next time
+      }
+      return result;
     }
+  }
 
-    if (!top_exists || top_connected) {
-        top_connected = top_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
-        new_connections++;
+    // this instance is called at most 4 times
+  var rollChance = rollChanceFromValue();
+
+  function takeAChance(){
+    return Math.roll( rollChance() );
+  }
+  
+  var revert_side = {
+    'top':     'bottom',
+    'right':   'left',
+    'bottom':   'top',
+    'left':   'right'
+  };
+
+  var that = this;
+  function isSideConnected(side){
+    var pattern = that.getPatternAt(coord[side]());
+    var exists = pattern ? true : false;
+    var connected    = exists ? pattern[ revert_side[side] ] : false;
+    if (!exists || connected) {
+      connected = connected || takeAChance();
     }
+    return connected;
+  }
 
-    if (!right_exists || right_connected) {
-        right_connected = right_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
-        new_connections++;
-    }
-
-    if (!bottom_exists | bottom_connected) {
-        bottom_connected = bottom_connected || Math.rollWithVariance(connection_chances[new_connections], World.VARIANCE_CHANCE);
-        new_connections++;
-    }
-
-
-    var pattern = new Pattern(top_connected, right_connected, bottom_connected, left_connected);
+    var pattern = new Pattern(isSideConnected('top'), isSideConnected('right'), isSideConnected('bottom'), isSideConnected('left'));
 
     if (!this.patternsMatrix[coord.row]) {
         this.patternsMatrix[coord.row] = {};
