@@ -86,7 +86,7 @@ Hobo.prototype.currentRow = function(){
 
 
 Hobo.prototype.collectCoin = function(cell) {
-    this.addPoints(this.translatePoints(cell.content));
+    this.addPoints(cell.content.getValue());
     cell.removeContent();
     SoundJS.play("coin" + Math.floor(Math.random() * 4));
 }
@@ -108,14 +108,6 @@ Hobo.prototype.isWall = function(direction, row, col){
             case "down": row += 1;break;
         }
     return this.world.getCellAt(row,col).isWall();
-};
-
-Hobo.prototype.translatePoints = function(content_type) {
-    switch(content_type) {
-        case 0: return 10;
-        case 1: return 5;
-        case 2: return 1;
-    }
 };
 
 Hobo.prototype.moveCoordinates = function(dt){

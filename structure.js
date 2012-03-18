@@ -106,12 +106,25 @@ World.prototype.generatePatternFor = function(coord) {
 function Cell(isWall) {
     this.wall = isWall;
     if (!isWall) {
-        this.content = null;
+        var roll = Math.random();
+        if (roll > Cell.TOP_COIN_CHANCE) {
+            this.content = new Content(Content.COIN, Content.COINS.TOP);
+        }
+        else if (roll > Cell.MID_COIN_CHANCE) {
+            this.content = new Content(Content.COIN, Content.COINS.MID);
+        }
+        else if (roll > Cell.LOW_COIN_CHANCE) {
+            this.content = new Content(Content.COIN, Content.COINS.LOW);
+        }
+        else {
+            this.content = null;
+        }
     }
-}
+};
 
-
-Cell.COIN_CHANCE = 0.5;
+Cell.LOW_COIN_CHANCE = 0.3;
+Cell.MID_COIN_CHANCE = 0.2;
+Cell.TOP_COIN_CHANCE = 0.1;
 
 Cell.prototype.setAsPath = function() {
     this.wall = false;
@@ -134,13 +147,33 @@ Cell.prototype.removeContent = function() {
 };
 
 /* ================================================= CONTENT ================================================= */
-function Content(type) {
-}
+function Content(type, value) {
+    this.type  = type;
+    this.value = value;
+};
 
+// coins.
+Content.COINS = {
+    TOP: 0,
+    MID: 1,
+    LOW: 2
+};
+
+// types.
 Content.COIN          = "coin";
 Content.POWERUP_GOD   = "godmode";
-Content.POWERUP_BONUS = "godmode";
+Content.POWERUP_BONUS = "bonus";
 
+Content.prototype.getValue() = function() {
+    if (this.type == Content.COIN) {
+        switch (this.value) {
+            case Content.COINS.TOP: return 10;
+            case Content.COINS.MID: return 5;
+            case Content.COINS.LOW: return 1;
+        }
+    }
+    return 0;
+};
 
 /* ================================================= COORDS ================================================= */
 function Coord(row, col) {
