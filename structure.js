@@ -40,38 +40,6 @@ World.VARIANCE_CHANCE = 2;
 
 World.prototype.generatePatternFor = function(coord) {
 
-    /**
-     * builds a 4 number sequance, e.g [1.0, 0.8, 0.2, 0.1]
-     */
-    function rollChanceFromValue() {
-
-        // total value of the sequance
-        var totalValue = 4.5;
-
-        // we set this to higher value then 1 so that the 1st run will have a better chance of being connected
-        var maxLimit = 1.3;
-
-        // the max amount to reduce from the upper bound each run
-        var jumpLimit = 0.1;
-
-        var result = 0;
-
-        return function() {
-            if (totalValue > 0) {
-                result = Math.max(0, Math.randomRange(0, maxLimit));
-                maxLimit = Math.max(0, maxLimit - Math.randomRange(0, jumpLimit));
-                totalValue = totalValue - result; // save for next time
-            }
-            return result;
-        }
-    }
-
-    // this instance is called at most 4 times
-    var rollChance = rollChanceFromValue();
-
-    function takeAChance() {
-        return Math.roll(rollChance());
-    }
 
     var revert_side = {
         'top': 'bottom',
@@ -81,12 +49,12 @@ World.prototype.generatePatternFor = function(coord) {
     };
 
     var that = this;
-    function isSideConnected(side) {
+    function isSideConnected(side, connection_chance) {
         var pattern = that.getPatternAt(coord[side]());
         var exists = pattern ? true: false;
         var connected = exists ? pattern[revert_side[side]] : false;
         if (!exists || connected) {
-            connected = connected || takeAChance();
+            connected = connected || connection_chance;
         }
         return connected;
     }
@@ -97,8 +65,11 @@ World.prototype.generatePatternFor = function(coord) {
         var connections = {};
         var sides = ['top', 'right', 'bottom', 'left'].shuffle();
 
+        // this instance is called at most 4 times
+        var sequence_popper = Math.sequenceBuilder(4.5, 1.3, 0.1);
+
         _.each( sides, function(side){
-            connections[side] = isSideConnected(side);
+            connections[side] = isSideConnected(side, Math.roll( sequence_popper() ) );
         });
 
         return connections;
