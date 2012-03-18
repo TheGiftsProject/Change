@@ -6,8 +6,9 @@ function Hobo(x, y, world) {
     this.images = new HoboAnimation();
     this.points = 0;
     this.world = world;
-    this.world.getCellAt(this.currentRow(), this.currentCol()).setAsPath();
-    this.world.collectAt(this.currentRow(), this.currentCol());
+    var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
+    startCell.setAsPath();
+    startCell.removeContent();
     SoundJS.add("die", "resources/sound/bitten.wav");
     SoundJS.add("coin0", "resources/sound/coin0.wav",5);
     SoundJS.add("coin1", "resources/sound/coin1.wav",5);
@@ -55,7 +56,7 @@ Hobo.prototype.move = function(dt) {
     var cell = this.world.getCellAt(oldRow,oldCol);
 
     if (cell.hasContent()) {
-        this.collectCoin(cell.content, oldRow, oldCol);
+        this.collectCoin(cell);
     }
 
     if (this.direction == "") {
@@ -84,9 +85,9 @@ Hobo.prototype.currentRow = function(){
 };
 
 
-Hobo.prototype.collectCoin = function(content_type, row, col) {
-    this.addPoints(this.translatePoints(content_type));
-    this.world.collectAt(row, col);
+Hobo.prototype.collectCoin = function(cell) {
+    this.addPoints(this.translatePoints(cell.content));
+    cell.removeContent();
     SoundJS.play("coin" + Math.floor(Math.random() * 4));
 }
 
