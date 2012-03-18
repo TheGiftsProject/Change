@@ -1,10 +1,10 @@
 /* ================================================= WORLD ================================================= */
 function World() {
-  this.patternsMatrix = {};
+    this.patternsMatrix = {};
 }
 
 World.prototype.getPatternAt = function(coord) {
-    if (!this.patternsMatrix[coord.row] || !this.patternsMatrix[coord.row][coord.col]) {
+    if (!this.patternsMatrix[coord.row] || ! this.patternsMatrix[coord.row][coord.col]) {
         return null;
     }
     return this.patternsMatrix[coord.row][coord.col];
@@ -40,7 +40,7 @@ World.prototype.generatePatternFor = function(coord) {
     /**
      * builds a 4 number sequance, e.g [1.0, 0.8, 0.2, 0.1]
      */
-  function rollChanceFromValue(){
+    function rollChanceFromValue() {
 
         // total value of the sequance
         var totalValue = 4.5;
@@ -51,42 +51,42 @@ World.prototype.generatePatternFor = function(coord) {
         // the max amount to reduce from the upper bound each run
         var jumpLimit = 0.1;
 
-    var result = 0;
-    
-    return function(){
-      if( totalValue > 0 ){
-        result = Math.max( 0, Math.randomRange(0, maxLimit) );
-        maxLimit = Math.max( 0, maxLimit - Math.randomRange(0, jumpLimit) );
-        totalValue = totalValue - result; // save for next time
-      }
-      return result;
+        var result = 0;
+
+        return function() {
+            if (totalValue > 0) {
+                result = Math.max(0, Math.randomRange(0, maxLimit));
+                maxLimit = Math.max(0, maxLimit - Math.randomRange(0, jumpLimit));
+                totalValue = totalValue - result; // save for next time
+            }
+            return result;
+        }
     }
-  }
 
     // this instance is called at most 4 times
-  var rollChance = rollChanceFromValue();
+    var rollChance = rollChanceFromValue();
 
-  function takeAChance(){
-    return Math.roll( rollChance() );
-  }
-  
-  var revert_side = {
-    'top':     'bottom',
-    'right':   'left',
-    'bottom':   'top',
-    'left':   'right'
-  };
-
-  var that = this;
-  function isSideConnected(side){
-    var pattern = that.getPatternAt(coord[side]());
-    var exists = pattern ? true : false;
-    var connected    = exists ? pattern[ revert_side[side] ] : false;
-    if (!exists || connected) {
-      connected = connected || takeAChance();
+    function takeAChance() {
+        return Math.roll(rollChance());
     }
-    return connected;
-  }
+
+    var revert_side = {
+        'top': 'bottom',
+        'right': 'left',
+        'bottom': 'top',
+        'left': 'right'
+    };
+
+    var that = this;
+    function isSideConnected(side) {
+        var pattern = that.getPatternAt(coord[side]());
+        var exists = pattern ? true: false;
+        var connected = exists ? pattern[revert_side[side]] : false;
+        if (!exists || connected) {
+            connected = connected || takeAChance();
+        }
+        return connected;
+    }
 
     var pattern = new Pattern(isSideConnected('top'), isSideConnected('right'), isSideConnected('bottom'), isSideConnected('left'));
 
@@ -101,8 +101,8 @@ World.prototype.generatePatternFor = function(coord) {
 
 /* ================================================= CELL ================================================= */
 function Cell(isWall, content) {
-  this.wall    = isWall;
-  this.content = content;
+    this.wall = isWall;
+    this.content = content;
 }
 
 Cell.prototype.setAsPath = function() {
@@ -114,7 +114,7 @@ Cell.prototype.isWall = function() {
 };
 
 Cell.prototype.isPath = function() {
-    return !this.wall;
+    return ! this.wall;
 };
 
 Cell.prototype.hasContent = function() {
@@ -128,34 +128,33 @@ function Coord(row, col) {
 }
 
 Coord.prototype.top = function() {
-    return new Coord(this.row-1, this.col);
+    return new Coord(this.row - 1, this.col);
 };
 
 Coord.prototype.bottom = function() {
-    return new Coord(this.row+1, this.col);
+    return new Coord(this.row + 1, this.col);
 };
 
 Coord.prototype.left = function() {
-    return new Coord(this.row, this.col-1);
+    return new Coord(this.row, this.col - 1);
 };
 
 Coord.prototype.right = function() {
-    return new Coord(this.row, this.col+1);
+    return new Coord(this.row, this.col + 1);
 };
 
 /* ================================================= PATTERN ================================================= */
-function Pattern(top, right, bottom, left)
-{
-    this.top    = top;
-    this.right  = right;
+function Pattern(top, right, bottom, left) {
+    this.top = top;
+    this.right = right;
     this.bottom = bottom;
-    this.left   = left;
+    this.left = left;
 
     this.middle_content = this.generateRandomContent();
-    this.top_content    = this.generateRandomContent();
-    this.right_content  = this.generateRandomContent();
+    this.top_content = this.generateRandomContent();
+    this.right_content = this.generateRandomContent();
     this.bottom_content = this.generateRandomContent();
-    this.left_content   = this.generateRandomContent();
+    this.left_content = this.generateRandomContent();
 }
 
 Pattern.CONTENT_CHANCE = 0.5;
@@ -167,19 +166,18 @@ Pattern.prototype.collectAt = function(coord) {
     else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
         this.top_content = null;
     }
-    else if (this.bottom && !this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
+    else if (this.bottom && ! this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
         this.bottom_content = null;
     }
     else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
         this.left_content = null;
     }
-    else if (this.right && !this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
+    else if (this.right && ! this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
         this.right_content = null;
     }
 }
 
-Pattern.prototype.generateRandomContent = function()
-{
+Pattern.prototype.generateRandomContent = function() {
     if (Math.roll(Pattern.CONTENT_CHANCE)) {
         return Math.floor(Math.random() * 3);
     }
@@ -199,31 +197,31 @@ Pattern.prototype.internalCellAt = function(coord) {
     var content;
 
     if (this.inCenter(coord.row) && this.inCenter(coord.col)) {
-        isWall  = false;
+        isWall = false;
         content = this.middle_content;
     }
-    else if (!(this.inCenter(coord.row) || this.inCenter(coord.col))) {
-       isWall  = true;
-       content = null;
+    else if (! (this.inCenter(coord.row) || this.inCenter(coord.col))) {
+        isWall = true;
+        content = null;
     }
     else if (this.top && this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
-        isWall  = false;
+        isWall = false;
         content = this.top_content;
     }
-    else if (this.bottom && !this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
-        isWall  = false;
+    else if (this.bottom && ! this.beforeCenter(coord.row) && this.inCenter(coord.col)) {
+        isWall = false;
         content = this.bottom_content;
     }
     else if (this.left && this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
-        isWall  = false;
+        isWall = false;
         content = this.left_content;
     }
-    else if (this.right && !this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
-        isWall  = false;
+    else if (this.right && ! this.beforeCenter(coord.col) && this.inCenter(coord.row)) {
+        isWall = false;
         content = this.right_content;
     }
     else {
-        isWall  = true;
+        isWall = true;
         content = null;
     }
 
@@ -241,3 +239,4 @@ Pattern.translateGlobalToInternal = function(coord) {
     var internal_col = coord.col.mod(3);
     return new Coord(internal_row, internal_col);
 };
+
