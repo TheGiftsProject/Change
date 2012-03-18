@@ -33,13 +33,15 @@ Math.sequenceBuilder = function sequenceBuilder(total, maxLim, jumpLim) {
 
     var result = 0;
 
-    return function() {
-        if (totalValue > 0) {
-            result = Math.max(0, Math.randomRange(0, maxLimit));
-            maxLimit = Math.max(0, maxLimit - Math.randomRange(0, jumpLimit));
-            totalValue = totalValue - result; // save for next time
+    return {
+        pop : function(){
+            if (totalValue > 0) {
+                result = Math.max(0, Math.randomRange(0, maxLimit));
+                maxLimit = Math.max(0, maxLimit - Math.randomRange(0, jumpLimit));
+                totalValue = totalValue - result; // save for next time
+            }
+            return result;
         }
-        return result;
     }
 };
 

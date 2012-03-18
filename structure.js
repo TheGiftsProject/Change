@@ -66,10 +66,11 @@ World.prototype.generatePatternFor = function(coord) {
         var sides = ['top', 'right', 'bottom', 'left'].shuffle();
 
         // this instance is called at most 4 times
-        var sequence_popper = Math.sequenceBuilder(4.5, 1.3, 0.1);
+        var sequence = Math.sequenceBuilder(4.5, 1.3, 0.1);
 
         _.each( sides, function(side){
-            connections[side] = isSideConnected(side, Math.roll( sequence_popper() ) );
+            var chance = sequence.pop();
+            connections[side] = isSideConnected(side, Math.roll( chance ) );
         });
 
         return connections;
