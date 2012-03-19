@@ -5,7 +5,7 @@ function World() {
 };
 
 World.prototype.getPatternAt = function(coord) {
-    if (!this.patternsMatrix[coord.row] || ! this.patternsMatrix[coord.row][coord.col]) {
+    if (!this.patternsMatrix[coord.row] || !this.patternsMatrix[coord.row][coord.col]) {
         return null;
     }
     return this.patternsMatrix[coord.row][coord.col];
@@ -120,6 +120,9 @@ function Cell(isWall) {
             this.content = null;
         }
     }
+    else {
+        this.content = null;
+    }
 };
 
 Cell.LOW_COIN_CHANCE = 0.3;
@@ -164,7 +167,7 @@ Content.COIN          = "coin";
 Content.POWERUP_GOD   = "godmode";
 Content.POWERUP_BONUS = "bonus";
 
-Content.prototype.getValue() = function() {
+Content.prototype.getValue = function() {
     if (this.type == Content.COIN) {
         switch (this.value) {
             case Content.COINS.TOP: return 10;
@@ -174,6 +177,10 @@ Content.prototype.getValue() = function() {
     }
     return 0;
 };
+
+Content.prototype.isCoin = function() {
+    return this.type == Content.COIN;
+}
 
 /* ================================================= COORDS ================================================= */
 function Coord(row, col) {

@@ -61,8 +61,8 @@ TileRenderer.prototype.render = function(render_row, render_col){
         this.renderRoad();
     }
     var cell = this.world.getCellAt(this.row, this.col);
-    if (cell.hasContent()) {
-        this.renderCoin(cell.content);
+    if (cell.hasContent() && cell.content.isCoin()) {
+        this.renderCoin(cell.content.value);
     }
 };
 
