@@ -5,7 +5,7 @@ function World() {
 };
 
 World.prototype.getPatternAt = function(coord) {
-    if (!this.patternsMatrix[coord.row] || !this.patternsMatrix[coord.row][coord.col]) {
+    if (!this.patternsMatrix[coord.row] || ! this.patternsMatrix[coord.row][coord.col]) {
         return null;
     }
     return this.patternsMatrix[coord.row][coord.col];
@@ -40,39 +40,6 @@ World.VARIANCE_CHANCE = 2;
 
 World.prototype.generatePatternFor = function(coord) {
 
-    /**
-     * builds a 4 number sequance, e.g [1.0, 0.8, 0.2, 0.1]
-     */
-    function rollChanceFromValue() {
-
-        // total value of the sequance
-        var totalValue = 4.5;
-
-        // we set this to higher value then 1 so that the 1st run will have a better chance of being connected
-        var maxLimit = 1.3;
-
-        // the max amount to reduce from the upper bound each run
-        var jumpLimit = 0.1;
-
-        var result = 0;
-
-        return function() {
-            if (totalValue > 0) {
-                result = Math.max(0, Math.randomRange(0, maxLimit));
-                maxLimit = Math.max(0, maxLimit - Math.randomRange(0, jumpLimit));
-                totalValue = totalValue - result; // save for next time
-            }
-            return result;
-        }
-    }
-
-    // this instance is called at most 4 times
-    var rollChance = rollChanceFromValue();
-
-    function takeAChance() {
-        return Math.roll(rollChance());
-    }
-
     var revert_side = {
         'top': 'bottom',
         'right': 'left',
@@ -81,17 +48,34 @@ World.prototype.generatePatternFor = function(coord) {
     };
 
     var that = this;
-    function isSideConnected(side) {
+    function isSideConnected(side, connection_chance) {
         var pattern = that.getPatternAt(coord[side]());
         var exists = pattern ? true: false;
         var connected = exists ? pattern[revert_side[side]] : false;
         if (!exists || connected) {
-            connected = connected || takeAChance();
+            connected = connected || connection_chance;
         }
         return connected;
     }
 
-    var pattern = new Pattern(isSideConnected('top'), isSideConnected('right'), isSideConnected('bottom'), isSideConnected('left'));
+
+    function getPatternConnections(){
+
+        var connections = {};
+        var sides = ['top', 'right', 'bottom', 'left'].shuffle();
+
+        // this instance is called at most 4 times
+        var sequence = Math.sequenceBuilder(4.5, 1.3, 0.1);
+
+        _.each( sides, function(side){
+            var chance = sequence.pop();
+            connections[side] = isSideConnected(side, Math.roll( chance ) );
+        });
+
+        return connections;
+    }
+
+    var pattern = new Pattern( getPatternConnections() );
 
     if (!this.patternsMatrix[coord.row]) {
         this.patternsMatrix[coord.row] = {};
@@ -180,7 +164,7 @@ Content.prototype.getValue = function() {
 
 Content.prototype.isCoin = function() {
     return this.type == Content.COIN;
-}
+};
 
 /* ================================================= COORDS ================================================= */
 function Coord(row, col) {
@@ -205,11 +189,12 @@ Coord.prototype.right = function() {
 };
 
 /* ================================================= PATTERN ================================================= */
-function Pattern(top, right, bottom, left) {
-    this.top = top;
-    this.right = right;
-    this.bottom = bottom;
-    this.left = left;
+
+function Pattern(connections) {
+    this.top = connections['top'];
+    this.right = connections['right'];
+    this.bottom = connections['bottom'];
+    this.left = connections['left'];
 };
 
 Pattern.prototype.inCenter = function(index) {
