@@ -68,8 +68,7 @@ World.prototype.generatePatternFor = function(coord) {
         var sequence = Math.sequenceBuilder(4.5, 1.3, 0.1);
 
         _.each( sides, function(side){
-            var chance = sequence.pop();
-            connections[side] = isSideConnected(side, Math.roll( chance ) );
+            connections[side] = isSideConnected(side, sequence.pop());
         });
 
         return connections;

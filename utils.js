@@ -40,7 +40,7 @@ Math.sequenceBuilder = function sequenceBuilder(total, maxLim, jumpLim) {
                 maxLimit = Math.max(0, maxLimit - Math.randomRange(0, jumpLimit));
                 totalValue = totalValue - result; // save for next time
             }
-            return result;
+            return Math.roll(result);
         }
     }
 };
