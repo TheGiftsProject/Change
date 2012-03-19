@@ -125,9 +125,9 @@ function Cell(isWall) {
     }
 };
 
-Cell.LOW_COIN_CHANCE = 0.3;
-Cell.MID_COIN_CHANCE = 0.2;
-Cell.TOP_COIN_CHANCE = 0.1;
+Cell.LOW_COIN_CHANCE = 0.4;
+Cell.MID_COIN_CHANCE = 0.7;
+Cell.TOP_COIN_CHANCE = 0.9;
 
 Cell.prototype.setAsPath = function() {
     this.wall = false;
