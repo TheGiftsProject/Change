@@ -1,7 +1,7 @@
 function HoboMan(canvas) {
     this.canvas = canvas;
     this.InitCanvas();
-    this.world = new World();
+    this.world = new World(this);
     this.level = new Level(this.world);
     this.entities = [];
 

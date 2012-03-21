@@ -1,7 +1,8 @@
 /* ================================================= WORLD ================================================= */
-function World() {
+function World(index) {
     this.patternsMatrix = {};
     this.cells = {};
+    this.index = index;
 };
 
 World.prototype.getPatternAt = function(coord) {
@@ -90,13 +91,16 @@ function Cell(isWall) {
     this.wall = isWall;
     if (!isWall) {
         var roll = Math.random();
-        if (roll > Cell.TOP_COIN_CHANCE) {
+        if (roll <= Cell.BONUS_CHANCE) {
+            this.content = new Content(Content.COIN, Content.COINS.BONUS);
+        }
+        else if (roll <= Cell.TOP_COIN_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.TOP);
         }
-        else if (roll > Cell.MID_COIN_CHANCE) {
+        else if (roll <= Cell.MID_COIN_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.MID);
         }
-        else if (roll > Cell.LOW_COIN_CHANCE) {
+        else if (roll <= Cell.LOW_COIN_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.LOW);
         }
         else {
@@ -108,9 +112,10 @@ function Cell(isWall) {
     }
 };
 
-Cell.LOW_COIN_CHANCE = 0.4;
-Cell.MID_COIN_CHANCE = 0.7;
-Cell.TOP_COIN_CHANCE = 0.9;
+Cell.LOW_COIN_CHANCE = 0.6;
+Cell.MID_COIN_CHANCE = 0.3;
+Cell.TOP_COIN_CHANCE = 0.1;
+Cell.BONUS_CHANCE    = 0.005;
 
 Cell.prototype.setAsPath = function() {
     this.wall = false;
@@ -140,22 +145,23 @@ function Content(type, value) {
 
 // coins.
 Content.COINS = {
-    TOP: 0,
-    MID: 1,
-    LOW: 2
+    TOP:   0,
+    MID:   1,
+    LOW:   2,
+    BONUS: 3
 };
 
 // types.
 Content.COIN          = "coin";
 Content.POWERUP_GOD   = "godmode";
-Content.POWERUP_BONUS = "bonus";
 
 Content.prototype.getValue = function() {
     if (this.type == Content.COIN) {
         switch (this.value) {
-            case Content.COINS.TOP: return 10;
-            case Content.COINS.MID: return 5;
-            case Content.COINS.LOW: return 1;
+            case Content.COINS.BONUS: return 100;
+            case Content.COINS.TOP:   return 10;
+            case Content.COINS.MID:   return 5;
+            case Content.COINS.LOW:   return 1;
         }
     }
     return 0;
@@ -163,6 +169,10 @@ Content.prototype.getValue = function() {
 
 Content.prototype.isCoin = function() {
     return this.type == Content.COIN;
+};
+
+Content.prototype.isBonus = function() {
+    return this.value == Content.COINS.BONUS;
 };
 
 /* ================================================= COORDS ================================================= */
