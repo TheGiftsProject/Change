@@ -7,6 +7,7 @@ function Hobo(x, y, world) {
     this.points = 0;
     this.world = world;
     this.coinSound = 0;
+    this.powerups = {};
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
@@ -28,13 +29,39 @@ Hobo.START = {
     y: 16
 };
 
+Hobo.POWERUP_LENGTH = 300;
 Hobo.SPEED = 82;
+Hobo.SPEED_BACKUP = Hobo.SPEED;
+Hobo.SPEED_BONUS = 100;
 
 Hobo.prototype.update = function(dt, keys) {
     this.updateFromKeys(dt, keys);
+    this.updatePowerups();
     this.move(dt);
     this.images.update(dt);
 };
+
+Hobo.prototype.updatePowerups = function() {
+    var enableSpeedPowerup = false;
+    for (var powerup in this.powerups) {
+        if (this.powerups[powerup] > 0) {
+            this.powerups[powerup]--;
+            switch (powerup) {
+                case Content.POWERUPS.SPEED.toString():   enableSpeedPowerup = true; break;
+                case Content.POWERUPS.GODMODE.toString(): enableSpeedPowerup = true; break;
+            }
+        }
+        else {
+            delete this.powerups[powerup];
+        }
+    }
+    if (enableSpeedPowerup) {
+        Hobo.SPEED = Hobo.SPEED_BONUS;
+    }
+    else {
+        Hobo.SPEED = Hobo.SPEED_BACKUP;
+    }
+}
 
 Hobo.prototype.updateFromKeys = function(dt, keys) {
     if (keys.left && this.direction != "left") {
@@ -86,13 +113,14 @@ Hobo.prototype.currentRow = function(){
     return Math.floor(this.y / Hobo.SIZE.h);
 };
 
-
 Hobo.prototype.collectContent = function(cell) {
     this.addPoints(cell.content.getValue());
     if (cell.content.isBonus()) {
 //        SoundJS.play("bonus");
     }
     else if (cell.content.isPowerup()) {
+        SoundJS.play("powerup");
+        this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
 //        SoundJS.play("powerup");
     }
     else {
