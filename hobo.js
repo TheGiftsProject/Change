@@ -6,14 +6,13 @@ function Hobo(x, y, world) {
     this.images = new HoboAnimation();
     this.points = 0;
     this.world = world;
+    this.coinSound = 0;
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
     startCell.removeContent();
     SoundJS.add("die", "resources/sound/bitten.wav");
     SoundJS.add("coin0", "resources/sound/coin0.wav",5);
     SoundJS.add("coin1", "resources/sound/coin1.wav",5);
-    SoundJS.add("coin2", "resources/sound/coin2.wav",5);
-    SoundJS.add("coin3", "resources/sound/coin3.wav",5);
 }
 
 Hobo.SIZE = {
@@ -88,7 +87,9 @@ Hobo.prototype.currentRow = function(){
 Hobo.prototype.collectCoin = function(cell) {
     this.addPoints(cell.content.getValue());
     cell.removeContent();
-    SoundJS.play("coin" + Math.floor(Math.random() * 4));
+    SoundJS.play("coin" + this.coinSound);
+    this.coinSound = 1 - this.coinSound;
+
 }
 
 Hobo.prototype.bitten = function(){
