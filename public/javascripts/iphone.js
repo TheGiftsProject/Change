@@ -3,6 +3,9 @@ function IPhone(){
     this.checkOrientationChange();
     this.hideAddressBar();
     this.pad();
+    if(("standalone" in window.navigator) && window.navigator.standalone){
+        document.body.parentElement.setAttribute("class","fullscreen");
+    }
 }
 
 IPhone.prototype.hideAddressBar= function(){
