@@ -5,14 +5,19 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
         <style type="text/css">
+            * {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+
+            }
             html,body{
                 margin:0;
                 padding:0;
                 height: 320px;
                 position: relative;
             }
-            html.fullscreen{
-                /*padding-top: 20px;*/
+            .fullscreen.scores{
+                top: 20px;
             }
 
             body{
@@ -21,46 +26,44 @@
 
             .pad{
                 background: url('/resources/images/pad.png') no-repeat;
-                width: 56px;
-                height: 56px;
+                width: 100px;
+                height: 100px;
                 background-size: 100%;
                 position: relative;
             }
             .pad .up{
                 /*background: pink;*/
                 position: absolute;
-                top: 0;
+                top: -10px;
                 left: 16px;
-                width: 24px;
-                height: 16px;
+                width: 68px;
+                height: 43px;
             }
             .pad .right{
                 /*background: yellow;*/
                 position: absolute;
-                top: 16px;
-                right: 0;
-                width: 16px;
-                height: 24px;
+                top: 33px;
+                right: -10px;
+                width: 60px;
+                height: 33px;
             }
             .pad .down{
                 /*background: green;*/
                 position: absolute;
-                bottom: 0;
+                bottom: -10px;
                 left: 16px;
-                width: 24px;
-                height: 16px;
+                width: 68px;
+                height: 43px;
             }
             .pad .left{
                 /*background: blue;*/
                 position: absolute;
-                top: 16px;
-                left: 0;
-                width: 16px;
-                height: 24px;
+                top: 33px;
+                left: -10px;
+                width: 60px;
+                height: 33px;
             }
             canvas{
-                margin-top: 20px;
-                margin-left: 20px;
             }
             body.horizontal{
             }
@@ -69,14 +72,15 @@
 
             .horizontal .pad{
                 position: absolute;
-                top: 200px;
+                top: 160px;
                 left: 10px;
             }
             .horizontal canvas{
-                margin-left: 76px;
             }
             .vertical canvas{
-                margin-left: 0;
+                /*width: 360px;*/
+                /*height: 480px;*/
+                /*margin-left: 0;*/
                 margin-top: 20px;
             }
             .vertical .pad{
@@ -84,39 +88,48 @@
                 top: 280px;
                 left: 20px;
             }
-            p.score{
+            .scores{
+                background: #dbdbdb;
                 margin: 0;
-                padding: 5px;
-                /*background: black;*/
-                color: black;
-                font-family: "Courier New",arial,san-serif;
+                padding: 0;
+
                 position: absolute;
                 top: 0;
-                left: 00px;
-                line-height: 10px;
+                left: 0;
+                width: 100%;
+                height: 16px;
+                line-height: 16px;
+
+            }
+            p.score{
+                float: left;
+                color: black;
+                font-family: "Courier New",arial,san-serif;
                 font-weight: bold;
+                margin:0;
+                padding:0;
             }
             .realscore{
                 font-weight: normal;
             }
             p.score.highscore{
-                right: 00px;
-                left: auto;
+                float: right;
             }
         </style>
     </head>
 
     <body>
-
-        <canvas width=320 height=240></canvas>
+        <canvas width=480 height=360></canvas>
         <div class="pad">
             <div class="up"></div>
             <div class="right"></div>
             <div class="down"></div>
             <div class="left"></div>
         </div>
-        <p class="score">P1: <span class='realscore'>00000</span></p>
-        <p class="highscore score">High Score: <span class='realscore'>00000</span></p>
+        <div class="scores">
+            <p class="score">P1: <span class='realscore'>00000</span></p>
+            <p class="highscore score">High Score: <span class='realscore'>00000</span></p>
+        </div>
         <script src="/javascripts/underscore.min.js"></script>
         <script src="/javascripts/tap.js"></script>
         <script src="/javascripts/iphone.js"></script>
