@@ -24,7 +24,7 @@ function TileRenderer(row, col, world, context, renderer){
 }
 TileRenderer.DECALS = {
     roof: 7,
-    wall: 5,
+    wall: 5
 };
 
 TileRenderer.prototype.isWall = function(x,y){
@@ -61,8 +61,13 @@ TileRenderer.prototype.render = function(render_row, render_col){
         this.renderRoad();
     }
     var cell = this.world.getCellAt(this.row, this.col);
-    if (cell.hasContent() && cell.content.isCoin()) {
-        this.renderCoin(cell.content.value);
+    if (cell.hasContent()) {
+        if (cell.content.isCoin()) {
+            this.renderCoin(cell.content.value);
+        }
+        else if (cell.content.isPowerup()) {
+            this.renderPowerup(cell.content.value)
+        }
     }
 };
 
@@ -70,6 +75,12 @@ TileRenderer.prototype.renderCoin = function(content_type) {
     var tmp = Math.floor((this.renderer.accumulator*5) % 4);
     var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
     this.blit(this.renderer.coins, 16 * animation, 16 * content_type)
+}
+
+TileRenderer.prototype.renderPowerup = function(content_type) {
+    var tmp = Math.floor((this.renderer.accumulator*5) % 4);
+    var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
+    this.blit(this.renderer.coins, 16 * animation, 16 * content_type + 48)
 }
 
 TileRenderer.prototype.renderWall = function(){
