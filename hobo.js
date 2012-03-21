@@ -7,6 +7,7 @@ function Hobo(x, y, world) {
     this.points = 0;
     this.world = world;
     this.coinSound = 0;
+
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
     startCell.removeContent();
@@ -14,6 +15,7 @@ function Hobo(x, y, world) {
     SoundJS.add("coin0", "resources/sound/coin0.wav",5);
     SoundJS.add("coin1", "resources/sound/coin1.wav",5);
     SoundJS.add("bonus", "resources/sound/bonus.wav",5);
+    SoundJS.add("powerup", "resources/sound/godmode.wav",5);
 }
 
 Hobo.SIZE = {
@@ -56,7 +58,7 @@ Hobo.prototype.move = function(dt) {
     var cell = this.world.getCellAt(oldRow,oldCol);
 
     if (cell.hasContent()) {
-        this.collectCoin(cell);
+        this.collectContent(cell);
     }
 
     if (this.direction == "") {
@@ -85,10 +87,13 @@ Hobo.prototype.currentRow = function(){
 };
 
 
-Hobo.prototype.collectCoin = function(cell) {
+Hobo.prototype.collectContent = function(cell) {
     this.addPoints(cell.content.getValue());
     if (cell.content.isBonus()) {
         SoundJS.play("bonus");
+    }
+    else if (cell.content.isPowerup()) {
+        SoundJS.play("powerup");
     }
     else {
         SoundJS.play("coin" + this.coinSound);

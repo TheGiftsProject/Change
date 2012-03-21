@@ -165,13 +165,13 @@ Content.COIN    = "coin";
 Content.POWERUP = "powerup";
 
 Content.prototype.getValue = function() {
-    if (this.type == Content.COIN) {
-        switch (this.value) {
-            case Content.COINS.BONUS: return 100;
-            case Content.COINS.TOP:   return 10;
-            case Content.COINS.MID:   return 5;
-            case Content.COINS.LOW:   return 1;
-        }
+    switch (this.value) {
+        case Content.COINS.BONUS: return 100;
+        case Content.COINS.TOP:   return 10;
+        case Content.COINS.MID:   return 5;
+        case Content.COINS.LOW:   return 1;
+        case Content.POWERUPS.GODMODE: return 5;
+        case Content.POWERUPS.SPEED:   return 5;
     }
     return 0;
 };
