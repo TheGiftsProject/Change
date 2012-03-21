@@ -90,16 +90,15 @@ Hobo.prototype.currentRow = function(){
 Hobo.prototype.collectContent = function(cell) {
     this.addPoints(cell.content.getValue());
     if (cell.content.isBonus()) {
-        SoundJS.play("bonus");
+//        SoundJS.play("bonus");
     }
     else if (cell.content.isPowerup()) {
-        SoundJS.play("powerup");
+//        SoundJS.play("powerup");
     }
     else {
-        SoundJS.play("coin" + this.coinSound);
+//        SoundJS.play("coin" + this.coinSound);
     }
     cell.removeContent();
-//    SoundJS.play("coin" + this.coinSound);
     this.coinSound = 1 - this.coinSound;
 }
 
