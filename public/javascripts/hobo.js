@@ -100,7 +100,13 @@ Hobo.prototype.move = function(dt) {
     var cell = this.world.getCellAt(oldRow,oldCol);
 
     if (cell.hasContent()) {
-        this.collectContent(cell);
+        if (this.direction == "up" || this.direction == "left"){
+            if (this.x % Hobo.SIZE.w <= 2 && this.y % Hobo.SIZE.h <= 2){
+                this.collectContent(cell);
+            }
+        } else{
+            this.collectContent(cell);
+        }
     }
 
     if (this.direction == "") {
