@@ -8,6 +8,7 @@ function Hobo(x, y, world) {
     this.world = world;
     this.coinSound = 0;
     this.powerups = {};
+    this.lastPowerup;
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
@@ -17,6 +18,7 @@ function Hobo(x, y, world) {
     SoundJS.add("coin1", "resources/sound/coin1.wav",5);
     SoundJS.add("bonus", "resources/sound/bonus.wav",5);
     SoundJS.add("powerup", "resources/sound/godmode.wav",5);
+    SoundJS.add("down", "resources/sound/down.wav",5);
 }
 
 Hobo.SIZE = {
@@ -43,6 +45,7 @@ Hobo.prototype.update = function(dt, keys) {
 
 Hobo.prototype.updatePowerups = function() {
     var enableSpeedPowerup = false;
+    this.lastPowerup = 0;
     for (var powerup in this.powerups) {
         if (this.powerups[powerup] > 0) {
             this.powerups[powerup]--;
@@ -50,8 +53,10 @@ Hobo.prototype.updatePowerups = function() {
                 case Content.POWERUPS.SPEED.toString():   enableSpeedPowerup = true; break;
                 case Content.POWERUPS.GODMODE.toString(): enableSpeedPowerup = true; break;
             }
+            this.lastPowerup = parseInt(powerup);
         }
         else {
+            SoundJS.play("down");
             delete this.powerups[powerup];
         }
     }
@@ -116,12 +121,12 @@ Hobo.prototype.currentRow = function(){
 Hobo.prototype.collectContent = function(cell) {
     this.addPoints(cell.content.getValue());
     if (cell.content.isBonus()) {
-//        SoundJS.play("bonus");
+        SoundJS.play("bonus");
     }
     else if (cell.content.isPowerup()) {
         SoundJS.play("powerup");
         this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
-//        SoundJS.play("powerup");
+        SoundJS.play("powerup");
     }
     else {
         SoundJS.play("coin" + this.coinSound);
@@ -135,7 +140,7 @@ Hobo.prototype.bitten = function(){
     this.points = 0;
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
-//    SoundJS.play("die");
+    SoundJS.play("die");
 };
 
 Hobo.prototype.isWall = function(direction, row, col){
