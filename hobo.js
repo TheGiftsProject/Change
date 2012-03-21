@@ -64,16 +64,16 @@ Hobo.prototype.updatePowerups = function() {
 }
 
 Hobo.prototype.updateFromKeys = function(dt, keys) {
-    if (keys.left) {
+    if (keys.left && this.direction != "left") {
         this.nextDirection = 'left';
     }
-    if (keys.up) {
+    if (keys.up && this.direction != "up") {
         this.nextDirection = 'up';
     }
-    if (keys.right) {
+    if (keys.right && this.direction != "right") {
         this.nextDirection = 'right';
     }
-    if (keys.down) {
+    if (keys.down && this.direction != "down") {
         this.nextDirection = 'down';
     }
 };
@@ -116,25 +116,26 @@ Hobo.prototype.currentRow = function(){
 Hobo.prototype.collectContent = function(cell) {
     this.addPoints(cell.content.getValue());
     if (cell.content.isBonus()) {
-        SoundJS.play("bonus");
+//        SoundJS.play("bonus");
     }
     else if (cell.content.isPowerup()) {
         SoundJS.play("powerup");
         this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
+//        SoundJS.play("powerup");
     }
     else {
-        SoundJS.play("coin" + this.coinSound);
+//        SoundJS.play("coin" + this.coinSound);
     }
     cell.removeContent();
     this.coinSound = 1 - this.coinSound;
-
 }
 
 Hobo.prototype.bitten = function(){
+    window.hoboman.died(this.points);
     this.points = 0;
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
-    SoundJS.play("die");
+//    SoundJS.play("die");
 };
 
 Hobo.prototype.isWall = function(direction, row, col){
