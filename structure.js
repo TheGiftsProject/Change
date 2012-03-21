@@ -94,8 +94,8 @@ function Cell(isWall) {
         if (roll <= Cell.BONUS_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.BONUS);
         }
-        else if (roll <= Cell.GODMODE_CHANCE) {
-            this.content = new Content(Content.POWERUP, Content.POWERUPS.GODMODE);
+        else if (roll <= Cell.POWERUP_CHANCE) {
+            this.content = new Content(Content.POWERUP, Math.roll(0.5) ? Content.POWERUPS.GODMODE: Content.POWERUPS.SPEED);
         }
         else if (roll <= Cell.TOP_COIN_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.TOP);
@@ -118,7 +118,7 @@ function Cell(isWall) {
 Cell.LOW_COIN_CHANCE = 0.6;
 Cell.MID_COIN_CHANCE = 0.3;
 Cell.TOP_COIN_CHANCE = 0.1;
-Cell.GODMODE_CHANCE  = 0.01;
+Cell.POWERUP_CHANCE  = 0.01;
 Cell.BONUS_CHANCE    = 0.0025;
 
 Cell.prototype.setAsPath = function() {
