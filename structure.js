@@ -94,6 +94,9 @@ function Cell(isWall) {
         if (roll <= Cell.BONUS_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.BONUS);
         }
+        else if (roll <= Cell.GODMODE_CHANCE) {
+            this.content = new Content(Content.POWERUP, Content.POWERUPS.GODMODE);
+        }
         else if (roll <= Cell.TOP_COIN_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.TOP);
         }
@@ -115,7 +118,8 @@ function Cell(isWall) {
 Cell.LOW_COIN_CHANCE = 0.6;
 Cell.MID_COIN_CHANCE = 0.3;
 Cell.TOP_COIN_CHANCE = 0.1;
-Cell.BONUS_CHANCE    = 0.005;
+Cell.GODMODE_CHANCE  = 0.01;
+Cell.BONUS_CHANCE    = 0.0025;
 
 Cell.prototype.setAsPath = function() {
     this.wall = false;
@@ -151,9 +155,14 @@ Content.COINS = {
     BONUS: 3
 };
 
+Content.POWERUPS = {
+    SPEED: 0,
+    GODMODE: 1
+}
+
 // types.
-Content.COIN          = "coin";
-Content.POWERUP_GOD   = "godmode";
+Content.COIN    = "coin";
+Content.POWERUP = "powerup";
 
 Content.prototype.getValue = function() {
     if (this.type == Content.COIN) {
@@ -173,6 +182,10 @@ Content.prototype.isCoin = function() {
 
 Content.prototype.isBonus = function() {
     return this.value == Content.COINS.BONUS;
+};
+
+Content.prototype.isPowerup = function() {
+    return this.type == Content.POWERUP;
 };
 
 /* ================================================= COORDS ================================================= */
