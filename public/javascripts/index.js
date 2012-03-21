@@ -84,7 +84,6 @@ HoboMan.prototype.render = function() {
     // render UI
     this.ctx.fillStyle = "black";
     this.ctx.fillText("fps: " + this.fps, 10, 12);
-    this.ctx.fillText("Score: " + this.hobo.points,300,12);
     this.scoreEl.innerHTML = this.hobo.points;
 };
 

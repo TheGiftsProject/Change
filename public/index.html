@@ -21,46 +21,47 @@
 
             .pad{
                 background: url('/resources/images/pad.png') no-repeat;
-                width: 56px;
-                height: 56px;
+                width: 100px;
+                height: 100px;
                 background-size: 100%;
                 position: relative;
             }
             .pad .up{
                 /*background: pink;*/
                 position: absolute;
-                top: 0;
+                top: -10px;
                 left: 16px;
-                width: 24px;
-                height: 16px;
+                width: 68px;
+                height: 43px;
             }
             .pad .right{
                 /*background: yellow;*/
                 position: absolute;
-                top: 16px;
-                right: 0;
-                width: 16px;
-                height: 24px;
+                top: 33px;
+                right: -10px;
+                width: 60px;
+                height: 33px;
             }
             .pad .down{
                 /*background: green;*/
                 position: absolute;
-                bottom: 0;
+                bottom: -10px;
                 left: 16px;
-                width: 24px;
-                height: 16px;
+                width: 68px;
+                height: 43px;
             }
             .pad .left{
                 /*background: blue;*/
                 position: absolute;
-                top: 16px;
-                left: 0;
-                width: 16px;
-                height: 24px;
+                top: 33px;
+                left: -10px;
+                width: 60px;
+                height: 33px;
             }
             canvas{
                 margin-top: 20px;
                 margin-left: 20px;
+                border: 2px solid black;
             }
             body.horizontal{
             }
@@ -69,11 +70,11 @@
 
             .horizontal .pad{
                 position: absolute;
-                top: 200px;
+                top: 160px;
                 left: 10px;
             }
             .horizontal canvas{
-                margin-left: 76px;
+                margin-left: 120px;
             }
             .vertical canvas{
                 margin-left: 0;
