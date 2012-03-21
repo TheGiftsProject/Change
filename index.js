@@ -30,6 +30,9 @@ function HoboMan(canvas) {
     this.frameTimeAccumulator = 0;
     this.frameCounter = 0;
     this.fps = 0;
+
+    this.scoreEl = document.getElementsByClassName("score")[0].getElementsByClassName("realscore")[0];
+    this.highScoreEl = document.getElementsByClassName("highscore")[0].getElementsByClassName("realscore")[0];
     this.loop();
     this.updateFPS();
 }
@@ -86,6 +89,7 @@ HoboMan.prototype.render = function() {
     this.ctx.fillStyle = "black";
     this.ctx.fillText("fps: " + this.fps, 10, 12);
     this.ctx.fillText("Score: " + this.hobo.points,300,12);
+    this.scoreEl.innerHTML = this.hobo.points;
 };
 
 HoboMan.prototype.updateFPS = function() {
@@ -123,4 +127,11 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctxScale = 1;
 };
 
-hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);
+HoboMan.prototype.died = function(points){
+    var highscore = parseInt(this.highScoreEl.innerHTML);
+    if (points > highscore){
+        this.highScoreEl.innerHTML = points;
+    }
+};
+
+window.hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);

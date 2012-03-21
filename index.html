@@ -1,34 +1,125 @@
 <html>
     <head>
+        <title>Change</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="viewport" content = "width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
         <style type="text/css">
-            .skin{
-                background: url("/resources/images/skin.png") no-repeat;;
-                width: 448px;
-                height: 736px;
+            html,body{
+                margin:0;
+                padding:0;
+                height: 320px;
                 position: relative;
             }
-            canvas, .shadow{
-                position: absolute;
-                top: 96px;
-                left: 64px;
-            }
-            .shadow{
-                /*-moz-box-shadow: inset 16px 16px 0px rgba(0.8,0.8,0.8,0.2);*/
-                /*-webkit-box-shadow: inset 16px 16px 0px rgba(0.8,0.8,0.8,0.8);*/
-                box-shadow: inset 8px 8px 2px rgba(80,80,80,0.2);
-                z-index: 100;
-                width: 320px;
-                height: 320px;
+            html.fullscreen{
+                /*padding-top: 20px;*/
             }
 
+            body{
+                background: #dbdbdb;
+            }
+
+            .pad{
+                background: url('/resources/images/pad.png') no-repeat;
+                width: 56px;
+                height: 56px;
+                background-size: 100%;
+                position: relative;
+            }
+            .pad .up{
+                /*background: pink;*/
+                position: absolute;
+                top: 0;
+                left: 16px;
+                width: 24px;
+                height: 16px;
+            }
+            .pad .right{
+                /*background: yellow;*/
+                position: absolute;
+                top: 16px;
+                right: 0;
+                width: 16px;
+                height: 24px;
+            }
+            .pad .down{
+                /*background: green;*/
+                position: absolute;
+                bottom: 0;
+                left: 16px;
+                width: 24px;
+                height: 16px;
+            }
+            .pad .left{
+                /*background: blue;*/
+                position: absolute;
+                top: 16px;
+                left: 0;
+                width: 16px;
+                height: 24px;
+            }
+            canvas{
+                margin-top: 20px;
+                margin-left: 20px;
+            }
+            body.horizontal{
+            }
+            body.vertical{
+            }
+
+            .horizontal .pad{
+                position: absolute;
+                top: 200px;
+                left: 10px;
+            }
+            .horizontal canvas{
+                margin-left: 76px;
+            }
+            .vertical canvas{
+                margin-left: 0;
+                margin-top: 20px;
+            }
+            .vertical .pad{
+                position: absolute;
+                top: 280px;
+                left: 20px;
+            }
+            p.score{
+                margin: 0;
+                padding: 5px;
+                /*background: black;*/
+                color: black;
+                font-family: "Courier New",arial,san-serif;
+                position: absolute;
+                top: 0;
+                left: 00px;
+                line-height: 10px;
+                font-weight: bold;
+            }
+            .realscore{
+                font-weight: normal;
+            }
+            p.score.highscore{
+                right: 00px;
+                left: auto;
+            }
         </style>
     </head>
+
     <body>
-        <div class="skin">
-            <div class= "shadow"></div>
-            <canvas width=320 height=320></canvas>
+
+        <canvas width=320 height=240></canvas>
+        <div class="pad">
+            <div class="up"></div>
+            <div class="right"></div>
+            <div class="down"></div>
+            <div class="left"></div>
         </div>
+        <p class="score">P1: <span class='realscore'>00000</span></p>
+        <p class="highscore score">High Score: <span class='realscore'>00000</span></p>
         <script src="underscore.min.js"></script>
+        <script src="tap.js"></script>
+        <script src="iphone.js"></script>
         <script src="sound.js"></script>
         <script src="utils.js"></script>
         <script src="structure.js"></script>
