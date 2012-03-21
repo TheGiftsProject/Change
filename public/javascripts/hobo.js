@@ -96,7 +96,7 @@ Hobo.prototype.collectContent = function(cell) {
 //        SoundJS.play("powerup");
     }
     else {
-//        SoundJS.play("coin" + this.coinSound);
+        SoundJS.play("coin" + this.coinSound);
     }
     cell.removeContent();
     this.coinSound = 1 - this.coinSound;
