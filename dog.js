@@ -7,6 +7,7 @@ function Dog(x, y, world, hobo) {
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w) ,Math.floor(this.y / Dog.SIZE.h)).setAsPath();
     this.hobo = hobo;
+    this.barked = false;
     SoundJS.add("bark", "resources/sound/bark.wav",2);
 }
 
@@ -21,8 +22,8 @@ Dog.prototype.update = function(dt) {
     this.decideOnDirection2();
     this.move(dt);
     this.renderer.update(dt);
-    this.checkCollistion();
-    this.bark();
+    this.checkCollision();
+    this.checkBark();
 };
 
 Dog.prototype.move = function(dt) {
@@ -116,7 +117,7 @@ Dog.prototype.render = function(ctx) {
     this.renderer.drawFrame(ctx, this);
 };
 
-Dog.prototype.checkCollistion = function(){
+Dog.prototype.checkCollision = function(){
     if (this.currentCol() == this.hobo.currentCol() && this.currentRow() == this.hobo.currentRow()) {
         this.hobo.bitten();
     }
@@ -131,10 +132,23 @@ Dog.prototype.currentRow = function(){
     return Math.floor(this.y / Dog.SIZE.h);
 };
 
-Dog.prototype.bark = function(){
-//    if (this.currentCol() == this.hobo.currentCol() || this.currentRow() == this.hobo.currentRow()) {
-//            SoundJS.play("bark");
-//    }
+Dog.prototype.checkBark = function(){
+    if (!this.barked && this.closeToHobo()) {
+        this.barked = true;
+        SoundJS.play("bark");
+    }
+};
+
+Dog.BARK_DISTANCE = 1;
+
+Dog.prototype.closeToHobo = function() {
+    if (this.currentCol() == this.hobo.currentCol() && Math.abs(this.currentRow() - this.hobo.currentRow()) <= Dog.BARK_DISTANCE) {
+        return true;
+    }
+    else if (this.currentRow() == this.hobo.currentRow() && Math.abs(this.currentCol() - this.hobo.currentCol()) <= Dog.BARK_DISTANCE) {
+        return true;
+    }
+    return false;
 };
 
 

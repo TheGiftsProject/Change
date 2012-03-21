@@ -7,12 +7,8 @@ function HoboMan(canvas) {
 
     this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this.world);
     this.dog = new Dog(160, 160, this.world, this.hobo);
-    this.dog2 = new Dog(16, 320, this.world, this.hobo);
-    this.dog3 = new Dog(320, 16, this.world, this.hobo);
 
     this.entities.push(this.dog);
-    this.entities.push(this.dog2);
-    this.entities.push(this.dog3);
     this.entities.push(this.hobo);
 
     this.keys = {
