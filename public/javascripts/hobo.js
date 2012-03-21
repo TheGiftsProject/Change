@@ -119,12 +119,12 @@ Hobo.prototype.collectContent = function(cell) {
 //        SoundJS.play("bonus");
     }
     else if (cell.content.isPowerup()) {
-        SoundJS.play("powerup");
+//        SoundJS.play("powerup");
         this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
 //        SoundJS.play("powerup");
     }
     else {
-        SoundJS.play("coin" + this.coinSound);
+//        SoundJS.play("coin" + this.coinSound);
     }
     cell.removeContent();
     this.coinSound = 1 - this.coinSound;
