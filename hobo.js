@@ -157,8 +157,21 @@ Hobo.prototype.turn = function(){
     this.nextDirection = null;
 };
 
+Hobo.prototype.opposite = function(direction){
+    switch (direction) {
+        case 'left': return "right";
+        case 'up': return "down";
+        case 'right': return "left";
+        case 'down': return "up";
+    }
+};
+
 Hobo.prototype.turnIfCan = function(oldRow, oldCol){
     if (this.nextDirection == null) return;
+    if (this.nextDirection == this.opposite(this.direction)){
+        this.turn();
+        return;
+    }
 
     var row = oldRow;
     var col = oldCol;
