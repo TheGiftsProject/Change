@@ -71,6 +71,12 @@
                 top: 420px;
                 left: 40px;
             }
+            .horizontal .scores{
+                width: 960px;
+            }
+            .vertical .scores{
+                width: 640px;
+            }
             .scores{
                 background: #dbdbdb;
                 margin: 0;
@@ -114,13 +120,19 @@
             <p class="score">P1: <span class='realscore'>00000</span></p>
             <p class="highscore score">High Score: <span class='realscore'>00000</span></p>
         </div>
-        <script src="/javascripts/underscore.min.js"></script>
-        <script src="/javascripts/tap.js"></script>
+
+        <script src="/javascripts/libs/underscore.min.js"></script>
+        <script src="/javascripts/libs/tap.js"></script>
+        <script src="/javascripts/libs/soundmanager2-jsmin.js"></script>
+        <script src="/javascripts/libs/keymaster.min.js"></script>
+        <script>
+            soundManager.url = '/resources/swf';
+        </script>
+
         <script src="/javascripts/iphone.js"></script>
-        <script src="/javascripts/sound.js"></script>
         <script src="/javascripts/utils.js"></script>
         <script src="/javascripts/structure.js"></script>
-        <script src="/javascripts/keymaster.min.js"></script>
+        <script src="/javascripts/empty_sound.js"></script>
         <script src="/javascripts/tile_renderer.js"></script>
         <script src="/javascripts/level_renderer.js"></script>
         <script src="/javascripts/level.js"></script>

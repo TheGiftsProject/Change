@@ -8,7 +8,17 @@ function Dog(x, y, world, hobo) {
     this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w) ,Math.floor(this.y / Dog.SIZE.h)).setAsPath();
     this.hobo = hobo;
     this.barked = false;
-    SoundJS.add("bark", "resources/sound/bark.wav",2);
+    this.sounds = {
+        bark : new EmptySound('bark.wav')
+    };
+    var that = this;
+    soundManager.onready(function() {
+        var newsounds = {};
+        for (var key in that.sounds){
+            newsounds[key] = that.sounds[key].load();
+        }
+        that.sounds = newsounds;
+    })
 }
 
 Dog.SIZE = {
@@ -135,7 +145,7 @@ Dog.prototype.currentRow = function(){
 Dog.prototype.checkBark = function(){
     if (!this.barked && this.closeToHobo()) {
         this.barked = true;
-        SoundJS.play("bark");
+        this.sounds.bark.play();
     }
 };
 
