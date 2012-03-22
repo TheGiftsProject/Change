@@ -44,7 +44,7 @@ Hobo.START = {
 Hobo.POWERUP_LENGTH = 300;
 Hobo.SPEED = 82;
 Hobo.SPEED_BACKUP = Hobo.SPEED;
-Hobo.SPEED_BONUS = 100;
+Hobo.SPEED_BONUS = 120;
 
 Hobo.prototype.update = function(dt, keys) {
     this.updateFromKeys(dt, keys);
