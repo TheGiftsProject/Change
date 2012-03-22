@@ -53,7 +53,7 @@ Hobo.prototype.updatePowerups = function() {
                 case Content.POWERUPS.SPEED.toString():   enableSpeedPowerup = true; break;
                 case Content.POWERUPS.GODMODE.toString(): enableSpeedPowerup = true; break;
             }
-            this.lastPowerup = parseInt(powerup);
+            this.lastPowerup = parseInt(powerup) + 1;
         }
         else {
             SoundJS.play("down");
