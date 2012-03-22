@@ -13,12 +13,22 @@ function Hobo(x, y, world) {
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
     startCell.removeContent();
-    SoundJS.add("die", "resources/sound/bitten.wav");
-    SoundJS.add("coin0", "resources/sound/coin0.wav",5);
-    SoundJS.add("coin1", "resources/sound/coin1.wav",5);
-    SoundJS.add("bonus", "resources/sound/bonus.wav",5);
-    SoundJS.add("powerup", "resources/sound/godmode.wav",5);
-    SoundJS.add("down", "resources/sound/down.wav",5);
+    this.sounds = {
+        die: new EmptySound("bitten.wav"),
+        coin0: new EmptySound("coin0.wav"),
+        coin1: new EmptySound('coin1.wav'),
+        bonus: new EmptySound('bonus.wav'),
+        powerup: new EmptySound('godmode.wav'),
+        down: new EmptySound('dead_dog.wav')
+    };
+    var that = this;
+    soundManager.onready(function() {
+        var newsounds = {};
+        for (var key in that.sounds){
+            newsounds[key] = that.sounds[key].load();
+        }
+        that.sounds = newsounds;
+    })
 }
 
 Hobo.SIZE = {
@@ -56,7 +66,7 @@ Hobo.prototype.updatePowerups = function() {
             this.lastPowerup = parseInt(powerup) + 1;
         }
         else {
-            SoundJS.play("down");
+            this.sounds.down.play();
             delete this.powerups[powerup];
         }
     }
@@ -90,7 +100,13 @@ Hobo.prototype.move = function(dt) {
     var cell = this.world.getCellAt(oldRow,oldCol);
 
     if (cell.hasContent()) {
-        this.collectContent(cell);
+        if (this.direction == "up" || this.direction == "left"){
+            if (this.x % Hobo.SIZE.w <= 2 && this.y % Hobo.SIZE.h <= 2){
+                this.collectContent(cell);
+            }
+        } else{
+            this.collectContent(cell);
+        }
     }
 
     if (this.direction == "") {
@@ -121,15 +137,14 @@ Hobo.prototype.currentRow = function(){
 Hobo.prototype.collectContent = function(cell) {
     this.addPoints(cell.content.getValue());
     if (cell.content.isBonus()) {
-        SoundJS.play("bonus");
+        this.sounds.bonus.play();
     }
     else if (cell.content.isPowerup()) {
-//        SoundJS.play("powerup");
         this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
-        SoundJS.play("powerup");
+        this.sounds.powerup.play();
     }
     else {
-//        SoundJS.play("coin" + this.coinSound);
+        this.sounds["coin" + this.coinSound].play();
     }
     cell.removeContent();
     this.coinSound = 1 - this.coinSound;
@@ -140,7 +155,7 @@ Hobo.prototype.bitten = function(){
     this.points = 0;
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
-    SoundJS.play("die");
+    this.sounds.die.play();
 };
 
 Hobo.prototype.isWall = function(direction, row, col){

@@ -36,5 +36,5 @@ DogRenderer.prototype.getAnimationOffset = function(){
 };
 
 DogRenderer.prototype.drawFrame = function(context, dog){
-    context.drawImage(this.spriteImage, this.getDirectionOffset(dog), this.getAnimationOffset(), this.width, this.height, dog.x, dog.y- 4, Dog.SIZE.w, Dog.SIZE.h);
+    context.drawImage(this.spriteImage, this.getDirectionOffset(dog), this.getAnimationOffset(), this.width, this.height, Math.floor(dog.x), Math.floor(dog.y)- 4, Dog.SIZE.w, Dog.SIZE.h);
 };
