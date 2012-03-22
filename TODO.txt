@@ -1,0 +1,7 @@
+* Palette fixes.
+* Fix mazes.
+* Highscore (with FB connect).
+* Godmode powerup.
+* Spawn dogs.
+* UI fixes (remove FPS, start, restart etc).
+* Lives.
