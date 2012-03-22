@@ -3,5 +3,11 @@
 * Highscore (with FB connect).
 * Godmode powerup.
 * Spawn dogs.
-* UI fixes (remove FPS, start, restart etc).
+* Better DOG AI for corners
+* Different DOG AI 
 * Lives.
+* UI
+** decide on ui
+** create menus
+** restart screen
+** HS screen
