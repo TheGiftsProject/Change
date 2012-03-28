@@ -2,7 +2,7 @@
     <head>
         <title>Hoboman</title>
         <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
-        <link rel="stylesheet" type="text/css" href="/stylesheets/start_screen.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/screens.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/game.css">
     </head>
 
@@ -18,7 +18,23 @@
             </div>
             <div class="screen pause"></div>
             <div class="screen gameover"></div>
-            <div class="screen highscores"></div>
+            <div class="screen highscores">
+                <h2>High Scores</h2>
+                <div class="highscores-list">
+                    <div class="scorelist local">
+                        <h3>Local Scores</h3>
+                        <ul>
+                            <li><span class="name">asd</span><span class="hscore">123</span></li>
+                        </ul>
+                    </div>
+                    <div class="scorelist global">
+                        <h3>Global Scores</h3>
+                        <ul>
+                            <li><span class="name">asd</span><span class="hscore">123</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div class="screen about">
                 <h2>About Hoboman</h2>
                 <p> This game rocks, thats it.</p>
@@ -45,7 +61,7 @@
         </script>
 
         <script src="/javascripts/utils.js"></script>
-        <script src="/javascripts/world.js"></script>
+        <script src="/javascripts/structure/world.js"></script>
         <script src="/javascripts/structure/pattern.js"></script>
         <script src="/javascripts/structure/content.js"></script>
         <script src="/javascripts/structure/coord.js"></script>

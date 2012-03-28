@@ -20,12 +20,5 @@ Coord.prototype.right = function() {
 };
 
 Coord.prototype.toLevelCoords = function() {
-    console.log(this.row, this.col);
-
-    Level.CELL_SIZE = {
-        WIDTH: 16,
-        HEIGHT: 16
-    };
-
     return new Coord(Level.CELL_SIZE.WIDTH * (this.row * 3 + 1), Level.CELL_SIZE.HEIGHT * (this.col * 3 + 1));
 };

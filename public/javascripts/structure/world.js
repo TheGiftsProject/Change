@@ -70,45 +70,71 @@ World.prototype.getCellAt = function(global_row, global_col) {
     return this.cells[global_row][global_col];
 };
 
-World.VARIANCE_CHANCE = 2;
+World.CONNECTION_CHANCES = [1,  1,  0.025, 0.001];
 
 World.prototype.generatePatternFor = function(coord) {
+    var top_pattern    = this.getPatternAt(coord.top());
+    var right_pattern  = this.getPatternAt(coord.right());
+    var bottom_pattern = this.getPatternAt(coord.bottom());
+    var left_pattern   = this.getPatternAt(coord.left());
 
-    var revert_side = {
-        'top': 'bottom',
-        'right': 'left',
-        'bottom': 'top',
-        'left': 'right'
-    };
+    var top_exists    = top_pattern    ? true : false;
+    var right_exists  = right_pattern  ? true : false;
+    var bottom_exists = bottom_pattern ? true : false;
+    var left_exists   = left_pattern   ? true : false;
 
-    var that = this;
-    function isSideConnected(side, connection_chance) {
-        var pattern = that.getPatternAt(coord[side]());
-        var exists = pattern ? true: false;
-        var connected = exists ? pattern[revert_side[side]] : false;
-        if (!exists || connected) {
-            connected = connected || connection_chance;
+    var connections = 0;
+
+    var top_connected    = top_exists    ? top_pattern.bottom : false;
+    if (top_connected) connections++;
+
+    var right_connected  = right_exists  ? right_pattern.left : false;
+    if (right_connected) connections++;
+
+    var bottom_connected = bottom_exists ? bottom_pattern.top : false;
+    if (bottom_connected) connections++;
+
+    var left_connected   = left_exists   ? left_pattern.right : false;
+    if (left_connected) connections++;
+
+    var connection_chances = World.CONNECTION_CHANCES.slice(0, 4 - connections);
+
+    var new_connections = 0;
+
+    var top_function = function() {
+        if (!top_exists || top_connected) {
+            top_connected = top_connected || Math.roll(connection_chances[new_connections]);
+            new_connections++;
         }
-        return connected;
     }
 
-
-    function getPatternConnections(){
-
-        var connections = {};
-        var sides = ['top', 'right', 'bottom', 'left'].shuffle();
-
-        // this instance is called at most 4 times
-        var sequence = Math.sequenceBuilder(4.5, 1.3, 0.1);
-
-        _.each( sides, function(side){
-            connections[side] = isSideConnected(side, sequence.pop());
-        });
-
-        return connections;
+    var right_function = function() {
+        if (!right_exists || right_connected) {
+            right_connected = right_connected || Math.roll(connection_chances[new_connections]);
+            new_connections++;
+        }
     }
 
-    var pattern = new Pattern( getPatternConnections() );
+    var bottom_function = function() {
+        if (!bottom_exists | bottom_connected) {
+            bottom_connected = bottom_connected || Math.roll(connection_chances[new_connections]);
+            new_connections++;
+        }
+    }
+
+    var left_function = function() {
+        if (!left_exists || left_connected) {
+            left_connected = left_connected || Math.roll(connection_chances[new_connections]);
+            new_connections++;
+        }
+    }
+
+    var connection_functions = [top_function, right_function, bottom_function, left_function].shuffle();
+    for (var i = 0; i < 4; i++) {
+        connection_functions[i].call();
+    }
+
+    var pattern = new Pattern({top:top_connected, right:right_connected, bottom:bottom_connected, left:left_connected});
 
     if (!this.patternsMatrix[coord.row]) {
         this.patternsMatrix[coord.row] = {};
@@ -116,5 +142,4 @@ World.prototype.generatePatternFor = function(coord) {
 
     this.patternsMatrix[coord.row][coord.col] = pattern;
     return pattern;
-
 };

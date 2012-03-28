@@ -34,7 +34,7 @@ a:hover{
     padding-top: 11px;
 }
 
-a.startgame{
+a.to_game{
     font-size: 24px;
     background: #f08080;
 }
@@ -50,4 +50,18 @@ h2{
 .about p{
     width: 700px;
     margin: 0 auto;
+}
+
+.highscores h2{
+    padding-top: 0;
+}
+
+.highscores-list{
+    width: 700px;
+    margin: 0 auto;
+}
+
+.scorelist{
+    float: left;
+    width: 300px;
 }

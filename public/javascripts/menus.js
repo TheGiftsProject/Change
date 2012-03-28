@@ -3,7 +3,7 @@ function Menus(){
         start: $(".screen.start"),
         pause: $(".screen.pause"),
         game: $(".screen.game"),
-        highscore: $(".screen.highscore"),
+        highscores: $(".screen.highscores"),
         gameover: $(".screen.gameover"),
         about: $(".screen.about")
     };
@@ -18,6 +18,9 @@ function Menus(){
     });
     $(".to_about").click(function(){
         that.goto(that.screens.about);
+    });
+    $(".to_highscores").click(function(){
+        that.goto(that.screens.highscores);
     });
 }
 
