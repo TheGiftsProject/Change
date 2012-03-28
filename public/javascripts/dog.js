@@ -3,7 +3,7 @@ function Dog(x, y, world, hobo) {
     this.y = y;
     this.direction = '';
     this.nextDirection = '';
-    this.renderer = new DogRenderer(Math.ceil(Math.randomRange(0,3)));
+    this.renderer = new DogRenderer(Math.floor(Math.randomRange(0,3)));
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w) ,Math.floor(this.y / Dog.SIZE.h)).setAsPath();
     this.hobo = hobo;
