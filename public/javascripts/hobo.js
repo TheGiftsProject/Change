@@ -151,7 +151,6 @@ Hobo.prototype.collectContent = function(cell) {
 }
 
 Hobo.prototype.bitten = function(){
-    window.hoboman.died(this.points);
     this.points = 0;
     this.x = Hobo.START.x;
     this.y = Hobo.START.y;
