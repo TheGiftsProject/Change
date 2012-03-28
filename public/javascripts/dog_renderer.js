@@ -1,10 +1,11 @@
-function DogRenderer() {
+function DogRenderer(dogType) {
     this.file = "resources/images/dog.png";
     this.height = 16;
     this.width = 16;
     this.spriteImage = new Image();
     this.spriteImage.src = this.file;
     this.accumulator = 0;
+    this.dogType = dogType || 1;
 }
 
 DogRenderer.totalAnimationTime = 0.4;
@@ -36,5 +37,7 @@ DogRenderer.prototype.getAnimationOffset = function(){
 };
 
 DogRenderer.prototype.drawFrame = function(context, dog){
-    context.drawImage(this.spriteImage, this.getDirectionOffset(dog), this.getAnimationOffset(), this.width, this.height, Math.floor(dog.x), Math.floor(dog.y)- 4, Dog.SIZE.w, Dog.SIZE.h);
+    context.drawImage(this.spriteImage, this.getDirectionOffset(dog),
+        this.getAnimationOffset() + (this.height*this.dogType*3),
+        this.width, this.height, Math.floor(dog.x), Math.floor(dog.y)- 4, Dog.SIZE.w, Dog.SIZE.h);
 };

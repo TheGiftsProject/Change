@@ -1,79 +1,60 @@
 <html>
     <head>
-        <title>Change</title>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <meta name="viewport" content = "width=device-width, initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no" />
-        <style type="text/css">
-            html,body{
-                margin:0;
-                padding:0;
-                position: relative;
-            }
-
-            body{
-                background: #dbdbdb;
-            }
-            .container{
-                width: 960px;
-                height: 600px;
-                margin: 0 auto;
-                position: relative;
-                background: #908a87;
-            }
-
-            canvas{
-                -webkit-transform: scale3d(2, 2, 0) translate3d(120px, 90px, 0);
-                margin-top: 16px;
-            }
-            .scores{
-                background: #dbdbdb;
-                margin: 0;
-                padding: 0;
-
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 960px;
-                height: 32px;
-                line-height: 32px;
-                font-size: 24px;
-
-            }
-            p.score{
-                float: left;
-                color: black;
-                font-family: "Courier New",arial,san-serif;
-                font-weight: bold;
-                margin:0;
-                padding:0;
-            }
-            .realscore{
-                font-weight: normal;
-            }
-            p.score.highscore{
-                float: right;
-            }
-
-            .fps{
-                margin-top: 340px;
-            }
-        </style>
+        <title>Hoboman</title>
+        <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/screens.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/game.css">
     </head>
 
     <body>
         <div class="container">
-            <canvas width=480 height=320></canvas>
-            <div class="scores">
-                <p class="score">P1: <span class='realscore'>00000</span></p>
-                <p class="highscore score">High Score: <span class='realscore'>00000</span></p>
+            <div class="screen start">
+                <h1>Hoboman</h1>
+                <ul>
+                    <li><a href="javascript:;" class="to_game">Start Game</a></li>
+                    <li><a href="javascript:;" class="to_highscores">High Scores</a></li>
+                    <li><a href="javascript:;" class="to_about">About</a></li>
+                </ul>
+            </div>
+            <div class="screen pause"></div>
+            <div class="screen gameover"></div>
+            <div class="screen highscores">
+                <h2>High Scores</h2>
+                <div class="highscores-list">
+                    <div class="scorelist local">
+                        <h3>Local Scores</h3>
+                        <ul>
+                            <li><span class="name">asd</span><span class="hscore">123</span></li>
+                        </ul>
+                    </div>
+                    <div class="scorelist global">
+                        <h3>Global Scores</h3>
+                        <ul>
+                            <li><span class="name">asd</span><span class="hscore">123</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="screen about">
+                <h2>About Hoboman</h2>
+                <p> This game rocks, thats it.</p>
+                <a href="javascript:;" class="to_start">Back</a>
+            </div>
+            <div class="screen game">
+                <canvas width=480 height=320></canvas>
+                <div class="scores">
+                    <p class="score">P1: <span class='realscore'>00000</span></p>
+                    <p class="highscore score">High Score: <span class='realscore'>00000</span></p>
+                </div>
+                <p class="fps"></p>
             </div>
         </div>
-        <p class="fps"></p>
+
+
 
         <script src="/javascripts/libs/underscore.min.js"></script>
         <script src="/javascripts/libs/soundmanager2-jsmin.js"></script>
-        <script src="/javascripts/libs/keymaster.min.js"></script>
+        <script src="/javascripts/libs/jquery-1.7.2.min.js"></script>
         <script>
             soundManager.url = '/resources/swf';
             soundManager.debugMode = false;
@@ -94,5 +75,6 @@
         <script src="/javascripts/hobo_animation.js"></script>
         <script src="/javascripts/hobo.js"></script>
         <script src="/javascripts/index.js"></script>
+        <script src="/javascripts/menus.js"></script>
     </body>
 </html>
