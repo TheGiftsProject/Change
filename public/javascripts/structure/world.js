@@ -70,7 +70,6 @@ World.prototype.getCellAt = function(global_row, global_col) {
     return this.cells[global_row][global_col];
 };
 
-World.VARIANCE_CHANCE = 2;
 World.CONNECTION_CHANCES = [1.0,  1.0,  0.05, 0.01];
 
 World.prototype.generatePatternFor = function(coord) {
