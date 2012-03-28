@@ -1,0 +1,44 @@
+html,body{
+    margin:0;
+    padding:0;
+    position: relative;
+    font-family: "Courier New",arial,san-serif;
+}
+
+body{
+    background: #dbdbdb;
+}
+.container, .screen{
+    width: 960px;
+    height: 740px;
+    margin: 0 auto;
+    position: relative;
+    background: #908a87;
+}
+
+.container{
+    overflow: hidden;
+}
+
+.screen{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    box-shadow: 0 2px 4px #666;
+    transition: top 2s;
+    -webkit-transition: top 2s;
+    -moz-transition: top 2s;
+}
+.screen.active{
+    display: block;
+}
+
+.screen.start{
+    z-index: 100;
+}
+
+.screen.game{
+    z-index: 90;
+}
+

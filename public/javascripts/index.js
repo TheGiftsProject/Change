@@ -134,4 +134,4 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctxScale = 1;
 };
 
-window.hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);
+

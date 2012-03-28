@@ -1,0 +1,38 @@
+.screen.game{
+    background: #dbdbdb;
+}
+canvas{
+    -webkit-transform: scale3d(2, 2, 0) translate3d(120px, 90px, 0);
+    margin-top: 12px;
+}
+.scores{
+    background: #dbdbdb;
+    margin: 0;
+    padding: 0;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 960px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 24px;
+
+}
+p.score{
+    float: left;
+    color: black;
+    font-weight: bold;
+    margin:0;
+    padding:0;
+}
+.realscore{
+    font-weight: normal;
+}
+p.score.highscore{
+    float: right;
+}
+
+.fps{
+    margin-top: 340px;
+}
