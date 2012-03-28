@@ -34,5 +34,20 @@ p.score.highscore{
 }
 
 .fps{
-    margin-top: 340px;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+}
+
+.mute{
+    position: absolute;
+    right: 20px;
+    bottom: 0;
+    width: 70px;
+}
+
+.mute.on{
+    background: grey;
+    content: 'unmute'
+
 }

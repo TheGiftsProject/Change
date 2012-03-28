@@ -22,6 +22,17 @@ function Menus(){
     $(".to_highscores").click(function(){
         that.goto(that.screens.highscores);
     });
+
+    $('.mute').click(function(){
+        $(this).toggleClass("on").toggleClass("off");
+        if ($(this).hasClass("on")){
+            window.hoboman.mute();
+            $(this).text("unmute");
+        } else {
+            window.hoboman.unmute();
+            $(this).text("mute");
+        }
+    })
 }
 
 Menus.prototype.goto = function(screen){

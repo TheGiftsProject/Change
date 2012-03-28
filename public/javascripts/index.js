@@ -90,7 +90,7 @@ HoboMan.prototype.render = function() {
     this.scoreEl.innerHTML = this.world.hobo.points;
     if (this.world.hobo.points > parseInt(this.highScoreEl.innerHTML)){
         this.highScoreEl.innerHTML = this.world.hobo.points;
-    } 3
+    }
 };
 
 HoboMan.prototype.updateFPS = function() {
@@ -128,4 +128,10 @@ HoboMan.prototype.InitCanvas = function() {
     this.ctxScale = 1;
 };
 
+HoboMan.prototype.mute= function() {
+    soundManager.mute();
+};
 
+HoboMan.prototype.unmute= function() {
+    soundManager.unmute();
+};
