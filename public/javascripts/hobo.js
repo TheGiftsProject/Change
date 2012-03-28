@@ -10,6 +10,7 @@ function Hobo(x, y, world) {
     this.powerups = {};
     this.lastPowerup;
     this.godmode = false;
+    this.accumulator = 0;
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
@@ -42,25 +43,25 @@ Hobo.START = {
     y: 16
 };
 
-Hobo.POWERUP_LENGTH = 300;
+Hobo.POWERUP_LENGTH = 10;
 Hobo.SPEED = 82;
 Hobo.SPEED_BACKUP = Hobo.SPEED;
 Hobo.SPEED_BONUS = 120;
 
 Hobo.prototype.update = function(dt, keys) {
     this.updateFromKeys(dt, keys);
-    this.updatePowerups();
+    this.updatePowerups(dt);
     this.move(dt);
     this.images.update(dt);
 };
 
-Hobo.prototype.updatePowerups = function() {
+Hobo.prototype.updatePowerups = function(dt) {
     var enableSpeedPowerup = false;
     var enableGodmode = false;
     this.lastPowerup = 0;
     for (var powerup in this.powerups) {
         if (this.powerups[powerup] > 0) {
-            this.powerups[powerup]--;
+            this.powerups[powerup] -= dt;
             switch (powerup) {
                 case Content.POWERUPS.SPEED.toString():   enableSpeedPowerup = true; break;
                 case Content.POWERUPS.GODMODE.toString(): enableGodmode = true; break;
