@@ -10,11 +10,11 @@ h1{
     margin: 0;
     padding: 0;
 }
-.start ul li {
+.start ul li{
     display: block;
 }
 
-.start a {
+a {
     display: block;
     padding: 10px;
     width: 300px;
@@ -28,13 +28,26 @@ h1{
     text-align: center;
 }
 
-.start a:hover{
+a:hover{
     box-shadow: 1px 1px 0 1px black;
     margin-bottom: 19px;
     padding-top: 11px;
 }
 
-.start a.startgame{
+a.startgame{
     font-size: 24px;
     background: #f08080;
+}
+
+h2{
+    padding-top: 100px;
+    font-size: 60px;
+    text-align: center;
+    color: white;
+    text-shadow: 4px 4px black;
+}
+
+.about p{
+    width: 700px;
+    margin: 0 auto;
 }
