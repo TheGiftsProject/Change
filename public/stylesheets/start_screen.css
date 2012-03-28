@@ -1,0 +1,53 @@
+h1{
+    padding-top: 150px;
+    font-size: 90px;
+    text-align: center;
+    color: white;
+    text-shadow: 4px 4px black;
+}
+
+.start ul{
+    margin: 0;
+    padding: 0;
+}
+.start ul li{
+    display: block;
+}
+
+a {
+    display: block;
+    padding: 10px;
+    width: 300px;
+    margin: 20px auto;
+    background: red;
+    border: 2px solid white;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 1px 2px 0 2px black;
+    text-align: center;
+}
+
+a:hover{
+    box-shadow: 1px 1px 0 1px black;
+    margin-bottom: 19px;
+    padding-top: 11px;
+}
+
+a.startgame{
+    font-size: 24px;
+    background: #f08080;
+}
+
+h2{
+    padding-top: 100px;
+    font-size: 60px;
+    text-align: center;
+    color: white;
+    text-shadow: 4px 4px black;
+}
+
+.about p{
+    width: 700px;
+    margin: 0 auto;
+}

@@ -139,7 +139,7 @@ Dog.prototype.checkCollision = function(){
 
 Dog.prototype.kill = function() {
     this.sounds.die.play();
-    this.world.entities.splice(this.world.entities.indexOf(this), 1);
+    this.world.removeEntity(this);
 }
 
 Dog.prototype.currentCol = function(){
