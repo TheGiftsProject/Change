@@ -18,3 +18,8 @@ Coord.prototype.left = function() {
 Coord.prototype.right = function() {
     return new Coord(this.row, this.col + 1);
 };
+
+Coord.prototype.toLevelCoords = function() {
+    console.log(this.row, this.col);
+    return new Coord(this.row * 48 + 16, this.col * 48 + 16);
+};

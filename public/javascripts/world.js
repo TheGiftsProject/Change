@@ -5,7 +5,13 @@ function World() {
     this.entities = [];
     this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this);
     this.addEntity(this.hobo);
+
+    this.nextDogCreationTag = this.generateNextDogCreationTag();
+    this.dogCreationCounter = 0;
 };
+
+World.DOG_CREATION_RANGE_MIN = 20;
+World.DOG_CREATION_RANGE_MAX = 25;
 
 World.prototype.addEntity = function(entity) {
     this.entities.push(entity);
@@ -13,6 +19,22 @@ World.prototype.addEntity = function(entity) {
 
 World.prototype.removeEntity = function(entity) {
     this.entities.splice(this.entities.indexOf(entity), 1);
+}
+
+World.prototype.generateNextDogCreationTag = function() {
+    return Math.floor(Math.randomRange(World.DOG_CREATION_RANGE_MIN, World.DOG_CREATION_RANGE_MAX));
+}
+
+World.prototype.checkDogCreationAt = function(pattern_coord)
+{
+    this.dogCreationCounter++;
+    if (this.dogCreationCounter == this.nextDogCreationTag) {
+        this.dogCreationCounter = 0;
+        this.nextDogCreationTag = this.generateNextDogCreationTag();
+        var levelCoords = pattern_coord.toLevelCoords();
+        this.addEntity(new Dog(levelCoords.row, levelCoords.col, this, this.hobo));
+        console.log(levelCoords);
+    }
 }
 
 World.prototype.getPatternAt = function(coord) {
@@ -36,8 +58,8 @@ World.prototype.addCellAt = function(cell, global_row, global_col) {
 World.prototype.getCellAt = function(global_row, global_col) {
     if (!this.cellExists(global_row, global_col)) {
         var pattern_coord = Pattern.translateGlobalToPattern(global_row, global_col);
-        pattern = this.generatePatternFor(new Coord(pattern_coord.row, pattern_coord.col));
-
+        pattern = this.generatePatternFor(pattern_coord);
+        this.checkDogCreationAt(pattern_coord);
 
         for (var internal_row = 0; internal_row < 3; internal_row++) {
             for (var internal_col = 0; internal_col < 3; internal_col++) {
