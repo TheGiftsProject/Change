@@ -9,7 +9,8 @@ function Dog(x, y, world, hobo) {
     this.hobo = hobo;
     this.barked = false;
     this.sounds = {
-        bark : new EmptySound('bark.wav')
+        bark : new EmptySound('bark.wav'),
+        die  : new EmptySound('dead_dog.wav')
     };
     var that = this;
     soundManager.onready(function() {
@@ -27,6 +28,7 @@ Dog.SIZE = {
 };
 
 Dog.SPEED = 82;
+Dog.VALUE = 50;
 
 Dog.prototype.update = function(dt) {
     this.decideOnDirection2();
@@ -129,10 +131,15 @@ Dog.prototype.render = function(ctx) {
 
 Dog.prototype.checkCollision = function(){
     if (this.currentCol() == this.hobo.currentCol() && this.currentRow() == this.hobo.currentRow()) {
-        this.hobo.bitten();
+        this.hobo.bitten(this);
     }
 
 };
+
+Dog.prototype.kill = function() {
+    this.sounds.die.play();
+    this.world.entities.splice(this.world.entities.indexOf(this), 1);
+}
 
 Dog.prototype.currentCol = function(){
     return Math.floor(this.x / Dog.SIZE.w);
@@ -238,6 +245,10 @@ Dog.prototype.decideOnDirection = function(){
     }
 
 };
+
+Dog.prototype.getValue = function() {
+    return Dog.VALUE;
+}
 
 Dog.prototype.decideOnDirection2 = function(){
     var xDiff = this.x - this.hobo.x;
