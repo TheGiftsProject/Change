@@ -31,7 +31,7 @@ Dog.SPEED = 82;
 Dog.VALUE = 50;
 
 Dog.prototype.update = function(dt) {
-    this.decideOnDirection2();
+    this.decideOnDirection();
     this.move(dt);
     this.renderer.update(dt);
     this.checkCollision();
@@ -210,51 +210,24 @@ Dog.prototype.turnAround = function(direction){
     }
 };
 
-
-Dog.prototype.decideOnDirection = function(){
-    var xDiff = this.x - this.hobo.x;
-    var yDiff = this.y - this.hobo.y;
-
-    if (Math.abs(xDiff) > Math.abs(yDiff)) {
-        if (xDiff < 0) {
-            this.nextDirection = 'right';
-
-        } else {
-            this.nextDirection = 'left';
-        }
-
-    } else {
-        if (yDiff < 0) {
-            this.nextDirection = 'down';
-        } else {
-            this.nextDirection = 'up';
-        }
-    }
-
-
-    var randTurn = Math.random() > 0.5;
-    while (this.isWall(this.nextDirection)){
-        if (randTurn){
-            this.nextDirection = this.turnLeft(this.nextDirection);
-        } else {
-            this.nextDirection = this.turnRight(this.nextDirection);
-        }
-    }
-    if (this.nextDirection == this.direction){
-        this.nextDirection = null;
-    }
-
-};
-
 Dog.prototype.getValue = function() {
     return Dog.VALUE;
 };
 
 Dog.prototype.decideOnDirection = function() {
+    if(this.dogType == 0){
+        this.brownDogDecideOnTurn();
+    }
+    else{
+        this.brownDogDecideOnTurn();
+    }
+};
+
+Dog.prototype.whiteDogDecideOnTurn = function(){
 
 };
 
-Dog.prototype.decideOnDirection2 = function(){
+Dog.prototype.brownDogDecideOnTurn = function(){
     var xDiff = this.x - this.hobo.x;
     var yDiff = this.y - this.hobo.y;
 
@@ -275,7 +248,10 @@ Dog.prototype.decideOnDirection2 = function(){
         } else {
             this.nextDirection = this.turnAround(yDirection)
         }
+    }
 
+    if(this.hobo.godmode) {
+        this.nextDirection = this.turnAround(this.nextDirection);
     }
 
     if (this.nextDirection == this.direction){
