@@ -1,8 +1,8 @@
 /* ================================================= WORLD ================================================= */
-function World(index) {
+function World() {
     this.patternsMatrix = {};
     this.cells = {};
-    this.index = index;
+    this.entities = [];
 };
 
 World.prototype.getPatternAt = function(coord) {

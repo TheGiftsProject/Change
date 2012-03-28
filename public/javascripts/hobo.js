@@ -150,7 +150,7 @@ Hobo.prototype.collectContent = function(cell) {
     this.coinSound = 1 - this.coinSound;
 }
 
-Hobo.prototype.bitten = function(){
+Hobo.prototype.bitten = function(dog){
     window.hoboman.died(this.points);
     this.points = 0;
     this.x = Hobo.START.x;

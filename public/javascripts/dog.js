@@ -129,10 +129,14 @@ Dog.prototype.render = function(ctx) {
 
 Dog.prototype.checkCollision = function(){
     if (this.currentCol() == this.hobo.currentCol() && this.currentRow() == this.hobo.currentRow()) {
-        this.hobo.bitten();
+        this.hobo.bitten(this);
     }
 
 };
+
+Dog.prototype.kill = function() {
+    this.en
+}
 
 Dog.prototype.currentCol = function(){
     return Math.floor(this.x / Dog.SIZE.w);

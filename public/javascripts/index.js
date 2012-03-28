@@ -12,15 +12,14 @@ window.requestAnimFrame = (function(){
 function HoboMan(canvas) {
     this.canvas = canvas;
     this.InitCanvas();
-    this.world = new World(this);
+    this.world = new World();
     this.level = new Level(this.world);
-    this.entities = [];
 
     this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this.world);
     this.dog = new Dog(160, 160, this.world, this.hobo);
 
-    this.entities.push(this.dog);
-    this.entities.push(this.hobo);
+    this.world.entities.push(this.dog);
+    this.world.entities.push(this.hobo);
 
     this.keys = {
         left: 0,
@@ -65,8 +64,8 @@ HoboMan.prototype.loop = function() {
 };
 
 HoboMan.prototype.update = function(dt) {
-    for (var i=0; i < this.entities.length ; i++){
-        this.entities[i].update(dt, this.keys);
+    for (var i=0; i < this.world.entities.length ; i++){
+        this.world.entities[i].update(dt, this.keys);
     }
     this.level.update(dt);
 };
@@ -86,8 +85,8 @@ HoboMan.prototype.render = function() {
     this.ctx.scale(this.ctxScale, this.ctxScale);
     this.ctx.translate(Math.floor(-viewport.x), Math.floor(-viewport.y));
     this.level.render(this.ctx, viewport);
-    for (var i=0; i < this.entities.length ; i++){
-        this.entities[i].render(this.ctx);
+    for (var i=0; i < this.world.entities.length ; i++){
+        this.world.entities[i].render(this.ctx);
     }
     this.ctx.restore();
 
