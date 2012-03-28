@@ -1,9 +1,10 @@
-function Dog(x, y, world, hobo) {
+function Dog(x, y, world, hobo, dogType) {
     this.x = x;
     this.y = y;
+    this.dogType = dogType;
     this.direction = '';
     this.nextDirection = '';
-    this.renderer = new DogRenderer();
+    this.renderer = new DogRenderer(dogType);
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w) ,Math.floor(this.y / Dog.SIZE.h)).setAsPath();
     this.hobo = hobo;
@@ -248,7 +249,11 @@ Dog.prototype.decideOnDirection = function(){
 
 Dog.prototype.getValue = function() {
     return Dog.VALUE;
-}
+};
+
+Dog.prototype.decideOnDirection = function() {
+
+};
 
 Dog.prototype.decideOnDirection2 = function(){
     var xDiff = this.x - this.hobo.x;
