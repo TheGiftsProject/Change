@@ -15,12 +15,6 @@ function HoboMan(canvas) {
     this.world = new World();
     this.level = new Level(this.world);
 
-    this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this.world);
-    this.dog = new Dog(160, 160, this.world, this.hobo);
-
-    this.world.entities.push(this.dog);
-    this.world.entities.push(this.hobo);
-
     this.keys = {
         left: 0,
         right: 0,
@@ -78,8 +72,8 @@ HoboMan.prototype.render = function() {
     // render game
     this.ctx.save();
     var viewport = {
-        x: this.hobo.x - (this.ctxWidth/this.ctxScale)/2 + 8,
-        y: this.hobo.y - (this.ctxHeight/this.ctxScale)/2 + 8,
+        x: this.world.hobo.x - (this.ctxWidth/this.ctxScale)/2 + 8,
+        y: this.world.hobo.y - (this.ctxHeight/this.ctxScale)/2 + 8,
         width: this.ctxWidth/this.ctxScale,
         height: this.ctxHeight/this.ctxScale
     };
@@ -93,9 +87,9 @@ HoboMan.prototype.render = function() {
 
     // render UI
     this.fpsEl.innerHTML = "fps: " + this.fps;
-    this.scoreEl.innerHTML = this.hobo.points;
-    if (this.hobo.points > parseInt(this.highScoreEl.innerHTML)){
-        this.highScoreEl.innerHTML = this.hobo.points;
+    this.scoreEl.innerHTML = this.world.hobo.points;
+    if (this.world.hobo.points > parseInt(this.highScoreEl.innerHTML)){
+        this.highScoreEl.innerHTML = this.world.hobo.points;
     }
 };
 

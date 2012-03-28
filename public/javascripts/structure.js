@@ -3,7 +3,17 @@ function World() {
     this.patternsMatrix = {};
     this.cells = {};
     this.entities = [];
+    this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this);
+    this.addEntity(this.hobo);
 };
+
+World.prototype.addEntity = function(entity) {
+    this.entities.push(entity);
+}
+
+World.prototype.removeEntity = function(entity) {
+    this.entities.splice(this.entities.indexOf(entity), 1);
+}
 
 World.prototype.getPatternAt = function(coord) {
     if (!this.patternsMatrix[coord.row] || ! this.patternsMatrix[coord.row][coord.col]) {
@@ -27,6 +37,7 @@ World.prototype.getCellAt = function(global_row, global_col) {
     if (!this.cellExists(global_row, global_col)) {
         var pattern_coord = Pattern.translateGlobalToPattern(global_row, global_col);
         pattern = this.generatePatternFor(new Coord(pattern_coord.row, pattern_coord.col));
+
 
         for (var internal_row = 0; internal_row < 3; internal_row++) {
             for (var internal_col = 0; internal_col < 3; internal_col++) {
