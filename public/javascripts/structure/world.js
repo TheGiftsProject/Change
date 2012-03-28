@@ -70,7 +70,7 @@ World.prototype.getCellAt = function(global_row, global_col) {
     return this.cells[global_row][global_col];
 };
 
-World.CONNECTION_CHANCES = [1.0,  1.0,  0.05, 0.01];
+World.CONNECTION_CHANCES = [1,  1,  0.025, 0.001];
 
 World.prototype.generatePatternFor = function(coord) {
     var top_pattern    = this.getPatternAt(coord.top());
@@ -97,7 +97,7 @@ World.prototype.generatePatternFor = function(coord) {
     var left_connected   = left_exists   ? left_pattern.right : false;
     if (left_connected) connections++;
 
-    var connection_chances = World.CONNECTION_CHANCES.slice(0, 4 - connections).shuffle();
+    var connection_chances = World.CONNECTION_CHANCES.slice(0, 4 - connections);
 
     var new_connections = 0;
 
