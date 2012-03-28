@@ -1,10 +1,9 @@
-function Dog(x, y, world, hobo, dogType) {
+function Dog(x, y, world, hobo) {
     this.x = x;
     this.y = y;
-    this.dogType = dogType;
     this.direction = '';
     this.nextDirection = '';
-    this.renderer = new DogRenderer(dogType);
+    this.renderer = new DogRenderer(Math.ceil(Math.randomRange(0,3)));
     this.world = world;
     this.world.getCellAt(Math.floor(this.x / Dog.SIZE.w) ,Math.floor(this.y / Dog.SIZE.h)).setAsPath();
     this.hobo = hobo;

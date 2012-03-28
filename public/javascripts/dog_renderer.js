@@ -5,7 +5,7 @@ function DogRenderer(dogType) {
     this.spriteImage = new Image();
     this.spriteImage.src = this.file;
     this.accumulator = 0;
-    this.dogType = dogType || 1;
+    this.dogType = dogType;
 }
 
 DogRenderer.totalAnimationTime = 0.4;
