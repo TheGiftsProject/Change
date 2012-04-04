@@ -169,6 +169,7 @@ Hobo.prototype.collectContent = function(cell) {
         this.powerup = cell.content.value;
         this.powerupLength = Hobo.POWERUP_LENGTH;
         this.sounds.powerup.play();
+        this.flickerOn = false;
     } else if (cell.content.isLife()){
         this.lives = Math.min(this.lives + 1, 5);
         window.hoboman.updateLives(this.lives);
