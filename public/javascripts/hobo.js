@@ -100,7 +100,7 @@ Hobo.prototype.updatePowerups = function(dt) {
     else {
         Hobo.SPEED = Hobo.SPEED_BACKUP;
     }
-    this.godmode = enableGodmode || enableHulk;
+    this.godmode = enableGodmode;
     this.hulkmode = enableHulk;
 }
 
