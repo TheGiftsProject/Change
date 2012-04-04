@@ -1,11 +1,10 @@
 function HighScore(){
-    this.scores = [];
     this.store = new Store("highscore");
     this.load();
 }
 
 HighScore.prototype.load = function(){
-    this.scores = this.store.get("topscores");
+    this.scores = this.store.get("topscores") || [];
 };
 
 HighScore.prototype.save = function(){
