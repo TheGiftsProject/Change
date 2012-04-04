@@ -35,6 +35,9 @@ function HoboMan(canvas) {
     this.highScoreEl = document.getElementsByClassName("highscore")[0].getElementsByClassName("realscore")[0];
     $(this.highScoreEl).text(window.highscore.bestScore());
     this.fpsEl = document.getElementsByClassName("fps")[0];
+    this.livesCounter = $(".lives");
+    this.updateLives(this.world.hobo.lives);
+
     this.loop();
     this.updateFPS();
 }
@@ -92,6 +95,7 @@ HoboMan.prototype.render = function() {
     if (this.world.hobo.points > parseInt(this.highScoreEl.innerHTML)){
         this.highScoreEl.innerHTML = this.world.hobo.points;
     }
+
 };
 
 HoboMan.prototype.updateFPS = function() {
@@ -135,6 +139,13 @@ HoboMan.prototype.mute= function() {
 
 HoboMan.prototype.unmute= function() {
     soundManager.unmute();
+};
+
+HoboMan.prototype.updateLives = function(lives){
+    this.livesCounter.empty();
+    for( var i=0; i < lives ; i++){
+        this.livesCounter.append($("<div class='life'></div>"))
+    }
 };
 
 HoboMan.prototype.gameOver = function(score){

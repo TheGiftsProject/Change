@@ -6,6 +6,7 @@ function Hobo(x, y, world) {
     this.images = new HoboAnimation();
     this.points = 0;
     this.world = world;
+    this.lives = 3;
     this.coinSound = 0;
     this.powerups = {};
     this.lastPowerup;
@@ -21,7 +22,8 @@ function Hobo(x, y, world) {
         coin1: new EmptySound('coin1.wav'),
         bonus: new EmptySound('bonus.wav'),
         powerup: new EmptySound('godmode.wav'),
-        down: new EmptySound('dead_dog.wav')
+        down: new EmptySound('down.wav'),
+        life: new EmptySound('life.wav')
     };
     var that = this;
     soundManager.onready(function() {
@@ -147,8 +149,11 @@ Hobo.prototype.collectContent = function(cell) {
     else if (cell.content.isPowerup()) {
         this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
         this.sounds.powerup.play();
-    }
-    else {
+    } else if (cell.content.isLife()){
+        this.lives = Math.min(this.lives + 1, 5);
+        window.hoboman.updateLives(this.lives);
+        this.sounds.life.play()
+    } else {
         this.sounds["coin" + this.coinSound].play();
     }
     cell.removeContent();
@@ -161,11 +166,15 @@ Hobo.prototype.bitten = function(dog){
         this.addPoints(dog.getValue());
     }
     else {
-        window.hoboman.gameOver(this.points);
-        this.points = 0;
+        this.lives -= 1;
+        window.hoboman.updateLives(this.lives);
         this.x = Hobo.START.x;
         this.y = Hobo.START.y;
         this.sounds.die.play();
+
+        if (this.lives <= 0) {
+            window.hoboman.gameOver(this.points);
+        }
     }
 };
 
