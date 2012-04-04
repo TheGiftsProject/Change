@@ -68,6 +68,8 @@ TileRenderer.prototype.render = function(render_row, render_col){
         }
         else if (cell.content.isPowerup()) {
             this.renderPowerup(cell.content.value)
+        } else if (cell.content.isLife()){
+            this.renderLife(cell.content.value)
         }
     }
 };
@@ -84,6 +86,11 @@ TileRenderer.prototype.renderPowerup = function(content_type) {
     var animation = (tmp % 2) ? 0 : Math.floor(tmp/2)+1;
     this.blit(this.renderer.coins, 16 * animation, 16 * content_type + 64)
 }
+TileRenderer.prototype.renderLife = function(content_type) {
+    var tmp = Math.floor((this.renderer.accumulator*5) % 4);
+    var animation = [0,1,2,1][tmp];
+    this.blit(this.renderer.coins, 16 * animation, 16 * content_type + 96)
+};
 
 TileRenderer.prototype.renderWall = function(){
     var idx = 0;

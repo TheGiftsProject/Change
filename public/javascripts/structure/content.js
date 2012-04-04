@@ -14,11 +14,18 @@ Content.COINS = {
 Content.POWERUPS = {
     SPEED: 0,
     GODMODE: 1
-}
+};
+
+Content.LIVES = {
+    LIFE: 0
+};
+
+
 
 // types.
 Content.COIN    = "coin";
 Content.POWERUP = "powerup";
+Content.LIVE    = "life";
 
 Content.prototype.getValue = function() {
     switch (this.value) {
@@ -28,6 +35,7 @@ Content.prototype.getValue = function() {
         case Content.COINS.LOW:   return 1;
         case Content.POWERUPS.GODMODE: return 5;
         case Content.POWERUPS.SPEED:   return 5;
+        case Content.LIVES.LIFE:   return 20;
     }
     return 0;
 };
@@ -42,4 +50,8 @@ Content.prototype.isBonus = function() {
 
 Content.prototype.isPowerup = function() {
     return this.type == Content.POWERUP;
+};
+
+Content.prototype.isLife = function() {
+    return this.type == Content.LIVE;
 };

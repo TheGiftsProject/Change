@@ -5,8 +5,15 @@ function Cell(isWall) {
         if (roll <= Cell.BONUS_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.BONUS);
         }
+        else if (roll <= Cell.LIFE_CHANCE) {
+            this.content = new Content(Content.LIVE, Content.LIVES.LIFE);
+        }
         else if (roll <= Cell.POWERUP_CHANCE) {
-            this.content = new Content(Content.POWERUP, Math.roll(0.5) ? Content.POWERUPS.GODMODE: Content.POWERUPS.SPEED);
+            if (Math.roll(0.5)) {
+                this.content = new Content(Content.POWERUP, Content.POWERUPS.SPEED);
+            } else {
+                this.content = new Content(Content.POWERUP, Content.POWERUPS.GODMODE);
+            }
         }
         else if (roll <= Cell.TOP_COIN_CHANCE) {
             this.content = new Content(Content.COIN, Content.COINS.TOP);
@@ -26,10 +33,11 @@ function Cell(isWall) {
     }
 };
 
-Cell.LOW_COIN_CHANCE = 0.6;
-Cell.MID_COIN_CHANCE = 0.3;
-Cell.TOP_COIN_CHANCE = 0.1;
-Cell.POWERUP_CHANCE  = 0.01;
+Cell.LOW_COIN_CHANCE = 0.6000;
+Cell.MID_COIN_CHANCE = 0.3000;
+Cell.TOP_COIN_CHANCE = 0.1000;
+Cell.POWERUP_CHANCE  = 0.0100;
+Cell.LIFE_CHANCE     = 0.0030;
 Cell.BONUS_CHANCE    = 0.0025;
 
 Cell.prototype.setAsPath = function() {
