@@ -21,6 +21,7 @@ HighScore.prototype.set = function(score){
 };
 
 HighScore.prototype.bestScore = function(){
+    if (this.scores.length == 0) return 0;
     return this.scores[0].score;
 };
 
