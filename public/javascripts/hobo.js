@@ -248,16 +248,19 @@ Hobo.prototype.stopAtWall = function(oldRow, oldCol){
         row += 1;
     }
 
-    if (this.world.getCellAt(row, col).isWall() && !this.hulkmode){
-        this.x = oldCol * 16;
-        this.y = oldRow * 16;
-        if (this.nextDirection && (!this.isWall(this.nextDirection) || this.hulkmode)){
-            //TURN at Wall
-            this.turn();
+    if (this.world.getCellAt(row, col).isWall()){
+        if (this.hulkmode){
+            this.world.getCellAt(row, col).setBroken();
+            this.sounds.smash.play();
+        } else {
+            this.x = oldCol * 16;
+            this.y = oldRow * 16;
+            if (this.nextDirection && (!this.isWall(this.nextDirection) || this.hulkmode)){
+                //TURN at Wall
+                this.turn();
+            }
+
         }
-    } else if (this.hulkmode) {
-        this.world.getCellAt(row, col).setBroken();
-        this.sounds.smash.play();
     }
 
 };
