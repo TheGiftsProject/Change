@@ -28,7 +28,9 @@ function Hobo(x, y, world) {
         down: new EmptySound('down.wav'),
         life: new EmptySound('life.wav'),
         warning: new EmptySound('warning.wav'),
-        break: new EmptySound('break.wav')
+        smash: new EmptySound('break.wav'),
+        gameover: new EmptySound("gameover.wav")
+
     };
     var that = this;
     soundManager.onready(function() {
@@ -196,6 +198,7 @@ Hobo.prototype.bitten = function(dog){
 
         if (this.lives <= 0) {
             window.hoboman.gameOver(this.points);
+            this.sounds.gameover.play();
         }
     }
 };
@@ -252,7 +255,7 @@ Hobo.prototype.stopAtWall = function(oldRow, oldCol){
         }
     } else if (this.hulkmode) {
         this.world.getCellAt(row, col).setBroken();
-        this.sounds.break.play();
+        this.sounds.smash.play();
     }
 
 };
