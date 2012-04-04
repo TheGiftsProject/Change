@@ -1,3 +1,2 @@
 * Fix collision.
-* Breaking walls powerup (+sound)
 * Dog AI (itay).
