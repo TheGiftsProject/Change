@@ -159,6 +159,8 @@ Hobo.prototype.bitten = function(dog){
     dog.kill();
     this.powerup = -1;
     this.powerupLength = 0;
+    this.direction = '';
+    this.nextDirection = '';
     if (this.godmode) {
         this.addPoints(dog.getValue());
     }
