@@ -7,10 +7,10 @@ function World() {
     this.addEntity(this.hobo);
 
     this.nextDogCreationTag = this.generateNextDogCreationTag();
-    this.dogCreationCounter = 0;
+    this.dogCreationCounter = -100;
 };
 
-World.DOG_CREATION_RANGE_MIN = 20;
+World.DOG_CREATION_RANGE_MIN = 15;
 World.DOG_CREATION_RANGE_MAX = 25;
 
 World.prototype.addEntity = function(entity) {
@@ -32,8 +32,7 @@ World.prototype.checkDogCreationAt = function(pattern_coord)
         this.dogCreationCounter = 0;
         this.nextDogCreationTag = this.generateNextDogCreationTag();
         var levelCoords = pattern_coord.toLevelCoords();
-        this.addEntity(new Dog(levelCoords.row, levelCoords.col, this, this.hobo));
-        console.log(levelCoords);
+        this.addEntity(new Dog(levelCoords.col, levelCoords.row, this, this.hobo));
     }
 }
 

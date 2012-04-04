@@ -20,5 +20,5 @@ Coord.prototype.right = function() {
 };
 
 Coord.prototype.toLevelCoords = function() {
-    return new Coord(Level.CELL_SIZE.WIDTH * (this.row * 3 + 1), Level.CELL_SIZE.HEIGHT * (this.col * 3 + 1));
+    return new Coord(Level.CELL_SIZE.WIDTH * (this.row * 3) + 18, Level.CELL_SIZE.HEIGHT * (this.col * 3) + 18);
 };
