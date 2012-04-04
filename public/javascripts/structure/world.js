@@ -7,11 +7,11 @@ function World() {
     this.addEntity(this.hobo);
 
     this.nextDogCreationTag = this.generateNextDogCreationTag();
-    this.dogCreationCounter = -100;
+    this.dogCreationCounter = -50;
 };
 
 World.DOG_CREATION_RANGE_MIN = 15;
-World.DOG_CREATION_RANGE_MAX = 25;
+World.DOG_CREATION_RANGE_MAX = 20;
 
 World.prototype.addEntity = function(entity) {
     this.entities.push(entity);

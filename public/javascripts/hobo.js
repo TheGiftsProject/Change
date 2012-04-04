@@ -7,9 +7,9 @@ function Hobo(x, y, world) {
     this.points = 0;
     this.world = world;
     this.coinSound = 0;
-    this.powerups = {};
-    this.lastPowerup;
+    this.powerup = -1;
     this.godmode = false;
+    this.powerupLength = 0;
     this.accumulator = 0;
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
@@ -59,19 +59,18 @@ Hobo.prototype.update = function(dt, keys) {
 Hobo.prototype.updatePowerups = function(dt) {
     var enableSpeedPowerup = false;
     var enableGodmode = false;
-    this.lastPowerup = 0;
-    for (var powerup in this.powerups) {
-        if (this.powerups[powerup] > 0) {
-            this.powerups[powerup] -= dt;
-            switch (powerup) {
-                case Content.POWERUPS.SPEED.toString():   enableSpeedPowerup = true; break;
-                case Content.POWERUPS.GODMODE.toString(): enableGodmode = true; break;
+    if (this.powerup > -1) {
+        debugger;
+        if (this.powerupLength > 0) {
+            this.powerupLength -= dt;
+            switch (this.powerup) {
+                case Content.POWERUPS.SPEED:   enableSpeedPowerup = true; break;
+                case Content.POWERUPS.GODMODE: enableGodmode = true; break;
             }
-            this.lastPowerup = parseInt(powerup) + 1;
         }
         else {
             this.sounds.down.play();
-            delete this.powerups[powerup];
+            this.powerup = -1;
         }
     }
     if (enableSpeedPowerup) {
@@ -145,7 +144,8 @@ Hobo.prototype.collectContent = function(cell) {
         this.sounds.bonus.play();
     }
     else if (cell.content.isPowerup()) {
-        this.powerups[cell.content.value] = Hobo.POWERUP_LENGTH;
+        this.powerup = cell.content.value;
+        this.powerupLength = Hobo.POWERUP_LENGTH;
         this.sounds.powerup.play();
     }
     else {
@@ -157,6 +157,8 @@ Hobo.prototype.collectContent = function(cell) {
 
 Hobo.prototype.bitten = function(dog){
     dog.kill();
+    this.powerup = -1;
+    this.powerupLength = 0;
     if (this.godmode) {
         this.addPoints(dog.getValue());
     }

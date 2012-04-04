@@ -1,3 +1,5 @@
 * Flicker before powerup ends (also flicker dogs).
+* Add life sound.
 * Fix collision.
+* Breaking walls powerup (+sound)
 * Dog AI (itay).
