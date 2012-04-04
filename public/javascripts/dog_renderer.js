@@ -14,14 +14,19 @@ DogRenderer.numFrames = 4;
 DogRenderer.frameMapping = [0, 1, 0 ,2];
 
 DogRenderer.prototype.getDirectionOffset = function(dog){
+    var offset = 0;
     switch (dog.direction) {
-        case 'left': return 48;
-        case 'up': return 32;
-        case 'right': return 16;
-        case 'down': return 0;
-        default: return 0;
+        case 'left': offset= 48; break;
+        case 'up': offset= 32; break;
+        case 'right': offset= 16; break;
+        case 'down': offset= 0; break;
     }
+    if (dog.isRunningAway()) offset += 64;
+    return offset;
 };
+
+
+
 
 DogRenderer.prototype.update = function(dt) {
     this.accumulator += dt;

@@ -155,8 +155,8 @@ Hobo.prototype.collectContent = function(cell) {
 }
 
 Hobo.prototype.bitten = function(dog){
+    dog.kill();
     if (this.godmode) {
-        dog.kill();
         this.addPoints(dog.getValue());
     }
     else {
