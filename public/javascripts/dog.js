@@ -149,7 +149,7 @@ Dog.prototype.currentRow = function(){
 };
 
 Dog.prototype.checkBark = function(){
-    if (!this.barked && this.closeToHobo()) {
+    if (!this.barked && this.closeToHobo() && !this.isRunningAway()) {
         this.barked = true;
         this.sounds.bark.play();
     }
@@ -249,7 +249,7 @@ Dog.prototype.brownDogDecideOnTurn = function(){
         }
     }
 
-    if(this.hobo.godmode) {
+    if (this.isRunningAway()) {
         this.nextDirection = this.turnAround(this.nextDirection);
     }
 
@@ -261,3 +261,7 @@ Dog.prototype.brownDogDecideOnTurn = function(){
         }
     }
 };
+
+Dog.prototype.isRunningAway = function(){
+    return this.hobo.godmode;
+}
