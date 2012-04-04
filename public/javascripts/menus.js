@@ -26,7 +26,14 @@ function Menus(){
             window.hoboman.unmute();
             $(this).text("mute");
         }
-    })
+    });
+    this.currentScore = 0;
+    $('.newhs .save').click(function(){
+        window.highscore.set({score: that.currentScore, name: $(".newhs input").val() || "hoboman"});
+        window.highscore.render();
+        $(".newhs").addClass("hidden");
+    });
+
 }
 
 Menus.prototype.goto = function(screen){
@@ -44,6 +51,17 @@ Menus.prototype.game = function(){
 
 Menus.prototype.start = function(){
     window.highscore.render()
+};
+
+Menus.prototype.gameOver = function(score){
+    this.currentScore = score;
+    this.goto(this.screens.gameover);
+
+    var newhs = this.screens.gameover.find(".newhs").addClass("hidden");
+    this.screens.gameover.find(".yourscore").text(score);
+    if (window.highscore.isHighScore(score)){
+        newhs.removeClass("hidden");
+    }
 };
 
 

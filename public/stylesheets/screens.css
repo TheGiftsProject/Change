@@ -7,11 +7,11 @@ h1{
     margin-bottom: 10px;
 }
 
-.start ul{
+ul{
     margin: 0;
     padding: 0;
 }
-.start ul li{
+ul li{
     display: block;
 }
 
@@ -59,28 +59,46 @@ a.to_game{
 }
 
 h2{
-    padding-top: 100px;
-    font-size: 60px;
+    padding: 0;
+    margin: 0;
+    font-size: 40px;
     text-align: center;
     color: white;
     text-shadow: 4px 4px black;
 }
 
-.about p{
-    width: 700px;
+.newhs em{
+    font-size: 40px;
+    text-align: center;
+    text-shadow: 4px 4px black;
+    font-weight: bold;
+    color: yellow;
+    display: block;
+}
+
+.newhs.hidden{
+    display: none;
+}
+
+.newhs input{
+    padding: 12px;
+    border: 2px solid white;
+    box-shadow: 1px 2px 0 2px black;
+    font-size: 18px;
+    width: 480px;
+}
+
+.newhs {
+    width: 600px;
     margin: 0 auto;
 }
 
-.highscores h2{
-    padding-top: 0;
+.newhs a{
+    width: 80px;
+    display: inline-block;
+    font-size: 20px;
 }
 
-.highscores-list{
-    width: 700px;
-    margin: 0 auto;
-}
-
-.scorelist{
-    float: left;
-    width: 300px;
+.gameover h1{
+    padding-top: 50px;
 }

@@ -29,6 +29,11 @@ HighScore.prototype.topScores = function(){
     return this.scores.slice(0,5);
 };
 
+HighScore.prototype.isHighScore = function(score){
+    if (this.scores.length < 5) return true;
+    return score > this.topScores().reverse()[0].score;
+};
+
 
 HighScore.prototype.render = function(){
     var parent = $("ul.highscores").empty();

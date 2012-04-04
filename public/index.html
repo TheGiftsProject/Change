@@ -20,7 +20,20 @@
                 </ul>
             </div>
             <div class="screen pause"></div>
-            <div class="screen gameover"></div>
+            <div class="screen gameover">
+                <h1>Game - Over</h1>
+                <h2> Your score is <span class="yourscore"></span></h2>
+                <div class="hidden newhs"><em> new highscore!</em>
+                <input type="text"/> <a href="javascript:;" class="save">save</a></div>
+                <ul class="highscores">
+                    <li><span class="name">The Hoboman</span><span class="hscore">1000000</span></li>
+                    <li><span class="name">Little Hobo</span><span class="hscore">40000</span></li>
+                    <li><span class="name">Dog</span><span class="hscore">100</span></li>
+                </ul>
+                <ul>
+                    <li><a href="javascript:;" class="to_game">New Game</a></li>
+                </ul>
+            </div>
             <div class="screen game">
                 <canvas width=480 height=320></canvas>
                 <div class="scores">

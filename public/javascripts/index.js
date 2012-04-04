@@ -30,6 +30,7 @@ function HoboMan(canvas) {
     this.frameTimeAccumulator = 0;
     this.frameCounter = 0;
     this.fps = 0;
+    this.gameover = false;
 
     this.scoreEl = document.getElementsByClassName("score")[0].getElementsByClassName("realscore")[0];
     this.highScoreEl = document.getElementsByClassName("highscore")[0].getElementsByClassName("realscore")[0];
@@ -58,6 +59,8 @@ HoboMan.prototype.loop = function() {
         this.render();
         this.frameCounter += 1;
     }
+
+    if (this.gameover) return false;
 
     window.requestAnimFrame(_.bind(this.loop, this));
 };
@@ -149,5 +152,6 @@ HoboMan.prototype.updateLives = function(lives){
 };
 
 HoboMan.prototype.gameOver = function(score){
-    window.highscore.set({score: score, name: "hoboman"});
+    window.menus.gameOver(score);
+    this.gameover = true;
 };
