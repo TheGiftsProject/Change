@@ -13,7 +13,8 @@ Content.COINS = {
 
 Content.POWERUPS = {
     SPEED: 0,
-    GODMODE: 1
+    GODMODE: 1,
+    BREAKER: 2
 };
 
 Content.LIVES = {
@@ -35,6 +36,7 @@ Content.prototype.getValue = function() {
         case Content.COINS.LOW:   return 1;
         case Content.POWERUPS.GODMODE: return 5;
         case Content.POWERUPS.SPEED:   return 5;
+        case Content.POWERUPS.BREAKER:   return 5;
         case Content.LIVES.LIFE:   return 20;
     }
     return 0;

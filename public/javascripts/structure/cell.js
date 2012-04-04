@@ -1,5 +1,6 @@
 function Cell(isWall) {
     this.wall = isWall;
+    this.broken = false;
     if (!isWall) {
         var roll = Math.random();
         if (roll <= Cell.BONUS_CHANCE) {
@@ -9,10 +10,13 @@ function Cell(isWall) {
             this.content = new Content(Content.LIVE, Content.LIVES.LIFE);
         }
         else if (roll <= Cell.POWERUP_CHANCE) {
-            if (Math.roll(0.5)) {
+            var powerup_roll = Math.random();
+            if (powerup_roll > 0.6) {
                 this.content = new Content(Content.POWERUP, Content.POWERUPS.SPEED);
-            } else {
+            } else if (powerup_roll > 0.3) {
                 this.content = new Content(Content.POWERUP, Content.POWERUPS.GODMODE);
+            } else {
+                this.content = new Content(Content.POWERUP, Content.POWERUPS.BREAKER);
             }
         }
         else if (roll <= Cell.TOP_COIN_CHANCE) {
@@ -42,6 +46,10 @@ Cell.BONUS_CHANCE    = 0.0025;
 
 Cell.prototype.setAsPath = function() {
     this.wall = false;
+};
+
+Cell.prototype.setBroken = function() {
+    this.broken = true;
 };
 
 Cell.prototype.isWall = function() {

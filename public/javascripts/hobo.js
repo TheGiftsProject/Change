@@ -11,6 +11,7 @@ function Hobo(x, y, world) {
     this.powerup = -1;
     this.flickerOn = false;
     this.godmode = false;
+    this.hulkmode = false;
     this.powerupLength = 0;
     this.lastLength = 0;
     this.accumulator = 0;
@@ -64,6 +65,7 @@ Hobo.prototype.update = function(dt, keys) {
 Hobo.prototype.updatePowerups = function(dt) {
     var enableSpeedPowerup = false;
     var enableGodmode = false;
+    var enableHulk = false;
     if (this.powerup > -1) {
         if (this.powerupLength > 0) {
             if (this.powerupLength <= Hobo.POWERUP_FLICKER_START) {
@@ -79,6 +81,7 @@ Hobo.prototype.updatePowerups = function(dt) {
             switch (this.powerup) {
                 case Content.POWERUPS.SPEED:   enableSpeedPowerup = true; break;
                 case Content.POWERUPS.GODMODE: enableGodmode = true; break;
+                case Content.POWERUPS.BREAKER: enableHulk = true; break;
             }
         }
         else {
@@ -95,6 +98,7 @@ Hobo.prototype.updatePowerups = function(dt) {
         Hobo.SPEED = Hobo.SPEED_BACKUP;
     }
     this.godmode = enableGodmode;
+    this.hulkmode = enableHulk;
 }
 
 Hobo.prototype.updateFromKeys = function(dt, keys) {
