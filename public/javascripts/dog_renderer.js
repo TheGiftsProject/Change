@@ -21,7 +21,7 @@ DogRenderer.prototype.getDirectionOffset = function(dog){
         case 'right': offset= 16; break;
         case 'down': offset= 0; break;
     }
-    if (dog.isRunningAway()) offset += 64;
+    if (dog.isRunningAway() && !dog.hobo.flickerOn) offset += 64;
     return offset;
 };
 

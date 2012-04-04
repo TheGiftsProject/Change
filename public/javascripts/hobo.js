@@ -11,7 +11,9 @@ function Hobo(x, y, world) {
     this.powerup = -1;
     this.flickerOn = false;
     this.godmode = false;
+    this.hulkmode = false;
     this.powerupLength = 0;
+    this.lastLength = 0;
     this.accumulator = 0;
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
@@ -24,7 +26,9 @@ function Hobo(x, y, world) {
         bonus: new EmptySound('bonus.wav'),
         powerup: new EmptySound('godmode.wav'),
         down: new EmptySound('down.wav'),
-        life: new EmptySound('life.wav')
+        life: new EmptySound('life.wav'),
+        warning: new EmptySound('warning.wav'),
+        break: new EmptySound('break.wav')
     };
     var that = this;
     soundManager.onready(function() {
@@ -62,22 +66,30 @@ Hobo.prototype.update = function(dt, keys) {
 Hobo.prototype.updatePowerups = function(dt) {
     var enableSpeedPowerup = false;
     var enableGodmode = false;
+    var enableHulk = false;
     if (this.powerup > -1) {
         if (this.powerupLength > 0) {
             if (this.powerupLength <= Hobo.POWERUP_FLICKER_START) {
-                var diff = this.powerupLength - Math.floor(this.powerupLength);
-                this.flickerOn =  diff > 0.5;
+                this.lastLength += dt;
+                var log = Math.max(Math.log(this.powerupLength) / 3, 0.1);
+                if (this.lastLength >= log) {
+                    this.lastLength = 0;
+                    this.flickerOn = !this.flickerOn;
+                    this.sounds.warning.play();
+                }
             }
             this.powerupLength -= dt;
             switch (this.powerup) {
                 case Content.POWERUPS.SPEED:   enableSpeedPowerup = true; break;
                 case Content.POWERUPS.GODMODE: enableGodmode = true; break;
+                case Content.POWERUPS.BREAKER: enableHulk = true; break;
             }
         }
         else {
             this.sounds.down.play();
             this.powerup = -1;
             this.flickerOn = false;
+            this.lastLength = 0;
         }
     }
     if (enableSpeedPowerup) {
@@ -87,6 +99,7 @@ Hobo.prototype.updatePowerups = function(dt) {
         Hobo.SPEED = Hobo.SPEED_BACKUP;
     }
     this.godmode = enableGodmode;
+    this.hulkmode = enableHulk;
 }
 
 Hobo.prototype.updateFromKeys = function(dt, keys) {
@@ -196,7 +209,7 @@ Hobo.prototype.isWall = function(direction, row, col){
             case "right": col += 1;break;
             case "down": row += 1;break;
         }
-    return this.world.getCellAt(row,col).isWall();
+    return this.world.getCellAt(row,col).isWall() && !this.hulkmode;
 };
 
 Hobo.prototype.moveCoordinates = function(dt){
@@ -230,14 +243,18 @@ Hobo.prototype.stopAtWall = function(oldRow, oldCol){
         row += 1;
     }
 
-    if (this.world.getCellAt(row, col).isWall()){
+    if (this.world.getCellAt(row, col).isWall() && !this.hulkmode){
         this.x = oldCol * 16;
         this.y = oldRow * 16;
-        if (this.nextDirection && !this.isWall(this.nextDirection)){
+        if (this.nextDirection && (!this.isWall(this.nextDirection) || this.hulkmode)){
             //TURN at Wall
             this.turn();
         }
+    } else if (this.hulkmode) {
+        this.world.getCellAt(row, col).setBroken();
+        this.sounds.break.play();
     }
+
 };
 
 Hobo.prototype.turn = function(){
@@ -271,7 +288,7 @@ Hobo.prototype.turnIfCan = function(oldRow, oldCol){
     var horizontal = (this.direction == "left" || this.direction == "right");
 
     if ((horizontal && oldCol != this.currentCol()) || (!horizontal && oldRow != this.currentRow())){
-        if (!this.isWall(this.nextDirection, row, col)){
+        if (!this.isWall(this.nextDirection, row, col) || this.hulkmode){
             this.turn();
             this.x = col * Hobo.SIZE.w;
             this.y = row * Hobo.SIZE.h;
