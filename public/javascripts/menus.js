@@ -7,6 +7,7 @@ function Menus(){
     };
 
     this.screens.start.show();
+    this.currentScreen = this.screens.start;
     this.start();
     var that = this;
     $(".to_start").click(function(){
@@ -34,6 +35,16 @@ function Menus(){
         $(".newhs").addClass("hidden");
     });
 
+    $(document).keyup(function(e) {
+         var key = e.which;
+        if (key == 13) { //enter
+            if (that.currentScreen == that.screens.start || that.currentScreen == that.screens.gameover){
+                that.game();
+            }
+
+        }
+    });
+
 }
 
 Menus.prototype.goto = function(screen){
@@ -41,7 +52,8 @@ Menus.prototype.goto = function(screen){
     currentScreen.css({top:"-744px"});
 
     screen.css({top:"0"});
-    screen.show()
+    screen.show();
+    this.currentScreen = screen;
 };
 
 Menus.prototype.game = function(){
