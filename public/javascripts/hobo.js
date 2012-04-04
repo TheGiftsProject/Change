@@ -8,6 +8,7 @@ function Hobo(x, y, world) {
     this.world = world;
     this.coinSound = 0;
     this.powerup = -1;
+    this.flickerOn = false;
     this.godmode = false;
     this.powerupLength = 0;
     this.accumulator = 0;
@@ -44,7 +45,7 @@ Hobo.START = {
 };
 
 Hobo.POWERUP_LENGTH = 10;
-Hobo.POWERUP_FLICKER_START = 3;
+Hobo.POWERUP_FLICKER_START = 4;
 Hobo.SPEED = 82;
 Hobo.SPEED_BACKUP = Hobo.SPEED;
 Hobo.SPEED_BONUS = 120;
@@ -60,8 +61,11 @@ Hobo.prototype.updatePowerups = function(dt) {
     var enableSpeedPowerup = false;
     var enableGodmode = false;
     if (this.powerup > -1) {
-        debugger;
         if (this.powerupLength > 0) {
+            if (this.powerupLength <= Hobo.POWERUP_FLICKER_START) {
+                var diff = this.powerupLength - Math.floor(this.powerupLength);
+                this.flickerOn =  diff > 0.5;
+            }
             this.powerupLength -= dt;
             switch (this.powerup) {
                 case Content.POWERUPS.SPEED:   enableSpeedPowerup = true; break;
@@ -71,6 +75,7 @@ Hobo.prototype.updatePowerups = function(dt) {
         else {
             this.sounds.down.play();
             this.powerup = -1;
+            this.flickerOn = false;
         }
     }
     if (enableSpeedPowerup) {
