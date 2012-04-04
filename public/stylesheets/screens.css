@@ -4,6 +4,7 @@ h1{
     text-align: center;
     color: white;
     text-shadow: 4px 4px black;
+    margin-bottom: 10px;
 }
 
 .start ul{
@@ -12,6 +13,25 @@ h1{
 }
 .start ul li{
     display: block;
+}
+
+.highscores{
+    text-align: center;
+}
+.highscores li{
+    width: 320px;
+    margin: 0 auto;
+    overflow: hidden;
+    font-size: 20px;
+}
+
+.highscores li .name{
+    float: left;
+    font-weight: bold;
+}
+
+.highscores li .hscore{
+    float: right;
 }
 
 a {
@@ -36,7 +56,6 @@ a:hover{
 
 a.to_game{
     font-size: 24px;
-    background: #f08080;
 }
 
 h2{

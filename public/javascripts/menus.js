@@ -3,24 +3,18 @@ function Menus(){
         start: $(".screen.start"),
         pause: $(".screen.pause"),
         game: $(".screen.game"),
-        highscores: $(".screen.highscores"),
-        gameover: $(".screen.gameover"),
-        about: $(".screen.about")
+        gameover: $(".screen.gameover")
     };
 
     this.screens.start.show();
+    this.start();
     var that = this;
     $(".to_start").click(function(){
         that.goto(that.screens.start);
     });
+
     $(".to_game").click(function(){
         that.game();
-    });
-    $(".to_about").click(function(){
-        that.goto(that.screens.about);
-    });
-    $(".to_highscores").click(function(){
-        that.goto(that.screens.highscores);
     });
 
     $('.mute').click(function(){
@@ -48,7 +42,12 @@ Menus.prototype.game = function(){
     window.hoboman = new HoboMan(document.getElementsByTagName('canvas')[0]);
 };
 
+Menus.prototype.start = function(){
+    window.highscore.render()
+};
+
 
 $(document).ready(function(){
+    window.highscore = new HighScore();
     window.menus = new Menus();
 });

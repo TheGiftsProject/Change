@@ -160,7 +160,7 @@ Hobo.prototype.bitten = function(dog){
         this.addPoints(dog.getValue());
     }
     else {
-//        window.hoboman.died(this.points);
+        window.hoboman.gameOver(this.points);
         this.points = 0;
         this.x = Hobo.START.x;
         this.y = Hobo.START.y;

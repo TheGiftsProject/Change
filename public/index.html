@@ -10,36 +10,17 @@
         <div class="container">
             <div class="screen start">
                 <h1>Hoboman</h1>
+                <ul class="highscores">
+                    <li><span class="name">The Hoboman</span><span class="hscore">1000000</span></li>
+                    <li><span class="name">Little Hobo</span><span class="hscore">40000</span></li>
+                    <li><span class="name">Dog</span><span class="hscore">100</span></li>
+                </ul>
                 <ul>
                     <li><a href="javascript:;" class="to_game">Start Game</a></li>
-                    <li><a href="javascript:;" class="to_highscores">High Scores</a></li>
-                    <li><a href="javascript:;" class="to_about">About</a></li>
                 </ul>
             </div>
             <div class="screen pause"></div>
             <div class="screen gameover"></div>
-            <div class="screen highscores">
-                <h2>High Scores</h2>
-                <div class="highscores-list">
-                    <div class="scorelist local">
-                        <h3>Local Scores</h3>
-                        <ul>
-                            <li><span class="name">asd</span><span class="hscore">123</span></li>
-                        </ul>
-                    </div>
-                    <div class="scorelist global">
-                        <h3>Global Scores</h3>
-                        <ul>
-                            <li><span class="name">asd</span><span class="hscore">123</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="screen about">
-                <h2>About Hoboman</h2>
-                <p> This game rocks, thats it.</p>
-                <a href="javascript:;" class="to_start">Back</a>
-            </div>
             <div class="screen game">
                 <canvas width=480 height=320></canvas>
                 <div class="scores">
@@ -56,12 +37,14 @@
         <script src="/javascripts/libs/underscore.min.js"></script>
         <script src="/javascripts/libs/soundmanager2-jsmin.js"></script>
         <script src="/javascripts/libs/jquery-1.7.2.min.js"></script>
+        <script src="/javascripts/libs/store.js"></script>
         <script>
             soundManager.url = '/resources/swf';
             soundManager.debugMode = false;
         </script>
 
         <script src="/javascripts/utils.js"></script>
+        <script src="/javascripts/stop_keyboard_scroll.js"></script>
         <script src="/javascripts/structure/world.js"></script>
         <script src="/javascripts/structure/pattern.js"></script>
         <script src="/javascripts/structure/content.js"></script>
@@ -76,6 +59,7 @@
         <script src="/javascripts/hobo_animation.js"></script>
         <script src="/javascripts/hobo.js"></script>
         <script src="/javascripts/index.js"></script>
+        <script src="/javascripts/highscore.js"></script>
         <script src="/javascripts/menus.js"></script>
     </body>
 </html>

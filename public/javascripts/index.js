@@ -33,6 +33,7 @@ function HoboMan(canvas) {
 
     this.scoreEl = document.getElementsByClassName("score")[0].getElementsByClassName("realscore")[0];
     this.highScoreEl = document.getElementsByClassName("highscore")[0].getElementsByClassName("realscore")[0];
+    $(this.highScoreEl).text(window.highscore.bestScore());
     this.fpsEl = document.getElementsByClassName("fps")[0];
     this.loop();
     this.updateFPS();
@@ -134,4 +135,8 @@ HoboMan.prototype.mute= function() {
 
 HoboMan.prototype.unmute= function() {
     soundManager.unmute();
+};
+
+HoboMan.prototype.gameOver = function(score){
+    window.highscore.set({score: score, name: "hoboman"});
 };
