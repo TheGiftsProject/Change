@@ -1,6 +1,5 @@
-* Fix dog spawning out of nowhere.
-* Flicker before powerup ends.
-* Investigate FPS drop.
+* Flicker before powerup ends (also flicker dogs).
+* Fix collision.
 
 * Local Highscore on menu screen.
 * Dog AI (itay).
