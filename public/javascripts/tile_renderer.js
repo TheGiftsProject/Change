@@ -89,7 +89,7 @@ TileRenderer.prototype.renderPowerup = function(content_type) {
 TileRenderer.prototype.renderLife = function(content_type) {
     var tmp = Math.floor((this.renderer.accumulator*5) % 4);
     var animation = [0,1,2,1][tmp];
-    this.blit(this.renderer.coins, 16 * animation, 16 * content_type + 96)
+    this.blit(this.renderer.coins, 16 * animation, 16 * content_type + 112)
 };
 
 TileRenderer.prototype.renderWall = function(){
