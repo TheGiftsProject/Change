@@ -12,6 +12,7 @@ function Hobo(x, y, world) {
     this.flickerOn = false;
     this.godmode = false;
     this.powerupLength = 0;
+    this.lastLength = 0;
     this.accumulator = 0;
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
@@ -24,7 +25,8 @@ function Hobo(x, y, world) {
         bonus: new EmptySound('bonus.wav'),
         powerup: new EmptySound('godmode.wav'),
         down: new EmptySound('down.wav'),
-        life: new EmptySound('life.wav')
+        life: new EmptySound('life.wav'),
+        warning: new EmptySound('warning.wav')
     };
     var that = this;
     soundManager.onready(function() {
@@ -65,8 +67,13 @@ Hobo.prototype.updatePowerups = function(dt) {
     if (this.powerup > -1) {
         if (this.powerupLength > 0) {
             if (this.powerupLength <= Hobo.POWERUP_FLICKER_START) {
-                var diff = this.powerupLength - Math.floor(this.powerupLength);
-                this.flickerOn =  diff > 0.5;
+                this.lastLength += dt;
+                var log = Math.max(Math.log(this.powerupLength) / 3, 0.1);
+                if (this.lastLength >= log) {
+                    this.lastLength = 0;
+                    this.flickerOn = !this.flickerOn;
+                    this.sounds.warning.play();
+                }
             }
             this.powerupLength -= dt;
             switch (this.powerup) {
@@ -78,6 +85,7 @@ Hobo.prototype.updatePowerups = function(dt) {
             this.sounds.down.play();
             this.powerup = -1;
             this.flickerOn = false;
+            this.lastLength = 0;
         }
     }
     if (enableSpeedPowerup) {
