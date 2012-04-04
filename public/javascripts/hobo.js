@@ -27,7 +27,8 @@ function Hobo(x, y, world) {
         powerup: new EmptySound('godmode.wav'),
         down: new EmptySound('down.wav'),
         life: new EmptySound('life.wav'),
-        warning: new EmptySound('warning.wav')
+        warning: new EmptySound('warning.wav'),
+        break: new EmptySound('break.wav')
     };
     var that = this;
     soundManager.onready(function() {
@@ -208,7 +209,7 @@ Hobo.prototype.isWall = function(direction, row, col){
             case "right": col += 1;break;
             case "down": row += 1;break;
         }
-    return this.world.getCellAt(row,col).isWall();
+    return this.world.getCellAt(row,col).isWall() && !this.hulkmode;
 };
 
 Hobo.prototype.moveCoordinates = function(dt){
@@ -242,14 +243,18 @@ Hobo.prototype.stopAtWall = function(oldRow, oldCol){
         row += 1;
     }
 
-    if (this.world.getCellAt(row, col).isWall()){
+    if (this.world.getCellAt(row, col).isWall() && !this.hulkmode){
         this.x = oldCol * 16;
         this.y = oldRow * 16;
-        if (this.nextDirection && !this.isWall(this.nextDirection)){
+        if (this.nextDirection && (!this.isWall(this.nextDirection) || this.hulkmode)){
             //TURN at Wall
             this.turn();
         }
+    } else if (this.hulkmode) {
+        this.world.getCellAt(row, col).setBroken();
+        this.sounds.break.play();
     }
+
 };
 
 Hobo.prototype.turn = function(){
@@ -283,7 +288,7 @@ Hobo.prototype.turnIfCan = function(oldRow, oldCol){
     var horizontal = (this.direction == "left" || this.direction == "right");
 
     if ((horizontal && oldCol != this.currentCol()) || (!horizontal && oldRow != this.currentRow())){
-        if (!this.isWall(this.nextDirection, row, col)){
+        if (!this.isWall(this.nextDirection, row, col) || this.hulkmode){
             this.turn();
             this.x = col * Hobo.SIZE.w;
             this.y = row * Hobo.SIZE.h;

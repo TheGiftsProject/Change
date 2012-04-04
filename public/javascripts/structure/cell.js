@@ -50,6 +50,7 @@ Cell.prototype.setAsPath = function() {
 
 Cell.prototype.setBroken = function() {
     this.broken = true;
+    this.wall = false;
 };
 
 Cell.prototype.isWall = function() {
