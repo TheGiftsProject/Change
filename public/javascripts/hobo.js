@@ -179,18 +179,19 @@ Hobo.prototype.collectContent = function(cell) {
     }
     cell.removeContent();
     this.coinSound = 1 - this.coinSound;
-}
+};
 
 Hobo.prototype.bitten = function(dog){
     dog.kill();
-    this.powerup = -1;
-    this.powerupLength = 0;
-    this.direction = '';
-    this.nextDirection = '';
+
     if (this.godmode) {
         this.addPoints(dog.getValue());
     }
     else {
+        this.powerup = -1;
+        this.powerupLength = 0;
+        this.direction = '';
+        this.nextDirection = '';
         this.lives -= 1;
         window.hoboman.updateLives(this.lives);
         this.x = Hobo.START.x;
