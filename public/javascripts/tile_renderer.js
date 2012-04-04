@@ -9,6 +9,7 @@ function TileRenderer(row, col, world, context, renderer){
         [world.getCellAt(row    , col -1), world.getCellAt(row    , col), world.getCellAt(row    , col +1)],
         [world.getCellAt(row + 1, col -1), world.getCellAt(row + 1, col), world.getCellAt(row + 1, col +1)]
         ];
+    this.cell = world.getCellAt(row    , col);
     this.wallDecal = null;
     this.roofDecal = null;
     if (this.fits([[2,2,2],
@@ -22,6 +23,7 @@ function TileRenderer(row, col, world, context, renderer){
         this.roofDecal = Math.floor(Math.random() * TileRenderer.DECALS.roof);
     }
     this.coin_offset = Math.random() * 60;
+    this.brokenDecal = Math.floor(Math.random() * 3);
 }
 TileRenderer.DECALS = {
     roof: 7,
@@ -132,6 +134,10 @@ TileRenderer.prototype.renderWall = function(){
 };
 
 TileRenderer.prototype.renderRoad = function(){
+    if (this.cell.broken) {
+        this.blit(this.renderer.road, this.brokenDecal*16, 48);
+        return;
+    }
     this.blit(this.renderer.road, 32, 0);
     this.renderLines();
     this.renderStops();
