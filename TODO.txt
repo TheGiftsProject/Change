@@ -1,3 +1,7 @@
 * Fix collision.
+* Fig unmoving dogs.
 * Dog AI improvement.
-* Decals for broken road.
+* Global highscore.
+* Add delay after bitten.
+* Add text notifications for powerups/score/lives taken (or even -1 when bitten).
+* Add "park" textures.
