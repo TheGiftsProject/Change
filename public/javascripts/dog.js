@@ -3,7 +3,8 @@ function Dog(x, y, world, hobo) {
     this.y = y;
     this.direction = '';
     this.nextDirection = '';
-    this.renderer = new DogRenderer(Math.floor(Math.randomRange(0,3)));
+    this.type = Math.floor(Math.randomRange(0,3));
+    this.renderer = new DogRenderer(this.type);
     this.world = world;
     this.hobo = hobo;
     this.barked = false;
@@ -26,7 +27,13 @@ Dog.SIZE = {
     h: 16
 };
 
-Dog.SPEED = 82;
+Dog.TYPE = {
+    brown: 0,
+    white: 1,
+    black: 2
+};
+
+Dog.SPEED = 80;
 Dog.VALUE = 50;
 
 Dog.prototype.update = function(dt) {
@@ -214,16 +221,70 @@ Dog.prototype.getValue = function() {
 };
 
 Dog.prototype.decideOnDirection = function() {
-    if(this.dogType == 0){
-        this.brownDogDecideOnTurn();
-    }
-    else{
-        this.brownDogDecideOnTurn();
+    switch(this.type){
+        case Dog.TYPE.brown : this.brownDogDecideOnTurn(); break;
+        case Dog.TYPE.white : this.whiteDogDecideOnTurn(); break;
+        case Dog.TYPE.black : this.blackDogDecideOnTurn(); break;
     }
 };
 
 Dog.prototype.whiteDogDecideOnTurn = function(){
 
+};
+
+Dog.prototype.blackDogDecideOnTurn = function(){
+    var target = {
+        x: this.hobo.x,
+        y: this.hobo.y
+    };
+
+    if (this.direction == "") this.direction = "left";
+
+    if (this.isWall(this.direction)){
+        var isLeftWall = this.isWall(this.turnLeft(this.direction)),
+            isRightWall= this.isWall(this.turnRight(this.direction));
+        if (isLeftWall && isRightWall) {
+            this.nextDirection = this.turnAround(this.direction);
+        }
+        else if (isLeftWall) {
+            this.nextDirection = this.turnRight(this.direction);
+        }
+        else if (isRightWall) {
+            this.nextDirection = this.turnLeft(this.direction);
+        } else {
+            var rightDistance = this.distance(this.futureLocation(this, this.turnRight(this.direction)), target);
+            var leftDistance = this.distance(this.futureLocation(this, this.turnLeft(this.direction)), target);
+            if (rightDistance < leftDistance && Math.random() < 0.8){
+                this.nextDirection = this.turnRight(this.direction);
+            } else {
+                this.nextDirection = this.turnLeft(this.direction);
+            }
+        }
+    }
+
+    if (this.isRunningAway()) {
+        this.nextDirection = this.turnAround(this.nextDirection);
+    }
+};
+
+Dog.prototype.distance = function(src, target){
+    var deltaX = src.x - target.x,
+            deltaY = src.y - target.y;
+    return Math.sqrt(deltaX*deltaX + deltaY * deltaY);
+};
+
+Dog.prototype.futureLocation = function(src, direction){
+    var location  = {
+        x: src.x,
+        y: src.y
+    };
+    switch (direction){
+        case "up" : location.y -= 5; break;
+        case "down" : location.y += 5; break;
+        case "left" : location.x -= 5; break;
+        case "right" : location.x += 5; break;
+    }
+    return location;
 };
 
 Dog.prototype.brownDogDecideOnTurn = function(){
@@ -247,6 +308,10 @@ Dog.prototype.brownDogDecideOnTurn = function(){
         } else {
             this.nextDirection = this.turnAround(yDirection)
         }
+    }
+
+    if (this.nextDirection == this.turnAround(this.direction) && !this.isWall(this.direction)){
+        this.nextDirection = null;
     }
 
     if (this.isRunningAway()) {
