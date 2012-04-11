@@ -66,6 +66,7 @@ HoboMan.prototype.loop = function() {
 };
 
 HoboMan.prototype.update = function(dt) {
+    if (this.world.hobo.dead) return;
     for (var i=0; i < this.world.entities.length ; i++){
         this.world.entities[i].update(dt, this.keys);
     }

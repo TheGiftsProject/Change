@@ -1,9 +1,12 @@
 function HoboAnimation() {
     this.file = "resources/images/hobo.png";
+    this.deadFile = "resources/images/deadhobo.png";
     this.height = 16;
     this.width = 16;
     this.spriteImage = new Image();
     this.spriteImage.src = this.file;
+    this.deadImage = new Image();
+    this.deadImage.src = this.deadFile;
     this.accumulator = 0;
     this.lastX = null;
     this.lastY = null;
@@ -45,7 +48,11 @@ HoboAnimation.prototype.getAnimationOffset = function(hobo){
 HoboAnimation.prototype.drawFrame = function(context, hobo){
     var x = Math.floor(hobo.x),
         y = Math.floor(hobo.y);
-    context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(hobo) + this.powerupState(hobo) * 48, this.width, this.height, x, y - 6, Hobo.SIZE.w, Hobo.SIZE.h);
+    if (hobo.dead){
+        context.drawImage(this.deadImage, 0, 0, this.width, this.height, x, y - 2, Hobo.SIZE.w, Hobo.SIZE.h);
+    } else {
+        context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(hobo) + this.powerupState(hobo) * 48, this.width, this.height, x, y - 6, Hobo.SIZE.w, Hobo.SIZE.h);
+    }
 };
 
 HoboAnimation.prototype.powerupState = function(hobo) {

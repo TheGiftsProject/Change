@@ -4,6 +4,8 @@ function World() {
     this.cells = {};
     this.entities = [];
     this.hobo = new Hobo(Hobo.START.x, Hobo.START.y, this);
+    this.points = new Points();
+    this.addEntity(this.points);
     this.addEntity(this.hobo);
 
     this.nextDogCreationTag = this.generateNextDogCreationTag();

@@ -15,12 +15,13 @@ function Hobo(x, y, world) {
     this.powerupLength = 0;
     this.lastLength = 0;
     this.accumulator = 0;
+    this.dead = false;
 
     var startCell = this.world.getCellAt(this.currentRow(), this.currentCol());
     startCell.setAsPath();
     startCell.removeContent();
     this.sounds = {
-        die: new EmptySound("bitten.wav"),
+        die: new EmptySound("die.wav"),
         coin0: new EmptySound("coin0.wav"),
         coin1: new EmptySound('coin1.wav'),
         bonus: new EmptySound('bonus.wav'),
@@ -150,6 +151,7 @@ Hobo.prototype.render = function(ctx) {
 
 Hobo.prototype.addPoints = function(points) {
     this.points += points;
+    this.world.points.add(points, this.x, this.y);
 };
 
 Hobo.prototype.currentCol = function(){
@@ -194,13 +196,20 @@ Hobo.prototype.bitten = function(dog){
         this.nextDirection = '';
         this.lives -= 1;
         window.hoboman.updateLives(this.lives);
-        this.x = Hobo.START.x;
-        this.y = Hobo.START.y;
+
         this.sounds.die.play();
 
         if (this.lives <= 0) {
             window.hoboman.gameOver(this.points);
             this.sounds.gameover.play();
+        } else {
+            this.dead = true;
+            var that = this;
+            setTimeout(function(){
+                that.x = Hobo.START.x;
+                that.y = Hobo.START.y;
+                that.dead = false;
+            }, 1000);
         }
     }
 };
