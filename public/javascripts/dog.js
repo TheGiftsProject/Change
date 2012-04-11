@@ -229,6 +229,36 @@ Dog.prototype.decideOnDirection = function() {
 };
 
 Dog.prototype.whiteDogDecideOnTurn = function(){
+    var target = {
+        x: this.hobo.x,
+        y: this.hobo.y
+    };
+
+    if (this.direction == "") this.direction = "up";
+
+    var turns = [
+            this.turnLeft(this.direction),
+            this.direction,
+            this.turnRight(this.direction)
+        ];
+
+    var availableIdx = 0;
+    if (!this.isWall(turns[0])) availableIdx += 1;
+    if (!this.isWall(turns[1])) availableIdx += 2;
+    if (!this.isWall(turns[2])) availableIdx += 4;
+
+
+    if (availableIdx == 0){ //blocked
+        this.nextDirection = this.turnAround(this.direction);
+    } else {
+        var random = Math.floor(Math.randomRange(0,3));
+        var turnVal = Math.pow(2, random);
+        if (availableIdx && turnVal) { // Bitwise and - open way
+            this.nextDirection = turns[random];
+        } else {
+            this.nextDirection = "";
+        }
+    }
 
 };
 
