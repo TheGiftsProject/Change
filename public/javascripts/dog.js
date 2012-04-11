@@ -7,6 +7,8 @@ function Dog(x, y, world, hobo) {
     this.renderer = new DogRenderer(this.type);
     this.world = world;
     this.hobo = hobo;
+    this.speed = Dog.SPEED;
+    if (this.type == Dog.TYPE.black) this.speed += 8;
     this.barked = false;
     this.sounds = {
         bark : new EmptySound('bark.wav'),
@@ -20,6 +22,8 @@ function Dog(x, y, world, hobo) {
         }
         that.sounds = newsounds;
     })
+
+
 }
 
 Dog.SIZE = {
@@ -59,7 +63,7 @@ Dog.prototype.move = function(dt) {
 
 
 Dog.prototype.moveCoordinates = function(dt){
-    var motion = Dog.SPEED * dt;
+    var motion = this.speed * dt;
     switch (this.direction) {
         case 'left':
             this.x -= motion;
@@ -233,33 +237,14 @@ Dog.prototype.whiteDogDecideOnTurn = function(){
         x: this.hobo.x,
         y: this.hobo.y
     };
-
-    if (this.direction == "") this.direction = "up";
-
-    var turns = [
-            this.turnLeft(this.direction),
-            this.direction,
-            this.turnRight(this.direction)
-        ];
-
-    var availableIdx = 0;
-    if (!this.isWall(turns[0])) availableIdx += 1;
-    if (!this.isWall(turns[1])) availableIdx += 2;
-    if (!this.isWall(turns[2])) availableIdx += 4;
-
-
-    if (availableIdx == 0){ //blocked
-        this.nextDirection = this.turnAround(this.direction);
-    } else {
-        var random = Math.floor(Math.randomRange(0,3));
-        var turnVal = Math.pow(2, random);
-        if (availableIdx && turnVal) { // Bitwise and - open way
-            this.nextDirection = turns[random];
-        } else {
-            this.nextDirection = "";
-        }
+    switch(this.hobo.direction){
+        case 'up': target.y -= 5; break;
+        case 'down': target.y += 5; break;
+        case 'left': target.x -= 5; break;
+        case 'right': target.x += 5; break;
     }
 
+    this.decideToTarget(target, 0.5);
 };
 
 Dog.prototype.blackDogDecideOnTurn = function(){
@@ -318,8 +303,16 @@ Dog.prototype.futureLocation = function(src, direction){
 };
 
 Dog.prototype.brownDogDecideOnTurn = function(){
-    var xDiff = this.x - this.hobo.x;
-    var yDiff = this.y - this.hobo.y;
+    this.decideToTarget(this.hobo, 0.8);
+};
+
+Dog.prototype.isRunningAway = function(){
+    return this.hobo.godmode;
+};
+
+Dog.prototype.decideToTarget = function(target, chanceToMiss){
+    var xDiff = this.x - target.x;
+    var yDiff = this.y - target.y;
 
     var xDirection = (xDiff < 3) ? 'right' : 'left';
     var yDirection = (yDiff < 3) ? 'down' : 'up';
@@ -350,13 +343,11 @@ Dog.prototype.brownDogDecideOnTurn = function(){
 
     if (this.nextDirection == this.direction){
         this.nextDirection = null;
+    } else if (this.direction == "") {
+        this.direction = "right";
     } else {
-        if (Math.random() > 0.8){
+        if (Math.random() > chanceToMiss){
             this.nextDirection = null;
         }
     }
 };
-
-Dog.prototype.isRunningAway = function(){
-    return this.hobo.godmode;
-}

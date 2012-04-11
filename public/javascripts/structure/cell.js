@@ -29,7 +29,7 @@ function Cell(isWall) {
             this.content = new Content(Content.COIN, Content.COINS.LOW);
         }
         else {
-            this.content = null;
+            this.content = new Content(Content.COIN, Content.COINS.LOW);
         }
     }
     else {
