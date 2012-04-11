@@ -139,8 +139,10 @@ Dog.prototype.render = function(ctx) {
     this.renderer.drawFrame(ctx, this);
 };
 
+Dog.COLLISION_RADIUS = 5;
+
 Dog.prototype.checkCollision = function(){
-    if (this.currentCol() == this.hobo.currentCol() && this.currentRow() == this.hobo.currentRow()) {
+    if (Math.abs(this.x - this.hobo.x) <= Dog.COLLISION_RADIUS && Math.abs(this.y - this.hobo.y) <= Dog.COLLISION_RADIUS) {
         this.hobo.bitten(this);
     }
 
