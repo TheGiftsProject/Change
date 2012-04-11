@@ -60,7 +60,10 @@ HoboMan.prototype.loop = function() {
         this.frameCounter += 1;
     }
 
-    if (this.gameover) return false;
+    if (this.gameover) {
+        this.render();
+        return false;
+    }
 
     window.requestAnimFrame(_.bind(this.loop, this));
 };

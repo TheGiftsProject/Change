@@ -196,6 +196,7 @@ Hobo.prototype.bitten = function(dog){
         this.sounds.die.play();
 
         if (this.lives <= 0) {
+            this.dead = true;
             window.hoboman.gameOver(this.points);
             this.sounds.gameover.play();
         } else {
