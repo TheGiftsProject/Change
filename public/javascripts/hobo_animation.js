@@ -49,7 +49,7 @@ HoboAnimation.prototype.drawFrame = function(context, hobo){
     var x = Math.floor(hobo.x),
         y = Math.floor(hobo.y);
     if (hobo.dead){
-        context.drawImage(this.deadImage, 0, 0, this.width, this.height, x, y - 2, Hobo.SIZE.w, Hobo.SIZE.h);
+        context.drawImage(this.deadImage, this.getDirectionOffset(hobo), 0, this.width, this.height, x, y - 2, Hobo.SIZE.w, Hobo.SIZE.h);
     } else {
         context.drawImage(this.spriteImage, this.getDirectionOffset(hobo), this.getAnimationOffset(hobo) + this.powerupState(hobo) * 48, this.width, this.height, x, y - 6, Hobo.SIZE.w, Hobo.SIZE.h);
     }

@@ -190,11 +190,7 @@ Hobo.prototype.bitten = function(dog){
         this.addPoints(dog.getValue());
     }
     else {
-        this.powerup = -1;
-        this.powerupLength = 0;
-        this.direction = '';
-        this.nextDirection = '';
-        this.lives -= 1;
+
         window.hoboman.updateLives(this.lives);
 
         this.sounds.die.play();
@@ -209,6 +205,11 @@ Hobo.prototype.bitten = function(dog){
                 that.x = Hobo.START.x;
                 that.y = Hobo.START.y;
                 that.dead = false;
+                that.powerup = -1;
+                that.powerupLength = 0;
+                that.direction = '';
+                that.nextDirection = '';
+                that.lives -= 1;
             }, 1000);
         }
     }
